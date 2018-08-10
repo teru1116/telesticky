@@ -14,6 +14,11 @@
     >
       さっそく使ってみる
     </button>
+    <router-link
+      to="/sign_in"
+    >
+      すでにアカウントをお持ちの方はこちら
+    </router-link>
   </div>
 </template>
 
