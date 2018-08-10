@@ -4,6 +4,7 @@ import SignUp from '@/views/SignUp'
 import SignIn from '@/views/SignIn'
 import Container from '@/views/Container'
 import Teams from '@/views/Teams'
+import TeamCreate from '@/views/TeamCreate'
 import TeamTop from '@/views/TeamTop'
 import ProductBacklog from '@/views/ProductBacklog'
 import ProductBacklogCreate from '@/views/ProductBacklogCreate'
@@ -31,7 +32,14 @@ export default new Router({
         {
           path: 'teams',
           name: 'Teams',
-          component: Teams
+          component: Teams,
+          children: [
+            {
+              path: 'create',
+              name: 'TeamCreate',
+              component: TeamCreate
+            }
+          ]
         },
         {
           path: 'teams/:teamId',
