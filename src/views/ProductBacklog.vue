@@ -13,11 +13,15 @@
       :key="item.id"
     >
       <ProductBacklogItem
-        data="item"
+        :data="item"
+        :estimationUnit="estimationUnit"
       >
       </ProductBacklogItem>
     </ol>
-    <router-view />
+    <router-view
+      :teamId="teamId"
+      :estimationUnit="estimationUnit"
+    />
   </div>
 </template>
 
@@ -39,7 +43,8 @@ export default {
   },
   data: function () {
     return {
-      productBacklog: []
+      productBacklog: [],
+      estimationUnit: ''
     }
   },
   components: {
@@ -51,12 +56,19 @@ export default {
     }
   },
   created: function () {
+    // ProductBacklog 取得
     db.collection('ScrumTeams').doc(this.teamId).collection('ProductBacklog').get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
           let item = Object.assign(doc.data(), {'id': doc.id})
           this.productBacklog.push(item)
         })
+      })
+
+    // 設定取得
+    db.collection('ScrumTeams').doc(this.teamId).get()
+      .then(doc => {
+        this.estimationUnit = doc.data().config.estimationUnit
       })
   }
 }
