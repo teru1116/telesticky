@@ -14,7 +14,15 @@
         </p>
         <input
           v-model="item.email"
-          placeholder="メールアドレスを入力して招待"
+          placeholder="メールアドレスを入力"
+        >
+        <input
+          v-model="item.nickname"
+          placeholder="ユーザー名を入力（あとから変更できます）"
+        >
+        <input
+          v-model="item.role"
+          placeholder="チームでの役割を入力"
         >
         <button
           @click="removeInput(index)"
@@ -45,12 +53,6 @@ const settings = {
 }
 db.settings(settings)
 
-// メールアクションの設定
-const actionCodeSettings = {
-  url: 'http://localhost:8080/?finishSignUp?cartId=1234',
-  handleCodeInApp: true
-}
-
 export default {
   data: function () {
     return {
@@ -63,6 +65,8 @@ export default {
       this.invitingMembers.push(
         {
           'email': '',
+          'nickname': '',
+          'role': '',
           'isSucceed': false,
           'message': ''
         }
@@ -72,38 +76,55 @@ export default {
       this.invitingMembers.splice(index, 1)
     },
     onCreateTeamClicked: function () {
-      // 1. create new ScrumTeams
-      // db.collection('ScrumTeams').add({
-      //   'teamName': this.teamName,
-      //   'config': {
-      //     'estimationUnit': 'story points',
-      //     'status': ['To Do', 'Doing', 'Done']
-      //   }
-      // })
-      //   .then(docRef => {
-      //
-      //   })
-      this.sendEmail()
-    },
-    sendEmail: function () {
-      this.invitingMembers.forEach((e, i) => {
-        if (!e.email) return
-        firebase.auth().sendSignInLinkToEmail(e.email, actionCodeSettings)
-          .then(() => {
-            this.invitingMembers[i].isSucceed = true
-            this.invitingMembers[i].message = '招待メールが送信されました。参加をお待ちください。'
-          })
-          .catch(error => {
-            this.invitingMembers[i].isSucceed = false
-            let errorMessage = ''
-            if (error.code === 'auth/invalid-email') {
-              errorMessage = 'メールアドレスの形式が正しくありません。'
-            } else {
-              errorMessage = error.message
-            }
-            this.invitingMembers[i].message = errorMessage
-          })
+      // 新規ScrumTeam作成
+      db.collection('ScrumTeams').add({
+        'teamName': this.teamName,
+        'config': {
+          'estimationUnit': 'story-points',
+          'status': ['To Do', 'Doing', 'Done']
+        }
       })
+        .then(docRef => {
+          // 招待したメンバーそれぞれについて
+          this.invitingMembers.forEach((member, index) => {
+            if (!member.email) return
+
+            let url = 'https://us-central1-web-scrum-board.cloudfunctions.net/getUserByEmail'
+            url += `?email=${member.email}`
+            // emailを渡してuidを検索するCloud Function
+            fetch(url)
+              .then(res => res.json())
+              .then(response => {
+                if (response.uid) {
+                  this.addExistingUserToTeam(docRef.id, response.uid, member, index)
+                } else {
+                  this.inviteMember(docRef.id, member, index)
+                }
+              })
+              .catch(error => {
+                console.error(error)
+              })
+          })
+        })
+    },
+    addExistingUserToTeam: function (teamId, uid, member, index) {
+      // ScrumTeamのmembersに登録
+      db.collection('ScrumTeams').doc(teamId).collection('members').doc(uid).set({
+        'nickname': member.nickname,
+        'role': member.role
+      })
+
+      // UserのscrumTeamsに追加
+      db.collection('Users').doc(uid).collection('teams').doc(teamId).set({
+        'teamName': this.teamName,
+        'nickname': member.nickname,
+        'role': member.role
+      })
+
+      // TODO: ScrumTeamに追加されたことを知らせるメールを送信
+    },
+    inviteMember: function (teamId, member, index) {
+      // TODO: メールを送信し、まずはemail/passwordによる会員登録を完了してもらう。完了後は直接TeamTop画面へ
     }
   },
   created: function () {

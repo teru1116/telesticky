@@ -5,6 +5,7 @@ import SignIn from '@/views/SignIn'
 import Container from '@/views/Container'
 import Teams from '@/views/Teams'
 import TeamCreate from '@/views/TeamCreate'
+import Invited from '@/views/Invited'
 import TeamTop from '@/views/TeamTop'
 import ProductBacklog from '@/views/ProductBacklog'
 import ProductBacklogCreate from '@/views/ProductBacklogCreate'
@@ -40,6 +41,11 @@ export default new Router({
               component: TeamCreate
             }
           ]
+        },
+        {
+          path: 'invited',
+          name: 'Invited',
+          component: Invited
         },
         {
           path: 'teams/:teamId',
