@@ -8,13 +8,12 @@
     >
       + 新規プロダクトバックログアイテム作成
     </button>
-    <ol
-      v-for="item in productBacklog"
-      :key="item.id"
-    >
+    <ol>
       <ProductBacklogItem
+        v-for="item in productBacklog"
         :data="item"
         :estimationUnit="estimationUnit"
+        :key="item.id"
       >
       </ProductBacklogItem>
     </ol>
