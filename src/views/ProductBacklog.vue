@@ -1,13 +1,21 @@
 <template>
   <div>
-    <h2>
-      プロダクトバックログ
-    </h2>
-    <button
-      @click="showCreateItemView"
+    <div
+      class="pbl-header"
     >
-      + 新規プロダクトバックログアイテム作成
-    </button>
+      <h2>
+        プロダクトバックログ
+      </h2>
+      <div
+        class="pbl-header-right"
+      >
+        <button
+          @click="showCreateItemView"
+        >
+          + 新規プロダクトバックログアイテム作成
+        </button>
+      </div>
+    </div>
     <ol>
       <ProductBacklogItem
         v-for="item in productBacklog"
@@ -72,3 +80,45 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+.pbl-header {
+  display: flex;
+  height: 64px;
+  border-bottom: 1px solid #e5e5e5;
+
+  h2 {
+    width: 300px;
+    font-size: 24px;
+    line-height: 24px;
+    margin: 20px 0 0;
+    text-align: left;
+  }
+
+  .pbl-header-right {
+    flex: 1;
+
+    button {
+      float: right;
+      vertical-align: middle;
+      cursor: pointer;
+      text-align: center;
+      padding: 3px 10px 4px;
+      -moz-border-radius: 3px;
+      -webkit-border-radius: 3px;
+      border-radius: 3px;
+      border: 1px solid #4cabff;
+      outline: none;
+      color: #0088ff;
+      margin-top: 18px;
+      font-size: 15px;
+      line-height: 19px;
+    }
+  }
+}
+
+ol {
+  margin: 32px 0 0;
+  padding: 0;
+}
+</style>

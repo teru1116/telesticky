@@ -1,6 +1,5 @@
 <template>
   <div>
-    TeamTop
     <router-view
       :teamId="teamId"
     />
