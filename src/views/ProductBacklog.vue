@@ -100,19 +100,7 @@ export default {
 
     button {
       float: right;
-      vertical-align: middle;
-      cursor: pointer;
-      text-align: center;
-      padding: 3px 10px 4px;
-      -moz-border-radius: 3px;
-      -webkit-border-radius: 3px;
-      border-radius: 3px;
-      border: 1px solid #4cabff;
-      outline: none;
-      color: #0088ff;
       margin-top: 18px;
-      font-size: 15px;
-      line-height: 19px;
     }
   }
 }

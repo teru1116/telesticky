@@ -7,13 +7,18 @@
     <div
       class="modal"
     >
-      <input
+      <h2>新規プロダクトバックログアイテム作成</h2>
+      <h3>タイトル</h3>
+      <textarea
         v-model="title"
         placeholder="タイトルを入力"
       >
+      </textarea>
+      <h3>見積り</h3>
       <input
         v-model="estimate"
         placeholder="見積りを入力"
+        id="create-card-input-estimate"
       >
       <span>
         {{ estimationUnit }}
@@ -21,7 +26,7 @@
       <button
         @click="submit"
       >
-        この内容でプロダクトバックログアイテムを追加する
+        プロダクトバックログに追加する
       </button>
     </div>
   </div>
@@ -90,10 +95,41 @@ export default {
   padding: 22px 2.25em 3em;
   display: block;
   position: absolute;
-  top: 128px;
+  top: 64px;
   left: 0;
   right: 0;
   width: 600px;
   margin: 0 auto;
+
+  h2 {
+    padding: 0 0 8px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  textarea {
+    width: 280px;
+    height: 120px;
+    font-size: 14px;
+    outline: 0;
+    resize: none;
+    border: 1px solid #E5E5E9;
+    padding: 8px;
+  }
+
+  input {
+    font-size: 14px;
+    outline: 0;
+    border: 1px solid #E5E5E9;
+
+    &#create-card-input-estimate {
+      width: 40px;
+      padding: 8px;
+    }
+  }
+
+  button {
+    margin: 32px auto 0;
+    display: block;
+  }
 }
 </style>
