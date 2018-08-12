@@ -2,7 +2,7 @@
   <div>
     TeamTop
     <router-view
-      teamId="teamId"
+      :teamId="teamId"
     />
   </div>
 </template>

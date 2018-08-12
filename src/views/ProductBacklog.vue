@@ -1,5 +1,13 @@
 <template>
   <div>
+    <h2>
+      プロダクトバックログ
+    </h2>
+    <button
+      @click="showCreateItemView"
+    >
+      + 新規プロダクトバックログアイテム作成
+    </button>
     <ol
       v-for="item in productBacklog"
       :key="item.id"
@@ -14,6 +22,7 @@
 </template>
 
 <script>
+import router from './../router'
 import firebase from './../firebase'
 // components
 import ProductBacklogItem from './../components/ProductBacklogItem'
@@ -35,6 +44,11 @@ export default {
   },
   components: {
     'ProductBacklogItem': ProductBacklogItem
+  },
+  methods: {
+    showCreateItemView: function () {
+      return router.push(`/teams/${this.teamId}/product_backlog/create`)
+    }
   },
   created: function () {
     db.collection('ScrumTeams').doc(this.teamId).collection('ProductBacklog').get()
