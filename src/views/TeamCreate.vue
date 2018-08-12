@@ -124,7 +124,27 @@ export default {
       // TODO: ScrumTeamに追加されたことを知らせるメールを送信
     },
     inviteMember: function (teamId, member, index) {
-      // TODO: メールを送信し、まずはemail/passwordによる会員登録を完了してもらう。完了後は直接TeamTop画面へ
+      const actionCodeSettings = {
+        url: `http://localhost:8080/invited?t=${teamId}&n=${member.nickname}&r=${member.role}`,
+        handleCodeInApp: true
+      }
+      firebase.auth().sendSignInLinkToEmail(member.email, actionCodeSettings)
+        .then(() => {
+          // 完了UI
+          this.invitingMembers[index].isSucceed = true
+          this.invitingMembers[index].message = '招待メールが送信されました。参加をお待ちください。'
+        })
+        .catch(error => {
+          // エラーUI
+          this.invitingMembers[index].isSucceed = false
+          let errorMessage = ''
+          if (error.code === 'auth/invalid-email') {
+            errorMessage = 'メールアドレスの形式が正しくありません。'
+          } else {
+            errorMessage = error.message
+          }
+          this.invitingMembers[index].message = errorMessage
+        })
     }
   },
   created: function () {
