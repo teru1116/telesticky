@@ -25,7 +25,7 @@
         並び順が下のアイテムほど不正確で詳細ではありません。
       </small>
       <input
-        v-model="estimate"
+        v-model.number="estimate"
         placeholder="例: 2"
         id="create-card-input-estimate"
       >
