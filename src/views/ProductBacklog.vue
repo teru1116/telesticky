@@ -128,12 +128,10 @@ export default {
       this.isDragging = true
     },
     onTouchMove: function (e) {
-      console.log(e.target)
       this.$refs.pbl.addEventListener('mouseup', this.onTouchUp, false)
 
-      console.log(e.clientX, e.clientY)
-      this.dummyBorderX = e.clientX >= 310 ? e.clientX - 310 : 0
-      this.dummyBorderY = e.clientY >= 250 ? e.clientY - 250 : 0
+      this.dummyBorderX = e.pageX >= 310 ? e.pageX - 310 : 0
+      this.dummyBorderY = e.pageY >= 250 ? e.pageY - 250 : 0
     },
     onTouchUp: function (e) {
       this.$refs.pbl.removeEventListener('mousemove', this.onTouchMove, false)
