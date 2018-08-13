@@ -32,6 +32,8 @@
       <span>
         {{ estimationUnit }}
       </span>
+      <h3>並び順</h3>
+
       <button
         @click="submit"
         :class="{ enabled: title }"
@@ -55,12 +57,14 @@ db.settings(settings)
 export default {
   props: {
     teamId: String,
-    estimationUnit: String
+    estimationUnit: String,
+    productBacklogCount: Number
   },
   data: function () {
     return {
       'title': '',
-      'estimate': 0
+      'estimate': 0,
+      'order': this.productBacklogCount + 1
     }
   },
   methods: {
@@ -70,7 +74,8 @@ export default {
     submit: function () {
       db.collection('ScrumTeams').doc(this.teamId).collection('ProductBacklog').add({
         'title': this.title,
-        'estimate': this.estimate
+        'estimate': this.estimate,
+        'order': this.order
       })
         .then(docRef => {
           router.push(`/teams/${this.teamId}/product_backlog`)

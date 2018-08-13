@@ -60,6 +60,7 @@
     <router-view
       :teamId="teamId"
       :estimationUnit="estimationUnit"
+      :productBacklogCount="productBacklog.length"
     />
   </div>
 </template>
