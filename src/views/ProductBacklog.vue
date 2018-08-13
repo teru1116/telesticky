@@ -109,22 +109,32 @@ export default {
       return total
     },
     activeColumn: function () {
+      let rawColumn = 0
       if (this.dummyBorderX < 145) {
-        return 1
-      } else if (145 <= this.dummyBorderX && this.dummyBorderX < 290 * 1 + 16 * 1 + 145) {
-        return 2
+        rawColumn = 1
+      } else if (this.dummyBorderX >= 145 && this.dummyBorderX < 290 * 1 + 16 * 1 + 145) {
+        rawColumn = 2
       } else if (290 * 1 + 16 * 1 + 145 <= this.dummyBorderX && this.dummyBorderX < 290 * 2 + 16 * 2 + 145) {
-        return 3
+        rawColumn = 3
       }
+
+      return Math.min(rawColumn, Math.ceil(this.productBacklog.length / maxRow))
     },
     activeRow: function () {
+      let rawRow = 0
       if (this.dummyBorderY < 170 + 16 + 80) {
-        return 1
+        rawRow = 1
       } else if (170 + 16 + 80 <= this.dummyBorderY && this.dummyBorderY < 170 * 2 + 16 * 2 + 80) {
-        return 2
+        rawRow = 2
       } else if (170 * 2 + 16 * 2 + 80 <= this.dummyBorderY && this.dummyBorderY < 170 * 3 + 16 * 3 + 80) {
-        return 3
+        rawRow = 3
       }
+
+      // 限界突破判定
+      if (this.activeColumn === Math.ceil(this.productBacklog.length / maxRow)) {
+        return Math.min(rawRow, this.productBacklog.length % maxRow)
+      }
+      return rawRow
     },
     borderPosition: function () {
       return (this.activeColumn - 1) * maxRow + this.activeRow
@@ -154,6 +164,7 @@ export default {
     onTouchUp: function (e) {
       this.$refs.pbl.removeEventListener('mousemove', this.onTouchMove, false)
       this.isDragging = false
+      // Dummyボーダーの位置補正
       this.dummyBorderX = (this.activeColumn - 1) * 290 + (this.activeColumn - 1) * columnMargin
       this.dummyBorderY = this.activeRow * 170 + (this.activeRow - 1) * rowMargin
     }
@@ -220,7 +231,7 @@ ol {
     position: absolute;
     width: 290px;
     height: 16px;
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.0);
   }
 }
 </style>
