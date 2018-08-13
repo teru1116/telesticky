@@ -109,11 +109,11 @@ export default {
       return total
     },
     activeColumn: function () {
-      if (this.dummyBorderX < 290 + 16 + 145) {
+      if (this.dummyBorderX < 145) {
         return 1
-      } else if (290 + 16 + 145 <= this.dummyBorderX && this.dummyBorderX < 290 * 2 + 16 * 2 + 145) {
+      } else if (145 <= this.dummyBorderX && this.dummyBorderX < 290 * 1 + 16 * 1 + 145) {
         return 2
-      } else if (290 * 2 + 16 * 2 + 145 <= this.dummyBorderX && this.dummyBorderX < 290 * 3 + 16 * 3 + 145) {
+      } else if (290 * 1 + 16 * 1 + 145 <= this.dummyBorderX && this.dummyBorderX < 290 * 2 + 16 * 2 + 145) {
         return 3
       }
     },
@@ -154,13 +154,13 @@ export default {
     onTouchUp: function (e) {
       this.$refs.pbl.removeEventListener('mousemove', this.onTouchMove, false)
       this.isDragging = false
-      this.dummyBorderX = this.activeColumn * 290 + (this.activeColumn - 1) * columnMargin
+      this.dummyBorderX = (this.activeColumn - 1) * 290 + (this.activeColumn - 1) * columnMargin
       this.dummyBorderY = this.activeRow * 170 + (this.activeRow - 1) * rowMargin
     }
   },
   created: function () {
     // ProductBacklog 取得
-    db.collection('ScrumTeams').doc(this.teamId).collection('ProductBacklog').get()
+    db.collection('ScrumTeams').doc(this.teamId).collection('ProductBacklog').orderBy('order').get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
           let item = Object.assign(doc.data(), {'id': doc.id})
@@ -218,7 +218,7 @@ ol {
 
   #dummy-planning-border {
     position: absolute;
-    width: 296px;
+    width: 290px;
     height: 16px;
     background-color: rgba(0, 0, 0, 0.05);
   }
