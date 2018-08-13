@@ -32,7 +32,7 @@
       </p>
       <dl>
         <dt>アイテム数</dt>
-        <dd>{{ selectedItemCount }}個</dd>
+        <dd>{{ borderPosition }}個</dd>
         <dt>見積り値合計</dt>
         <dd>{{ selectedItemTotalEstimate + estimationUnit }}</dd>
       </dl>
@@ -76,20 +76,30 @@ export default {
       productBacklog: [],
       estimationUnit: '',
       isInPlanning: false,
-      borderPosition: 0,
-      selectedItemCount: 0,
-      selectedItemTotalEstimate: 0
+      borderPosition: 0
     }
   },
   components: {
     'ProductBacklogItem': ProductBacklogItem
+  },
+  computed: {
+    selectedItemTotalEstimate: function () {
+      let index = 0
+      let total = 0
+      while (index <= this.borderPosition - 1) {
+        let item = this.productBacklog[index]
+        total = total + item.estimate
+        index++
+      }
+      return total
+    }
   },
   methods: {
     showCreateItemView: function () {
       return router.push(`/teams/${this.teamId}/product_backlog/create`)
     },
     startSprintPlanning: function () {
-      return this.isInPlanning = !this.isInPlanning
+      this.isInPlanning = !this.isInPlanning
     }
   },
   created: function () {
@@ -107,6 +117,10 @@ export default {
       .then(doc => {
         this.estimationUnit = doc.data().config.estimationUnit
       })
+
+    // window.onmousemove = (e) => {
+    //   console.log(e.clientX, e.clientY)
+    // }
   }
 }
 </script>
