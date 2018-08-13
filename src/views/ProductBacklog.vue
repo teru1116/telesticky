@@ -15,7 +15,27 @@
         >
           + 新規プロダクトバックログアイテムを作成する
         </button>
+        <button
+          @click="startSprintPlanning"
+          class="enabled"
+        >
+          {{ isInPlanning ? 'スプリントプランニングを終了する' : 'スプリントプランニングを開始する' }}
+        </button>
       </div>
+    </div>
+    <div
+      v-if="isInPlanning"
+    >
+      <p>
+        スプリントで届けるプロダクトバックログアイテムを選択します。<br />
+        選択し終えたら、スプリントバックログ画面で、より詳細な計画づくりをします。
+      </p>
+      <dl>
+        <dt>アイテム数</dt>
+        <dd>個</dd>
+        <dt>見積り値合計</dt>
+        <dd>{{ estimationUnit }}</dd>
+      </dl>
     </div>
     <ol>
       <ProductBacklogItem
@@ -52,7 +72,8 @@ export default {
   data: function () {
     return {
       productBacklog: [],
-      estimationUnit: ''
+      estimationUnit: '',
+      isInPlanning: false
     }
   },
   components: {
@@ -61,6 +82,9 @@ export default {
   methods: {
     showCreateItemView: function () {
       return router.push(`/teams/${this.teamId}/product_backlog/create`)
+    },
+    startSprintPlanning: function () {
+      return this.isInPlanning = !this.isInPlanning
     }
   },
   created: function () {
@@ -102,7 +126,7 @@ export default {
 
     button {
       float: right;
-      margin-top: 18px;
+      margin: 18px 0 0 8px;
     }
   }
 }
