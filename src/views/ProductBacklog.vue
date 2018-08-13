@@ -11,6 +11,7 @@
       >
         <button
           @click="showCreateItemView"
+          class="enabled"
         >
           + 新規プロダクトバックログアイテム作成
         </button>
@@ -86,6 +87,7 @@ export default {
   display: flex;
   height: 64px;
   border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 24px;
 
   h2 {
     width: 300px;

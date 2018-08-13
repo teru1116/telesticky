@@ -2,6 +2,7 @@
   <div>
     <section
       class="dimmer"
+      @click="close"
     >
     </section>
     <div
@@ -9,15 +10,23 @@
     >
       <h2>新規プロダクトバックログアイテム作成</h2>
       <h3>タイトル</h3>
+      <small>
+        プロダクトバックログの一覧画面に表示されるタイトルです。
+      </small>
       <textarea
         v-model="title"
         placeholder="タイトルを入力"
       >
       </textarea>
       <h3>見積り</h3>
+      <small>
+        開発チームは見積りに責任を持ちます。最終的な見積りは、実際に作業をする人が行います。<br />
+        並び順が上のアイテムほど明確で詳細であり、見積りも正確になります。<br />
+        並び順が下のアイテムほど不正確で詳細ではありません。
+      </small>
       <input
         v-model="estimate"
-        placeholder="見積りを入力"
+        placeholder="例: 2"
         id="create-card-input-estimate"
       >
       <span>
@@ -25,6 +34,7 @@
       </span>
       <button
         @click="submit"
+        :class="{ enabled: title }"
       >
         プロダクトバックログに追加する
       </button>
@@ -54,6 +64,9 @@ export default {
     }
   },
   methods: {
+    close: function () {
+      router.push(`/teams/${this.teamId}/product_backlog`)
+    },
     submit: function () {
       db.collection('ScrumTeams').doc(this.teamId).collection('ProductBacklog').add({
         'title': this.title,
