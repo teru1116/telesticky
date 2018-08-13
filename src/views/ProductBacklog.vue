@@ -37,7 +37,9 @@
         <dd>{{ selectedItemTotalEstimate + estimationUnit }}</dd>
       </dl>
     </div>
-    <ol>
+    <ol
+      ref="pbl"
+    >
       <ProductBacklogItem
         v-for="item in productBacklog"
         :data="item"
@@ -45,8 +47,14 @@
         :isInPlanning="isInPlanning"
         :borderPosition="borderPosition"
         :key="item.id"
-      >
-      </ProductBacklogItem>
+      />
+      <div
+        v-if="isInPlanning"
+        @mousedown="onBorderSelected"
+        ref="dummyPlanningBorder"
+        id="dummy-planning-border"
+        :style="{ left: `${mouseX}px`, top: `${mouseY}px` }"
+      />
     </ol>
     <router-view
       :teamId="teamId"
@@ -76,7 +84,9 @@ export default {
       productBacklog: [],
       estimationUnit: '',
       isInPlanning: false,
-      borderPosition: 0
+      borderPosition: 0,
+      mouseX: 0,
+      mouseY: 0
     }
   },
   components: {
@@ -99,7 +109,22 @@ export default {
       return router.push(`/teams/${this.teamId}/product_backlog/create`)
     },
     startSprintPlanning: function () {
-      this.isInPlanning = !this.isInPlanning
+      if (!this.isInPlanning) {
+        this.isInPlanning = true
+      } else {
+        this.isInPlanning = false
+      }
+    },
+    onBorderSelected: function (e) {
+      this.$refs.pbl.addEventListener('mousemove', this.onTouchMove, false)
+    },
+    onTouchMove: function (e) {
+      this.mouseX = e.offsetX
+      this.mouseY = e.offsetY
+      e.target.addEventListener('mouseup', this.onTouchUp, false)
+    },
+    onTouchUp: function (e) {
+      this.$refs.pbl.removeEventListener('mousemove', this.onTouchMove, false)
     }
   },
   created: function () {
@@ -117,10 +142,6 @@ export default {
       .then(doc => {
         this.estimationUnit = doc.data().config.estimationUnit
       })
-
-    // window.onmousemove = (e) => {
-    //   console.log(e.clientX, e.clientY)
-    // }
   }
 }
 </script>
@@ -153,5 +174,13 @@ export default {
 ol {
   margin: 32px 0 0;
   padding: 0;
+  position: relative;
+
+  #dummy-planning-border {
+    position: absolute;
+    width: 296px;
+    height: 8px;
+    background-color: #0088ff;
+  }
 }
 </style>
