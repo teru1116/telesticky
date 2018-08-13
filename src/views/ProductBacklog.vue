@@ -37,7 +37,9 @@
         <dd>{{ selectedItemTotalEstimate + estimationUnit }}</dd>
       </dl>
     </div>
-    <ol
+    <draggable
+      element="ol"
+      v-model="productBacklog"
       ref="pbl"
       :style="isDragging ? {userSelect: 'none'} : ''"
     >
@@ -56,7 +58,7 @@
         id="dummy-planning-border"
         :style="{ left: `${dummyBorderX}px`, top: `${dummyBorderY}px` }"
       />
-    </ol>
+    </draggable>
     <router-view
       :teamId="teamId"
       :estimationUnit="estimationUnit"
@@ -69,6 +71,7 @@
 import router from './../router'
 import firebase from './../firebase'
 // components
+import draggable from 'vuedraggable'
 import ProductBacklogItem from './../components/ProductBacklogItem'
 
 const db = firebase.firestore()
@@ -96,6 +99,7 @@ export default {
     }
   },
   components: {
+    'draggable': draggable,
     'ProductBacklogItem': ProductBacklogItem
   },
   computed: {
