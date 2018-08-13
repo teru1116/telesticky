@@ -77,6 +77,7 @@ const settings = {
 db.settings(settings)
 
 const maxRow = 3
+const rowMargin = 16
 
 export default {
   props: {
@@ -89,7 +90,7 @@ export default {
       isInPlanning: false,
       isDragging: false,
       dummyBorderX: 0,
-      dummyBorderY: 0
+      dummyBorderY: 170
     }
   },
   components: {
@@ -112,8 +113,13 @@ export default {
       return Math.min(rawColumn, maxColumn)
     },
     activeRow: function () {
-      const rawRow = Math.round((this.dummyBorderY + 160 * 0.5) / 160)
-      return Math.min(rawRow, maxRow)
+      if (this.dummyBorderY < 170 + 16 + 80) {
+        return 1
+      } else if (170 + 16 + 80 <= this.dummyBorderY && this.dummyBorderY < 170 * 2 + 16 * 2 + 80) {
+        return 2
+      } else if (170 * 2 + 16 * 2 + 80 <= this.dummyBorderY && this.dummyBorderY < 170 * 3 + 16 * 3 + 80) {
+        return 3
+      }
     },
     borderPosition: function () {
       return (this.activeColumn - 1) * maxRow + this.activeRow
@@ -136,13 +142,15 @@ export default {
     },
     onTouchMove: function (e) {
       this.$refs.pbl.addEventListener('mouseup', this.onTouchUp, false)
-
+      // Dummyボーダーの位置をDragに追従させる
       this.dummyBorderX = e.pageX >= 310 ? e.pageX - 310 : 0
       this.dummyBorderY = e.pageY >= 250 ? e.pageY - 250 : 0
     },
     onTouchUp: function (e) {
       this.$refs.pbl.removeEventListener('mousemove', this.onTouchMove, false)
       this.isDragging = false
+      this.dummyBorderX = (this.activeColumn - 1) * 280
+      this.dummyBorderY = this.activeRow * 170 + (this.activeRow - 1) * rowMargin
     }
   },
   created: function () {
@@ -201,8 +209,8 @@ ol {
   #dummy-planning-border {
     position: absolute;
     width: 296px;
-    height: 8px;
-    background-color: rgba(0, 0, 0, 0.1);
+    height: 16px;
+    background-color: rgba(0, 0, 0, 0.05);
   }
 }
 </style>

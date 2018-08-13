@@ -62,7 +62,7 @@ export default {
   nav {
     width: 300px;
     background-color: #222;
-    height: 100vh;
+    min-height: 100vh;
 
     ul {
       list-style: none;
