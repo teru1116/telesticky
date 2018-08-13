@@ -9,6 +9,7 @@ import Invited from '@/views/Invited'
 import TeamTop from '@/views/TeamTop'
 import ProductBacklog from '@/views/ProductBacklog'
 import ProductBacklogCreate from '@/views/ProductBacklogCreate'
+import SprintBacklog from '@/views/SprintBacklog'
 
 Vue.use(Router)
 
@@ -63,6 +64,11 @@ export default new Router({
                   component: ProductBacklogCreate
                 }
               ]
+            },
+            {
+              path: 'sprint_backlog',
+              name: 'SprintBacklog',
+              component: SprintBacklog
             }
           ]
         }
