@@ -39,6 +39,7 @@
     </div>
     <ol
       ref="pbl"
+      :style="isDragging ? {userSelect: 'none'} : ''"
     >
       <ProductBacklogItem
         v-for="item in productBacklog"
@@ -53,7 +54,7 @@
         @mousedown="onBorderSelected"
         ref="dummyPlanningBorder"
         id="dummy-planning-border"
-        :style="{ left: `${mouseX}px`, top: `${mouseY}px` }"
+        :style="{ left: `${dummyBorderX}px`, top: `${dummyBorderY}px` }"
       />
     </ol>
     <router-view
@@ -85,8 +86,9 @@ export default {
       estimationUnit: '',
       isInPlanning: false,
       borderPosition: 0,
-      mouseX: 0,
-      mouseY: 0
+      isDragging: false,
+      dummyBorderX: 0,
+      dummyBorderY: 0
     }
   },
   components: {
@@ -102,6 +104,12 @@ export default {
         index++
       }
       return total
+    },
+    activeColumn: function () {
+      return Math.round((this.dummyBorderX + 280 * 0.5) / 280)
+    },
+    activeRow: function () {
+      return Math.round((this.dummyBorderY + 160 * 0.5) / 160)
     }
   },
   methods: {
@@ -117,14 +125,19 @@ export default {
     },
     onBorderSelected: function (e) {
       this.$refs.pbl.addEventListener('mousemove', this.onTouchMove, false)
+      this.isDragging = true
     },
     onTouchMove: function (e) {
-      this.mouseX = e.offsetX
-      this.mouseY = e.offsetY
-      e.target.addEventListener('mouseup', this.onTouchUp, false)
+      console.log(e.target)
+      this.$refs.pbl.addEventListener('mouseup', this.onTouchUp, false)
+
+      console.log(e.clientX, e.clientY)
+      this.dummyBorderX = e.clientX >= 310 ? e.clientX - 310 : 0
+      this.dummyBorderY = e.clientY >= 250 ? e.clientY - 250 : 0
     },
     onTouchUp: function (e) {
       this.$refs.pbl.removeEventListener('mousemove', this.onTouchMove, false)
+      this.isDragging = false
     }
   },
   created: function () {
@@ -176,11 +189,15 @@ ol {
   padding: 0;
   position: relative;
 
+  &.isInPlanning {
+    user-select: none;
+  }
+
   #dummy-planning-border {
     position: absolute;
     width: 296px;
     height: 8px;
-    background-color: #0088ff;
+    background-color: #42b983;
   }
 }
 </style>
