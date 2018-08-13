@@ -32,9 +32,9 @@
       </p>
       <dl>
         <dt>アイテム数</dt>
-        <dd>個</dd>
+        <dd>{{ selectedItemCount }}個</dd>
         <dt>見積り値合計</dt>
-        <dd>{{ estimationUnit }}</dd>
+        <dd>{{ selectedItemTotalEstimate + estimationUnit }}</dd>
       </dl>
     </div>
     <ol>
@@ -73,7 +73,9 @@ export default {
     return {
       productBacklog: [],
       estimationUnit: '',
-      isInPlanning: false
+      isInPlanning: false,
+      selectedItemCount: 0,
+      selectedItemTotalEstimate: 0
     }
   },
   components: {
