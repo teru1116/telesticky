@@ -33,7 +33,7 @@ li {
   height: 160px;
   border: 1px solid #d6d6d6;
   border-radius: 4px;
-  margin: 0 0 16px;
+  margin: 0 16px 16px 0;
   padding: 4px 4px;
   list-style: none;
   position: relative;

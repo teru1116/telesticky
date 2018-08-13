@@ -203,6 +203,11 @@ export default {
 }
 
 ol {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: baseline;
+  height: 560px;
   margin: 32px 0 0;
   padding: 0;
   position: relative;
