@@ -70,6 +70,7 @@
   }
 
   .main-content {
+    width: calc(100% - 300px);
     padding: 0 16px;
   }
 }

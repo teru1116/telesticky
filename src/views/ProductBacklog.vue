@@ -13,7 +13,7 @@
           @click="showCreateItemView"
           class="enabled"
         >
-          + 新規プロダクトバックログアイテム作成
+          + 新規プロダクトバックログアイテムを作成する
         </button>
       </div>
     </div>
