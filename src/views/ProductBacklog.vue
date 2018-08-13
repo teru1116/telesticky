@@ -132,7 +132,7 @@ export default {
       }
 
       // 限界突破判定
-      if (this.activeColumn === Math.ceil(this.productBacklog.length / maxRow)) {
+      if (this.activeColumn === Math.ceil(this.productBacklog.length / maxRow) && this.productBacklog.length % maxRow !== 0) {
         return Math.min(rawRow, this.productBacklog.length % maxRow)
       }
       return rawRow
