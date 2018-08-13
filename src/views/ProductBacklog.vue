@@ -77,6 +77,7 @@ const settings = {
 db.settings(settings)
 
 const maxRow = 3
+const columnMargin = 16
 const rowMargin = 16
 
 export default {
@@ -108,9 +109,13 @@ export default {
       return total
     },
     activeColumn: function () {
-      const rawColumn = Math.round((this.dummyBorderX + 280 * 0.5) / 280)
-      const maxColumn = Math.ceil(this.productBacklog.length / maxRow)
-      return Math.min(rawColumn, maxColumn)
+      if (this.dummyBorderX < 290 + 16 + 145) {
+        return 1
+      } else if (290 + 16 + 145 <= this.dummyBorderX && this.dummyBorderX < 290 * 2 + 16 * 2 + 145) {
+        return 2
+      } else if (290 * 2 + 16 * 2 + 145 <= this.dummyBorderX && this.dummyBorderX < 290 * 3 + 16 * 3 + 145) {
+        return 3
+      }
     },
     activeRow: function () {
       if (this.dummyBorderY < 170 + 16 + 80) {
@@ -149,7 +154,7 @@ export default {
     onTouchUp: function (e) {
       this.$refs.pbl.removeEventListener('mousemove', this.onTouchMove, false)
       this.isDragging = false
-      this.dummyBorderX = (this.activeColumn - 1) * 280
+      this.dummyBorderX = this.activeColumn * 290 + (this.activeColumn - 1) * columnMargin
       this.dummyBorderY = this.activeRow * 170 + (this.activeRow - 1) * rowMargin
     }
   },
