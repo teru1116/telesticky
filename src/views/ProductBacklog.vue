@@ -76,6 +76,8 @@ const settings = {
 }
 db.settings(settings)
 
+const maxRow = 3
+
 export default {
   props: {
     teamId: String
@@ -85,7 +87,6 @@ export default {
       productBacklog: [],
       estimationUnit: '',
       isInPlanning: false,
-      borderPosition: 0,
       isDragging: false,
       dummyBorderX: 0,
       dummyBorderY: 0
@@ -106,10 +107,16 @@ export default {
       return total
     },
     activeColumn: function () {
-      return Math.round((this.dummyBorderX + 280 * 0.5) / 280)
+      const rawColumn = Math.round((this.dummyBorderX + 280 * 0.5) / 280)
+      const maxColumn = Math.ceil(this.productBacklog.length / maxRow)
+      return Math.min(rawColumn, maxColumn)
     },
     activeRow: function () {
-      return Math.round((this.dummyBorderY + 160 * 0.5) / 160)
+      const rawRow = Math.round((this.dummyBorderY + 160 * 0.5) / 160)
+      return Math.min(rawRow, maxRow)
+    },
+    borderPosition: function () {
+      return (this.activeColumn - 1) * maxRow + this.activeRow
     }
   },
   methods: {
@@ -195,7 +202,7 @@ ol {
     position: absolute;
     width: 296px;
     height: 8px;
-    background-color: #42b983;
+    background-color: rgba(0, 0, 0, 0.1);
   }
 }
 </style>
