@@ -31,9 +31,9 @@
         選択し終えたら、スプリントバックログ画面で、より詳細な計画づくりをします。
       </p>
       <dl>
-        <dt>アイテム数</dt>
+        <dt>選択中のアイテム数</dt>
         <dd>{{ borderPosition }}個</dd>
-        <dt>見積り値合計</dt>
+        <dt>選択中の見積り値合計</dt>
         <dd>{{ selectedItemTotalEstimate + estimationUnit }}</dd>
       </dl>
     </div>
@@ -210,6 +210,14 @@ export default {
       float: right;
       margin: 18px 0 0 8px;
     }
+  }
+}
+
+dl {
+  dt {
+    float: left;
+    clear: both;
+    width: 180px;
   }
 }
 
