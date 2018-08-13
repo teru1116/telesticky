@@ -8,6 +8,11 @@
     >
       {{ data.estimate + estimationUnit }}
     </div>
+    <div
+      v-if="isInPlanning && borderPosition == data.order"
+      class="planning-border"
+    >
+    </div>
   </li>
 </template>
 
@@ -15,7 +20,9 @@
 export default {
   props: {
     data: Object,
-    estimationUnit: String
+    estimationUnit: String,
+    isInPlanning: Boolean,
+    borderPosition: Number
   }
 }
 </script>
@@ -29,6 +36,7 @@ li {
   margin: 0 0 16px;
   padding: 4px 4px;
   list-style: none;
+  position: relative;
 
   h3 {
     height: 120px;
@@ -39,6 +47,15 @@ li {
 
   .card-footer {
     text-align: left;
+  }
+
+  .planning-border {
+    position: absolute;
+    bottom: -8px;
+    left: -8px;
+    width: 296px;
+    height: 2px;
+    background-color: #0088ff;
   }
 }
 </style>

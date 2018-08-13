@@ -42,6 +42,8 @@
         v-for="item in productBacklog"
         :data="item"
         :estimationUnit="estimationUnit"
+        :isInPlanning="isInPlanning"
+        :borderPosition="borderPosition"
         :key="item.id"
       >
       </ProductBacklogItem>
@@ -74,6 +76,7 @@ export default {
       productBacklog: [],
       estimationUnit: '',
       isInPlanning: false,
+      borderPosition: 0,
       selectedItemCount: 0,
       selectedItemTotalEstimate: 0
     }
