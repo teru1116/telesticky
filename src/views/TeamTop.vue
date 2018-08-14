@@ -37,25 +37,50 @@
     >
       <router-view
         :teamId="teamId"
+        :currentSprint="currentSprint"
+        :productBacklog="productBacklog"
+        :config="config"
+        :DBTeamRef="DBTeamRef"
       />
     </div>
   </div>
 </template>
 
 <script>
+import firebase from './../firebase'
+
+const db = firebase.firestore()
+const settings = {
+  timestampsInSnapshots: true
+}
+db.settings(settings)
+
 export default {
   data: function () {
+    const teamId = this.$route.params['teamId']
     return {
-      teamId: '',
-      currentSprint: '',
+      teamId: teamId,
       productBacklog: [],
-      sprintItems: [],
+      currentSprint: '',
       config: {},
-      DBTeamRef: {}
+      DBTeamRef: db.collection('ScrumTeams').doc(teamId)
     }
   },
   created: function () {
-    this.teamId = this.$route.params['teamId']
+    // Team Data Document
+    this.DBTeamRef.get()
+      .then(doc => {
+        const data = doc.data()
+        this.currentSprint = data.currentSprint
+        this.config = data.config
+      })
+    // Product Backlog
+    this.DBTeamRef.collection('ProductBacklog').where('status', '==', 'sprintItem').where('status', '==', 'todo').orderBy('order').get()
+      .then(snapShot => {
+        snapShot.forEach(doc => {
+          this.productBacklog.push(Object.assign(doc.data(), { id: doc.id }))
+        })
+      })
   }
 }
 </script>

@@ -16,8 +16,55 @@
         </button>
       </div>
     </div>
+    <div>
+      <draggable>
+        <ProductBacklogItem
+          v-for="item in selectedProductBacklog"
+          :data="item"
+          :key="item.id"
+        />
+      </draggable>
+    </div>
   </div>
 </template>
+
+<script>
+import firebase from './../firebase'
+// components
+import draggable from 'vuedraggable'
+import ProductBacklogItem from './../components/ProductBacklogItem'
+
+const db = firebase.firestore()
+const settings = {
+  timestampsInSnapshots: true
+}
+db.settings(settings)
+
+export default {
+  props: {
+    teamId: String
+  },
+  components: {
+    'ProductBacklogItem': ProductBacklogItem
+  },
+  data: function () {
+    return {
+      'selectedProductBacklog': []
+    }
+  },
+  created: function () {
+    const teamRef = db.collection('ScrumTeams').doc(this.teamId)
+    teamRef.get().then(teamDoc => {
+      const sprintId = teamDoc.data().currentSprint
+      teamRef.collection('Sprints').doc(sprintId).collection('SelectedProductBacklog').orderBy('order').get().then(snapShot => {
+        snapShot.forEach(doc => {
+          this.selectedProductBacklog.push(Object.assign(doc.data(), {'id': doc.id}))
+        })
+      })
+    })
+  }
+}
+</script>
 
 <style scoped lang="scss">
 .pbl-header {

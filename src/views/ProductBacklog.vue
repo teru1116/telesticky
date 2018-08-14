@@ -34,8 +34,14 @@
         <dt>選択中のアイテム数</dt>
         <dd>{{ borderPosition }}個</dd>
         <dt>選択中の見積り値合計</dt>
-        <dd>{{ selectedItemTotalEstimate + estimationUnit }}</dd>
+        <dd>{{ selectedItemTotalEstimate + config.estimationUnit }}</dd>
       </dl>
+      <button
+        @click="pushItemsIntoSprint"
+        class="enabled"
+      >
+        選択したアイテムをスプリントに投入する
+      </button>
     </div>
     <div
       ref="pbl"
@@ -49,7 +55,7 @@
         <ProductBacklogItem
           v-for="item in productBacklog"
           :data="item"
-          :estimationUnit="estimationUnit"
+          :estimationUnit="config.estimationUnit"
           :isInPlanning="isInPlanning"
           :borderPosition="borderPosition"
           :key="item.id"
@@ -65,8 +71,7 @@
     </div>
     <router-view
       :teamId="teamId"
-      :estimationUnit="estimationUnit"
-      :productBacklogCount="productBacklog.length"
+      :estimationUnit="config.estimationUnit"
     />
   </div>
 </template>
@@ -90,12 +95,14 @@ const rowMargin = 16
 
 export default {
   props: {
-    teamId: String
+    teamId: String,
+    currentSprint: String,
+    productBacklog: Array,
+    config: Object,
+    DBTeamRef: Object
   },
   data: function () {
     return {
-      productBacklog: [],
-      estimationUnit: '',
       isInPlanning: false,
       isUpdating: false,
       dummyBorderX: 0,
@@ -182,7 +189,7 @@ export default {
       const isRaised = (event.newIndex < event.oldIndex)
       // order更新処理開始
       const batch = db.batch()
-      const pblRef = db.collection('ScrumTeams').doc(this.teamId).collection('ProductBacklog')
+      const pblRef = this.DBTeamRef.collection('ProductBacklog')
       this.isUpdating = true
       // orderの数値を下げた場合
       if (isRaised) {
@@ -207,40 +214,30 @@ export default {
           }
         })
       }
-      // commit
-      // let ref
       batch.commit().then(() => {
         this.isUpdating = false
-        // orderが変わったitemのみを取得してviewに反映
-        // if (isRaised) {
-        //   ref = pblRef.where('order', '>=', event.newIndex + 1).where('order', '<=', event.oldIndex + 1).orderBy('order')
-        // } else {
-        //   ref = pblRef.where('order', '>=', event.oldIndex + 1).where('order', '<=', event.newIndex + 1).orderBy('order')
-        // }
-        // ref.get()
-        //   .then(snapshot => {
-        //     snapshot.forEach(doc => {
-        //       this.productBacklog.splice(Math.min(event.oldIndex + 1, event.newIndex + 1), snapshot.length, )
-        //     })
-        //   })
       })
-    }
-  },
-  created: function () {
-    // ProductBacklog 取得
-    db.collection('ScrumTeams').doc(this.teamId).collection('ProductBacklog').orderBy('order').get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          let item = Object.assign(doc.data(), {'id': doc.id})
-          this.productBacklog.push(item)
+    },
+    // 新しいスプリントを開始する
+    startNewSprint: function () {
+        // Sprint Docのデータ構造
+        // id : 1
+        // doc {status: 'doing', startDate: Date, endDate: Date, sprintGoal: '', description: '<markdown>'}
+        // SubCollection SprintItems / Doc ProductBacklogItem / SubCollection tasks / Doc task {status, title}
+    },
+    // SprintBacklogに追加
+    pushItemsIntoSprint: function () {
+      const batch = db.batch()
+      const sprintItemsRef = this.DBTeamRef.collection('Sprints').doc(this.sprintId).collection('ProductBacklogItems')
+      this.DBTeamRef.collection('ProductBacklog').where('order', '<=', this.borderPosition).orderBy('order').get()
+        .then(snapShot => {
+          snapShot.forEach(doc => {
+            let newSprintItemRef = sprintItemsRef.doc(doc.id)
+            batch.set(newSprintItemRef, doc.data())
+          })
+          batch.commit()
         })
-      })
-
-    // 設定取得
-    db.collection('ScrumTeams').doc(this.teamId).get()
-      .then(doc => {
-        this.estimationUnit = doc.data().config.estimationUnit
-      })
+    }
   }
 }
 </script>
