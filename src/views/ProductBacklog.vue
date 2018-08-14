@@ -42,7 +42,6 @@
       v-model="productBacklog"
       @end="onItemDragged"
       ref="pbl"
-      :style="isDragging ? {userSelect: 'none'} : ''"
       :options="isUpdating ? {disabled: true} : {disabled: false}"
     >
       <ProductBacklogItem
@@ -95,7 +94,6 @@ export default {
       productBacklog: [],
       estimationUnit: '',
       isInPlanning: false,
-      isDragging: false,
       isUpdating: false,
       dummyBorderX: 0,
       dummyBorderY: 170
@@ -161,7 +159,6 @@ export default {
     },
     onBorderSelected: function (e) {
       this.$refs.pbl.addEventListener('mousemove', this.onTouchMove, false)
-      this.isDragging = true
     },
     onTouchMove: function (e) {
       this.$refs.pbl.addEventListener('mouseup', this.onTouchUp, false)
@@ -171,7 +168,6 @@ export default {
     },
     onTouchUp: function (e) {
       this.$refs.pbl.removeEventListener('mousemove', this.onTouchMove, false)
-      this.isDragging = false
       // Dummyボーダーの位置補正
       this.dummyBorderX = (this.activeColumn - 1) * 290 + (this.activeColumn - 1) * columnMargin
       this.dummyBorderY = this.activeRow * 170 + (this.activeRow - 1) * rowMargin
