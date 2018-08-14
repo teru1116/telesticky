@@ -46,7 +46,12 @@
 export default {
   data: function () {
     return {
-      teamId: ''
+      teamId: '',
+      currentSprint: '',
+      productBacklog: [],
+      sprintItems: [],
+      config: {},
+      DBTeamRef: {}
     }
   },
   created: function () {
