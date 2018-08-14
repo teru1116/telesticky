@@ -177,24 +177,28 @@ export default {
       if (event.newIndex === event.oldIndex) return
       // 優先度を上げたか下げたか（orderの数値が下がっていれば優先度が上げられたことになる）
       const isRaised = (event.newIndex < event.oldIndex)
-      // order更新
+      // order更新処理開始
       const batch = db.batch()
       const pblRef = db.collection('ScrumTeams').doc(this.teamId).collection('ProductBacklog')
       this.isUpdating = true
+      // orderの数値を下げた場合
       if (isRaised) {
         this.productBacklog.forEach((item, index) => {
           // 動かしたアイテムのorderを更新
           if (item.order === event.oldIndex + 1) {
             batch.update(pblRef.doc(item.id), { order: event.newIndex + 1 })
-          // ↑によって影響を受けたアイテムのorderを更新
+          // ↑によって影響を受けた全アイテムのorderを更新
           } else if (item.order >= event.newIndex + 1 && item.order < event.oldIndex + 1) {
             batch.update(pblRef.doc(item.id), { order: item.order + 1 })
           }
         })
+      // orderの数値を上げた場合
       } else {
         this.productBacklog.forEach((item, index) => {
+          // 動かしたアイテムのorderを更新
           if (item.order === event.oldIndex + 1) {
             batch.update(pblRef.doc(item.id), { order: event.newIndex + 1 })
+          // ↑によって影響を受けた全アイテムのorderを更新
           } else if (item.order > event.oldIndex + 1 && item.order <= event.newIndex + 1) {
             batch.update(pblRef.doc(item.id), { order: item.order - 1 })
           }
