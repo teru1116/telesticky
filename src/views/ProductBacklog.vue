@@ -43,6 +43,7 @@
       @end="onItemDragged"
       ref="pbl"
       :style="isDragging ? {userSelect: 'none'} : ''"
+      :options="isUpdating ? {disabled: true} : {disabled: false}"
     >
       <ProductBacklogItem
         v-for="item in productBacklog"
