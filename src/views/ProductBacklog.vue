@@ -37,29 +37,32 @@
         <dd>{{ selectedItemTotalEstimate + estimationUnit }}</dd>
       </dl>
     </div>
-    <draggable
-      element="ol"
-      v-model="productBacklog"
-      @end="onItemDragged"
+    <div
       ref="pbl"
-      :options="isUpdating ? {disabled: true} : {disabled: false}"
     >
-      <ProductBacklogItem
-        v-for="item in productBacklog"
-        :data="item"
-        :estimationUnit="estimationUnit"
-        :isInPlanning="isInPlanning"
-        :borderPosition="borderPosition"
-        :key="item.id"
-      />
-      <div
-        v-if="isInPlanning"
-        @mousedown="onBorderSelected"
-        ref="dummyPlanningBorder"
-        id="dummy-planning-border"
-        :style="{ left: `${dummyBorderX}px`, top: `${dummyBorderY}px` }"
-      />
-    </draggable>
+      <draggable
+        element="ol"
+        v-model="productBacklog"
+        @end="onItemDragged"
+        :options="isUpdating ? {disabled: true} : {disabled: false}"
+      >
+        <ProductBacklogItem
+          v-for="item in productBacklog"
+          :data="item"
+          :estimationUnit="estimationUnit"
+          :isInPlanning="isInPlanning"
+          :borderPosition="borderPosition"
+          :key="item.id"
+        />
+        <div
+          v-if="isInPlanning"
+          @mousedown="onBorderSelected"
+          ref="dummyPlanningBorder"
+          id="dummy-planning-border"
+          :style="{ left: `${dummyBorderX}px`, top: `${dummyBorderY}px` }"
+        />
+      </draggable>
+    </div>
     <router-view
       :teamId="teamId"
       :estimationUnit="estimationUnit"
