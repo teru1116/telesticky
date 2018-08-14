@@ -6,7 +6,7 @@
     <div
       class="card-footer"
     >
-      {{ data.estimate + estimationUnit }}
+      <p>{{ data.estimate + estimationUnit + ' ' + data.order }}</p>
     </div>
     <div
       v-if="isInPlanning && borderPosition == data.order"

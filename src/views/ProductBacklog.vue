@@ -95,6 +95,7 @@ export default {
       estimationUnit: '',
       isInPlanning: false,
       isDragging: false,
+      isUpdating: false,
       dummyBorderX: 0,
       dummyBorderY: 170
     }
@@ -174,37 +175,51 @@ export default {
       this.dummyBorderX = (this.activeColumn - 1) * 290 + (this.activeColumn - 1) * columnMargin
       this.dummyBorderY = this.activeRow * 170 + (this.activeRow - 1) * rowMargin
     },
-    onItemDragged: function (e) {
-      if (e.type !== 'end') return
-      if (e.newIndex === e.oldIndex) return
+    onItemDragged: function (event) {
+      if (event.type !== 'end') return
+      if (event.newIndex === event.oldIndex) return
+      // 優先度を上げたか下げたか（orderの数値が下がっていれば優先度が上げられたことになる）
+      const isRaised = (event.newIndex < event.oldIndex)
       // order更新
-      // 優先順位を上げた時 = orderの数値が下がった
-      if (e.newIndex < e.oldIndex) {
+      const batch = db.batch()
+      const pblRef = db.collection('ScrumTeams').doc(this.teamId).collection('ProductBacklog')
+      this.isUpdating = true
+      if (isRaised) {
         this.productBacklog.forEach((item, index) => {
-          if (item.order === e.oldIndex + 1) {
-            db.collection('ScrumTeams').doc(this.teamId).collection('ProductBacklog').doc(item.id).update({
-              order: e.newIndex + 1
-            })
-          } else if (item.order >= e.newIndex + 1 && item.order < e.oldIndex + 1) {
-            db.collection('ScrumTeams').doc(this.teamId).collection('ProductBacklog').doc(item.id).update({
-              order: item.order + 1
-            })
+          // 動かしたアイテムのorderを更新
+          if (item.order === event.oldIndex + 1) {
+            batch.update(pblRef.doc(item.id), { order: event.newIndex + 1 })
+          // ↑によって影響を受けたアイテムのorderを更新
+          } else if (item.order >= event.newIndex + 1 && item.order < event.oldIndex + 1) {
+            batch.update(pblRef.doc(item.id), { order: item.order + 1 })
           }
         })
-      // 優先順位を下げた時 = orderの数値が上がった
-      } else if (e.newIndex > e.oldIndex) {
+      } else {
         this.productBacklog.forEach((item, index) => {
-          if (item.order === e.oldIndex + 1) {
-            db.collection('ScrumTeams').doc(this.teamId).collection('ProductBacklog').doc(item.id).update({
-              order: e.newIndex + 1
-            })
-          } else if (item.order > e.oldIndex + 1 && item.order <= e.newIndex + 1) {
-            db.collection('ScrumTeams').doc(this.teamId).collection('ProductBacklog').doc(item.id).update({
-              order: item.order - 1
-            })
+          if (item.order === event.oldIndex + 1) {
+            batch.update(pblRef.doc(item.id), { order: event.newIndex + 1 })
+          } else if (item.order > event.oldIndex + 1 && item.order <= event.newIndex + 1) {
+            batch.update(pblRef.doc(item.id), { order: item.order - 1 })
           }
         })
       }
+      // commit
+      // let ref
+      batch.commit().then(() => {
+        this.isUpdating = false
+        // orderが変わったitemのみを取得してviewに反映
+        // if (isRaised) {
+        //   ref = pblRef.where('order', '>=', event.newIndex + 1).where('order', '<=', event.oldIndex + 1).orderBy('order')
+        // } else {
+        //   ref = pblRef.where('order', '>=', event.oldIndex + 1).where('order', '<=', event.newIndex + 1).orderBy('order')
+        // }
+        // ref.get()
+        //   .then(snapshot => {
+        //     snapshot.forEach(doc => {
+        //       this.productBacklog.splice(Math.min(event.oldIndex + 1, event.newIndex + 1), snapshot.length, )
+        //     })
+        //   })
+      })
     }
   },
   created: function () {
