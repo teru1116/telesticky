@@ -34,7 +34,7 @@
         <dt>選択中のアイテム数</dt>
         <dd>{{ borderPosition }}個</dd>
         <dt>選択中の見積り値合計</dt>
-        <dd>{{ selectedItemTotalEstimate + config.estimationUnit }}</dd>
+        <dd>{{ selectedItemTotalEstimate + teamRules.estimationUnit }}</dd>
       </dl>
       <button
         @click="pushItemsIntoSprint"
@@ -55,7 +55,7 @@
         <ProductBacklogItem
           v-for="item in productBacklog"
           :data="item"
-          :estimationUnit="config.estimationUnit"
+          :estimationUnit="teamRules.estimationUnit"
           :isInPlanning="isInPlanning"
           :borderPosition="borderPosition"
           :key="item.id"
@@ -70,13 +70,13 @@
       </draggable>
     </div>
     <router-view
-      :teamId="teamId"
-      :estimationUnit="config.estimationUnit"
+      :estimationUnit="teamRules.estimationUnit"
     />
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import router from './../router'
 import firebase from './../firebase'
 // components
@@ -95,11 +95,9 @@ const rowMargin = 16
 
 export default {
   props: {
-    teamId: String,
-    currentSprint: String,
     productBacklog: Array,
-    config: Object,
-    DBTeamRef: Object
+    isUpdatingPB: Boolean,
+    teamRules: Object
   },
   data: function () {
     return {
@@ -157,8 +155,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      move: 'moveProductBacklogItem'
+    }),
     showCreateItemView: function () {
-      return router.push(`/teams/${this.teamId}/product_backlog/create`)
+      return router.push('product_backlog/create')
     },
     startSprintPlanning: function () {
       if (!this.isInPlanning) {
@@ -184,38 +185,22 @@ export default {
     },
     onItemDragged: function (event) {
       if (event.type !== 'end') return
-      if (event.newIndex === event.oldIndex) return
+      const newIndex = event.newIndex
+      const oldIndex = event.oldIndex
+      if (newIndex === oldIndex) return
+
+      // 移動したアイテム
+      const movedItem = this.productBacklog[oldIndex]
       // 優先度を上げたか下げたか（orderの数値が下がっていれば優先度が上げられたことになる）
-      const isRaised = (event.newIndex < event.oldIndex)
+      const isRaised = (newIndex < oldIndex)
+      // アイテムの移動に伴って位置が変わる全てのアイテム
+      const relatedItems = isRaised ? this.productBacklog.slice(newIndex, oldIndex + 1) : this.productBacklog.slice(oldIndex, newIndex + 1)
       // order更新処理開始
-      const batch = db.batch()
-      const pblRef = this.DBTeamRef.collection('ProductBacklog')
-      this.isUpdating = true
-      // orderの数値を下げた場合
-      if (isRaised) {
-        this.productBacklog.forEach((item, index) => {
-          // 動かしたアイテムのorderを更新
-          if (item.order === event.oldIndex + 1) {
-            batch.update(pblRef.doc(item.id), { order: event.newIndex + 1 })
-          // ↑によって影響を受けた全アイテムのorderを更新
-          } else if (item.order >= event.newIndex + 1 && item.order < event.oldIndex + 1) {
-            batch.update(pblRef.doc(item.id), { order: item.order + 1 })
-          }
-        })
-      // orderの数値を上げた場合
-      } else {
-        this.productBacklog.forEach((item, index) => {
-          // 動かしたアイテムのorderを更新
-          if (item.order === event.oldIndex + 1) {
-            batch.update(pblRef.doc(item.id), { order: event.newIndex + 1 })
-          // ↑によって影響を受けた全アイテムのorderを更新
-          } else if (item.order > event.oldIndex + 1 && item.order <= event.newIndex + 1) {
-            batch.update(pblRef.doc(item.id), { order: item.order - 1 })
-          }
-        })
-      }
-      batch.commit().then(() => {
-        this.isUpdating = false
+      this.move({
+        'movedItem': movedItem,
+        'newIndex': newIndex,
+        'isRaised': isRaised,
+        'relatedItems': relatedItems
       })
     },
     // 新しいスプリントを開始する

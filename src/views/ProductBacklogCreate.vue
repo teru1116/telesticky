@@ -32,8 +32,6 @@
       <span>
         {{ estimationUnit }}
       </span>
-      <h3>並び順</h3>
-
       <button
         @click="submit"
         :class="{ enabled: title }"
@@ -47,39 +45,28 @@
 <script>
 import { mapActions } from 'vuex'
 import router from './../router'
-import firebase from './../firebase'
-
-const db = firebase.firestore()
-const settings = {
-  timestampsInSnapshots: true
-}
-db.settings(settings)
 
 export default {
   props: {
-    teamId: String,
-    estimationUnit: String,
-    productBacklogCount: Number
+    estimationUnit: String
   },
   data: function () {
     return {
       'title': '',
-      'estimate': 0,
-      'order': this.productBacklogCount + 1
+      'estimate': 0
     }
   },
   methods: {
     ...mapActions({
-      create: 'addProductBackItem'
+      create: 'addProductBacklogItem'
     }),
     close: function () {
-      router.push(`/teams/${this.teamId}/product_backlog`)
+      router.go(-1)
     },
     submit: function () {
       this.create({
         'title': this.title,
-        'estimate': this.estimate,
-        'order': this.order
+        'estimate': this.estimate
       })
     }
   }

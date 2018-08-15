@@ -1,4 +1,5 @@
-// initial state
+import teamRules from '../../api/teamRules'
+
 const state = {
   taskStatus: [],
   estimationUnit: ''
@@ -6,10 +7,23 @@ const state = {
 
 // getters
 
-// actions
+const actions = {
+  getTeamRules ({ commit }) {
+    teamRules.get(teamRules => {
+      commit('setTeamRules', teamRules)
+    })
+  }
+}
 
-// mutations
+const mutations = {
+  setTeamRules (state, teamRules) {
+    state.taskStatus = teamRules.status
+    state.estimationUnit = teamRules.estimationUnit
+  }
+}
 
 export default {
-  state
+  state,
+  actions,
+  mutations
 }

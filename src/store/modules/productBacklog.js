@@ -1,14 +1,14 @@
 import productBacklog from '../../api/productBacklog'
 
-// initial state
 const state = {
-  productBacklog: [],
-  totalItemCount: 0
+  // Close分を含まないプロダクトバックログ
+  activeItems: [],
+  // プロダクトバックログ書き込み中か
+  isUpdatingPB: false
 }
 
-// getters
+// TODO: getters
 
-// actions
 const actions = {
   listenProductBacklog ({ commit }) {
     productBacklog.listen(productBacklog => {
@@ -16,16 +16,26 @@ const actions = {
     })
   },
 
-  addProductBackItem ({ commit }, newItem) {
+  addProductBacklogItem ({ commit }, newItem) {
+    commit('startUpdatePB')
     productBacklog.add(newItem)
+  },
+
+  moveProductBacklogItem ({ commit }, payload) {
+    // commit('startUpdatePB')
+    productBacklog.move(payload.movedItem, payload.newIndex, payload.isRaised, payload.relatedItems)
   }
 }
 
-// mutations
 const mutations = {
-  // 一旦ProductBacklogの更新が発生したら全入れ替え
-  setProductBacklog (state, productBacklog) {
-    state.productBacklog = productBacklog
+  // FIXME: 一旦ProductBacklogの更新が発生したら全入れ替え
+  setProductBacklog (state, items) {
+    state.activeItems = items
+    state.isUpdatingPB = false
+  },
+
+  startUpdatePB (state) {
+    state.isUpdatingPB = true
   }
 }
 

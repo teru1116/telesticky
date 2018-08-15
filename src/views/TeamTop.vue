@@ -36,11 +36,9 @@
       class="main-content"
     >
       <router-view
-        :teamId="teamId"
-        :currentSprint="currentSprint"
-        :productBacklog="productBacklog"
-        :config="config"
-        :DBTeamRef="DBTeamRef"
+        :productBacklog="productBacklog.activeItems"
+        :isUpdatingPB="productBacklog.isUpdatingPB"
+        :teamRules="teamRules"
       />
     </div>
   </div>
@@ -48,43 +46,23 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import firebase from './../firebase'
-
-const db = firebase.firestore()
-const settings = {
-  timestampsInSnapshots: true
-}
-db.settings(settings)
 
 export default {
-  data: function () {
-    const teamId = this.$route.params['teamId']
-    return {
-      teamId: teamId,
-      currentSprint: '',
-      config: {},
-      DBTeamRef: db.collection('ScrumTeams').doc(teamId)
-    }
-  },
   computed: mapState([
-    'productBacklog'
+    'productBacklog',
+    'teamRules'
   ]),
   methods: {
     ...mapActions({
-      listen: 'listenProductBacklog'
+      listenProductBacklog: 'listenProductBacklog',
+      getTeamRules: 'getTeamRules'
     })
   },
   created: function () {
-    // Team Data Document
-    this.DBTeamRef.get()
-      .then(doc => {
-        const data = doc.data()
-        this.currentSprint = data.currentSprint
-        this.config = data.config
-      })
-
     // listen Product Backlog
-    this.listen()
+    this.listenProductBacklog()
+    // get Team Rules
+    this.getTeamRules()
   }
 }
 </script>
