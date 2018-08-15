@@ -25,7 +25,7 @@ export default {
       })
   },
 
-  add (newItem) {
+  add (newItem, callback, errorCallback) {
     return db.runTransaction(transaction => {
       return transaction.get(teamRef).then(doc => {
         const data = doc.data()
@@ -38,6 +38,10 @@ export default {
         }))
         transaction.update(teamRef, { totalItemCount: newCount })
       })
+    }).then(() => {
+      callback()
+    }).catch(error => {
+      errorCallback(error)
     })
   },
 
@@ -53,7 +57,6 @@ export default {
           // 影響を受けたアイテムのorderを更新
           relatedItems.forEach((item, index) => {
             if (item.id === movedItem.id) return
-            console.log('isRaised', item)
             pblRef.doc(item.id).update({ order: item.order + 1 })
           })
         }
@@ -62,7 +65,6 @@ export default {
           // 影響を受けたアイテムのorderを更新
           relatedItems.forEach((item, index) => {
             if (item.id === movedItem.id) return
-            console.log('isRaised', item)
             pblRef.doc(item.id).update({ order: item.order - 1 })
           })
         }

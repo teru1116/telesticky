@@ -16,9 +16,9 @@ const actions = {
     })
   },
 
-  addProductBacklogItem ({ commit }, newItem) {
+  addProductBacklogItem ({ commit }, payload) {
     commit('startUpdatePB')
-    productBacklog.add(newItem)
+    productBacklog.add(payload.newItem, payload.callback, payload.errorCallback)
   },
 
   moveProductBacklogItem ({ commit }, payload) {
