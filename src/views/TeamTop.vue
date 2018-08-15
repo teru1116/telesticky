@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 import firebase from './../firebase'
 
 const db = firebase.firestore()
@@ -60,11 +61,18 @@ export default {
     const teamId = this.$route.params['teamId']
     return {
       teamId: teamId,
-      productBacklog: [],
       currentSprint: '',
       config: {},
       DBTeamRef: db.collection('ScrumTeams').doc(teamId)
     }
+  },
+  computed: mapState([
+    'productBacklog'
+  ]),
+  methods: {
+    ...mapActions({
+      listen: 'listenProductBacklog'
+    })
   },
   created: function () {
     // Team Data Document
@@ -74,6 +82,10 @@ export default {
         this.currentSprint = data.currentSprint
         this.config = data.config
       })
+
+    // listen Product Backlog
+    this.listen()
+
     // Product Backlog
     this.DBTeamRef.collection('ProductBacklog').where('status', '==', 'sprintItem').where('status', '==', 'todo').orderBy('order').get()
       .then(snapShot => {
