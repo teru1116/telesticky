@@ -31,8 +31,8 @@
 <script>
 import firebase from './../firebase'
 // components
-import draggable from 'vuedraggable'
 import ProductBacklogItem from './../components/ProductBacklogItem'
+import draggable from 'vuedraggable'
 
 const db = firebase.firestore()
 const settings = {
@@ -45,7 +45,8 @@ export default {
     teamId: String
   },
   components: {
-    'ProductBacklogItem': ProductBacklogItem
+    'ProductBacklogItem': ProductBacklogItem,
+    'draggable': draggable
   },
   data: function () {
     return {

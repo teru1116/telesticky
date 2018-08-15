@@ -220,10 +220,10 @@ export default {
     },
     // 新しいスプリントを開始する
     startNewSprint: function () {
-        // Sprint Docのデータ構造
-        // id : 1
-        // doc {status: 'doing', startDate: Date, endDate: Date, sprintGoal: '', description: '<markdown>'}
-        // SubCollection SprintItems / Doc ProductBacklogItem / SubCollection tasks / Doc task {status, title}
+      // Sprint Docのデータ構造
+      // id : 1
+      // doc {status: 'doing', startDate: Date, endDate: Date, sprintGoal: '', description: '<markdown>'}
+      // SubCollection SprintItems / Doc ProductBacklogItem / SubCollection tasks / Doc task {status, title}
     },
     // SprintBacklogに追加
     pushItemsIntoSprint: function () {
