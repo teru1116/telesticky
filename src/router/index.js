@@ -8,7 +8,8 @@ import TeamCreate from '@/views/TeamCreate'
 import Invited from '@/views/Invited'
 import TeamTop from '@/views/TeamTop'
 import ProductBacklog from '@/views/ProductBacklog'
-import ProductBacklogCreate from '@/views/ProductBacklogCreate'
+import CreateProductBacklogItem from '@/views/CreateProductBacklogItem'
+import CreateSprint from '@/views/CreateSprint'
 import SprintBacklog from '@/views/SprintBacklog'
 
 Vue.use(Router)
@@ -59,9 +60,14 @@ export default new Router({
               component: ProductBacklog,
               children: [
                 {
-                  path: 'create',
-                  name: 'ProductBacklogCreate',
-                  component: ProductBacklogCreate
+                  path: 'create_item',
+                  name: 'CreateProductBacklogItem',
+                  component: CreateProductBacklogItem
+                },
+                {
+                  path: 'create_sprint',
+                  name: 'CreateSprint',
+                  component: CreateSprint
                 }
               ]
             },

@@ -37,10 +37,10 @@
         <dd>{{ selectedItemTotalEstimate + teamRules.estimationUnit }}</dd>
       </dl>
       <button
-        @click="pushItemsIntoSprint"
+        @click="finishSelectItem"
         class="enabled"
       >
-        選択したアイテムをスプリントに投入する
+        選択したアイテムでスプリントを開始する
       </button>
     </div>
     <div
@@ -156,10 +156,11 @@ export default {
   },
   methods: {
     ...mapActions({
-      move: 'moveProductBacklogItem'
+      move: 'moveProductBacklogItem',
+      startSprint: 'startSprintWithItems'
     }),
     showCreateItemView: function () {
-      return router.push('product_backlog/create')
+      return router.push('product_backlog/create_item')
     },
     startSprintPlanning: function () {
       if (!this.isInPlanning) {
@@ -203,25 +204,16 @@ export default {
         'relatedItems': relatedItems
       })
     },
-    // 新しいスプリントを開始する
-    startNewSprint: function () {
-      // Sprint Docのデータ構造
-      // id : 1
-      // doc {status: 'doing', startDate: Date, endDate: Date, sprintGoal: '', description: '<markdown>'}
-      // SubCollection SprintItems / Doc ProductBacklogItem / SubCollection tasks / Doc task {status, title}
-    },
-    // SprintBacklogに追加
-    pushItemsIntoSprint: function () {
-      const batch = db.batch()
-      const sprintItemsRef = this.DBTeamRef.collection('Sprints').doc(this.sprintId).collection('ProductBacklogItems')
-      this.DBTeamRef.collection('ProductBacklog').where('order', '<=', this.borderPosition).orderBy('order').get()
-        .then(snapShot => {
-          snapShot.forEach(doc => {
-            let newSprintItemRef = sprintItemsRef.doc(doc.id)
-            batch.set(newSprintItemRef, doc.data())
-          })
-          batch.commit()
-        })
+    finishSelectItem: function () {
+      return router.push('product_backlog/create_sprint')
+      // const items = this.productBacklog.slice(0, this.borderPosition - 1)
+      // const startDate = new Date('August 16, 2018')
+      // const endDate = new Date('August 30, 2018')
+      // this.startSprint({
+      //   'items': items,
+      //   'startDate': startDate,
+      //   'endDate': endDate
+      // })
     }
   }
 }
