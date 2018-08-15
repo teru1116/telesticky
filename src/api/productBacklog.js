@@ -53,6 +53,7 @@ export default {
           // 影響を受けたアイテムのorderを更新
           relatedItems.forEach((item, index) => {
             if (item.id === movedItem.id) return
+            console.log('isRaised', item)
             pblRef.doc(item.id).update({ order: item.order + 1 })
           })
         }
@@ -61,6 +62,7 @@ export default {
           // 影響を受けたアイテムのorderを更新
           relatedItems.forEach((item, index) => {
             if (item.id === movedItem.id) return
+            console.log('isRaised', item)
             pblRef.doc(item.id).update({ order: item.order - 1 })
           })
         }

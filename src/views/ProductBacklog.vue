@@ -190,7 +190,7 @@ export default {
       if (newIndex === oldIndex) return
 
       // 移動したアイテム
-      const movedItem = this.productBacklog[oldIndex]
+      const movedItem = this.productBacklog[newIndex]
       // 優先度を上げたか下げたか（orderの数値が下がっていれば優先度が上げられたことになる）
       const isRaised = (newIndex < oldIndex)
       // アイテムの移動に伴って位置が変わる全てのアイテム
