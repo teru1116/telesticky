@@ -85,14 +85,6 @@ export default {
 
     // listen Product Backlog
     this.listen()
-
-    // Product Backlog
-    this.DBTeamRef.collection('ProductBacklog').where('status', '==', 'sprintItem').where('status', '==', 'todo').orderBy('order').get()
-      .then(snapShot => {
-        snapShot.forEach(doc => {
-          this.productBacklog.push(Object.assign(doc.data(), { id: doc.id }))
-        })
-      })
   }
 }
 </script>

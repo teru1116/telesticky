@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import router from './../router'
 import firebase from './../firebase'
 
@@ -68,18 +69,18 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      create: 'addProductBackItem'
+    }),
     close: function () {
       router.push(`/teams/${this.teamId}/product_backlog`)
     },
     submit: function () {
-      db.collection('ScrumTeams').doc(this.teamId).collection('ProductBacklog').add({
+      this.create({
         'title': this.title,
         'estimate': this.estimate,
         'order': this.order
       })
-        .then(docRef => {
-          router.push(`/teams/${this.teamId}/product_backlog`)
-        })
     }
   }
 }

@@ -7,7 +7,8 @@ const settings = {
 db.settings(settings)
 
 const teamId = location.pathname.split('/')[2]
-const pblRef = db.collection('ScrumTeams').doc(teamId).collection('ProductBacklog')
+const teamRef = db.collection('ScrumTeams').doc(teamId)
+const pblRef = teamRef.collection('ProductBacklog')
 
 export default {
   listen (callback) {
@@ -25,12 +26,18 @@ export default {
   },
 
   add (newItem, callback, errorCallback) {
-    pblRef.add(newItem)
-      .then(doc => {
-        callback(Object.assign(doc.data(), {id: doc.id}))
+    return db.runTransaction(transaction => {
+      return transaction.get(teamRef).then(doc => {
+        const data = doc.data()
+        const newCount = data.totalItemCount + 1
+        const newItemRef = pblRef.doc()
+        transaction.set(newItemRef, Object.assign(newItem, {
+          status: 'todo',
+          number: newCount,
+          order: newCount
+        }))
+        transaction.update(teamRef, { totalItemCount: newCount })
       })
-      .catch(error => {
-        errorCallback(error)
-      })
+    })
   }
 }
