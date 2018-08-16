@@ -22,9 +22,14 @@ const actions = {
     })
   },
 
-  startSprint ({ commit }, payload) {
-    sprint.start(payload, insertedData => {
-      commit('setSprintData', insertedData)
+  createSprintAndStart ({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      sprint.create(payload).then(insertedData => {
+        commit('setSprintData', insertedData)
+        resolve()
+      }, error => {
+        reject(error)
+      })
     })
   }
 }

@@ -17,7 +17,7 @@ export default {
       })
   },
 
-  start (params, callback) {
+  create (params) {
     const newDocRef = teamRef.collection('Sprints').doc()
     const newDocId = newDocRef.id
     const itemsRef = teamRef.collection('Sprints').doc(newDocId).collection('ProductBacklogItems')
@@ -48,8 +48,10 @@ export default {
       activeSprintData: activeSprintData
     })
     // commit
-    batch.commit().then(() => {
-      callback(activeSprintData)
+    return new Promise((resolve, reject) => {
+      batch.commit().then(() => {
+        resolve(activeSprintData)
+      })
     })
   }
 }

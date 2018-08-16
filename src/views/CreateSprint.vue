@@ -53,10 +53,18 @@ export default {
   },
   methods: {
     ...mapActions({
-      startSprint: 'startSprint'
+      createSprintAndStart: 'createSprintAndStart'
     }),
     submit: function () {
-      this.startSprint(Object.assign(this.$data, { 'items': this.selectedItems }))
+      this.createSprintAndStart(
+        Object.assign(this.$data, { 'items': this.selectedItems })
+      )
+      .then(() => {
+        router.go(-1)
+      })
+      .catch(error => {
+        console.error(error)
+      })
     },
     close: function () {
       router.go(-1)
