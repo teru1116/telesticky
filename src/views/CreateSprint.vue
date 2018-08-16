@@ -40,14 +40,14 @@ import router from './../router'
 
 export default {
   props: {
-    currentSprint: Object,
+    activeSprint: Object,
     selectedItems: Array
   },
   data: function () {
     return {
       'startDate': new Date(),
       'endDate': new Date(),
-      'sprintNumber': this.currentSprint ? this.currentSprint.sprintNumber + 1 : 1,
+      'sprintNumber': this.activeSprint ? this.activeSprint.sprintNumber + 1 : 1,
       'sprintGoal': ''
     }
   },

@@ -36,6 +36,7 @@
       class="main-content"
     >
       <router-view
+        :activeSprint="sprint"
         :productBacklog="productBacklog.activeItems"
         :isUpdatingPB="productBacklog.isUpdatingPB"
         :teamRules="teamRules"

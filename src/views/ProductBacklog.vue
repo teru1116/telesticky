@@ -72,6 +72,7 @@
     <router-view
       :estimationUnit="teamRules.estimationUnit"
       :selectedItems="productBacklog.slice(0, borderPosition)"
+      :activeSprint="activeSprint"
     />
   </div>
 </template>
@@ -96,6 +97,7 @@ const rowMargin = 16
 
 export default {
   props: {
+    activeSprint: Object,
     productBacklog: Array,
     isUpdatingPB: Boolean,
     teamRules: Object
