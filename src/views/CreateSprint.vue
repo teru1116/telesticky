@@ -25,7 +25,7 @@
         （一旦固定）
       </small>
       <button
-        @click="createSprint"
+        @click="submit"
         class="enabled"
       >
         スプリントを開始する
@@ -40,7 +40,8 @@ import router from './../router'
 
 export default {
   props: {
-    currentSprint: Object
+    currentSprint: Object,
+    selectedItems: Array
   },
   data: function () {
     return {
@@ -52,8 +53,11 @@ export default {
   },
   methods: {
     ...mapActions({
-      createSprint: ''
+      startSprint: 'startSprint'
     }),
+    submit: function () {
+      this.startSprint(Object.assign(this.$data, { 'items': this.selectedItems }))
+    },
     close: function () {
       router.go(-1)
     }

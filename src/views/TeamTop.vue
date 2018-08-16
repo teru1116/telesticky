@@ -49,16 +49,20 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   computed: mapState([
+    'sprint',
     'productBacklog',
     'teamRules'
   ]),
   methods: {
     ...mapActions({
+      getActiveSprint: 'getActiveSprint',
       listenProductBacklog: 'listenProductBacklog',
       getTeamRules: 'getTeamRules'
     })
   },
   created: function () {
+    // get Current Sprint
+    this.getActiveSprint()
     // listen Product Backlog
     this.listenProductBacklog()
     // get Team Rules
