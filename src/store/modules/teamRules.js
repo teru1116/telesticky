@@ -1,7 +1,7 @@
 import teamRules from '../../api/teamRules'
 
 const state = {
-  taskStatus: [],
+  taskStatusList: [],
   estimationUnit: ''
 }
 
@@ -16,9 +16,9 @@ const actions = {
 }
 
 const mutations = {
-  setTeamRules (state, teamRules) {
-    state.taskStatus = teamRules.status
-    state.estimationUnit = teamRules.estimationUnit
+  setTeamRules (state, payload) {
+    state.taskStatusList = payload.taskStatusList
+    state.estimationUnit = payload.estimationUnit
   }
 }
 

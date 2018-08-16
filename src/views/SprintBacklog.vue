@@ -4,27 +4,25 @@
       class="pbl-header"
     >
       <h2>
-        スプリントバックログ
+        スプリント {{ activeSprint.sprintNumber === 0 ? '' : activeSprint.sprintNumber }}
       </h2>
-      <div
-        class="pbl-header-right"
-      >
-        <button
-          class="enabled"
-        >
-          + スプリントで届けるプロダクトバックログアイテムを選択する
-        </button>
-      </div>
     </div>
     <div>
       <draggable>
         <ProductBacklogItem
-          v-for="item in selectedProductBacklog"
+          v-for="item in activeSprint.items"
           :data="item"
           :key="item.id"
         />
       </draggable>
     </div>
+    <ol>
+      <TaskLane
+        v-for="item in activeSprint.items"
+        :item="item"
+        :taskStatusList="teamRules.taskStatusList"
+      />
+    </ol>
   </div>
 </template>
 
@@ -33,6 +31,7 @@ import firebase from './../firebase'
 // components
 import ProductBacklogItem from './../components/ProductBacklogItem'
 import draggable from 'vuedraggable'
+import TaskLane from './../components/TaskLane'
 
 const db = firebase.firestore()
 const settings = {
@@ -42,27 +41,13 @@ db.settings(settings)
 
 export default {
   props: {
-    teamId: String
+    activeSprint: Object,
+    teamRules: Object
   },
   components: {
     'ProductBacklogItem': ProductBacklogItem,
-    'draggable': draggable
-  },
-  data: function () {
-    return {
-      'selectedProductBacklog': []
-    }
-  },
-  created: function () {
-    const teamRef = db.collection('ScrumTeams').doc(this.teamId)
-    teamRef.get().then(teamDoc => {
-      const sprintId = teamDoc.data().currentSprint
-      teamRef.collection('Sprints').doc(sprintId).collection('SelectedProductBacklog').orderBy('order').get().then(snapShot => {
-        snapShot.forEach(doc => {
-          this.selectedProductBacklog.push(Object.assign(doc.data(), {'id': doc.id}))
-        })
-      })
-    })
+    'draggable': draggable,
+    'TaskLane': TaskLane
   }
 }
 </script>
