@@ -37,7 +37,7 @@
         <dd>{{ selectedItemTotalEstimate + teamRules.estimationUnit }}</dd>
       </dl>
       <button
-        @click="finishSelectItem"
+        @click="$router.push('product_backlog/create_sprint')"
         class="enabled"
       >
         選択したアイテムでスプリントを開始する
@@ -164,11 +164,7 @@ export default {
       return router.push('product_backlog/create_item')
     },
     startSprintPlanning: function () {
-      if (!this.isInPlanning) {
-        this.isInPlanning = true
-      } else {
-        this.isInPlanning = false
-      }
+      this.isInPlanning = !this.isInPlanning
     },
     onBorderSelected: function (e) {
       this.$refs.pbl.addEventListener('mousemove', this.onTouchMove, false)
@@ -204,17 +200,6 @@ export default {
         'isRaised': isRaised,
         'relatedItems': relatedItems
       })
-    },
-    finishSelectItem: function () {
-      return router.push('product_backlog/create_sprint')
-      // const items = this.productBacklog.slice(0, this.borderPosition - 1)
-      // const startDate = new Date('August 16, 2018')
-      // const endDate = new Date('August 30, 2018')
-      // this.startSprint({
-      //   'items': items,
-      //   'startDate': startDate,
-      //   'endDate': endDate
-      // })
     }
   }
 }

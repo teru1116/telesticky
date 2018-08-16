@@ -61,11 +61,8 @@ export default {
     })
   },
   created: function () {
-    // get Current Sprint
     this.getActiveSprint()
-    // listen Product Backlog
     this.listenProductBacklog()
-    // get Team Rules
     this.getTeamRules()
   }
 }
