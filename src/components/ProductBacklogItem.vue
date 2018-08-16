@@ -1,5 +1,7 @@
 <template>
-  <li>
+  <li
+    :class="type"
+  >
     <h3>
       {{ data.title }}
     </h3>
@@ -22,7 +24,8 @@ export default {
     data: Object,
     estimationUnit: String,
     isInPlanning: Boolean,
-    borderPosition: Number
+    borderPosition: Number,
+    type: String
   }
 }
 </script>
@@ -56,6 +59,21 @@ li {
     width: 296px;
     height: 2px;
     background-color: #0088ff;
+  }
+
+  &.small {
+    width: 160px;
+    height: 80px;
+    margin: 0 0 8px;
+    padding: 2px 2px;
+
+    h3 {
+      font-size: 12px!important;
+    }
+
+    .card-footer {
+      display: none;
+    }
   }
 }
 </style>

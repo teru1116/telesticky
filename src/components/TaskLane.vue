@@ -16,4 +16,14 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped lang="scss">
+ol {
+  display: flex;
+
+  li {
+    width: 200px;
+    height: 80px;
+    background-color: #f5f5f5;
+  }
+}
+</style>

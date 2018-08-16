@@ -7,37 +7,15 @@
         スプリント {{ activeSprint.sprintNumber === 0 ? '' : activeSprint.sprintNumber }}
       </h2>
     </div>
-    <div>
-      <draggable>
-        <ProductBacklogItem
-          v-for="item in activeSprint.items"
-          :data="item"
-          :key="item.id"
-        />
-      </draggable>
-    </div>
-    <ol>
-      <TaskLane
-        v-for="item in activeSprint.items"
-        :item="item"
-        :taskStatusList="teamRules.taskStatusList"
-      />
-    </ol>
+    <SprintBacklogBoard
+      :items=activeSprint.items
+      :teamRules="teamRules"
+    />
   </div>
 </template>
 
 <script>
-import firebase from './../firebase'
-// components
-import ProductBacklogItem from './../components/ProductBacklogItem'
-import draggable from 'vuedraggable'
-import TaskLane from './../components/TaskLane'
-
-const db = firebase.firestore()
-const settings = {
-  timestampsInSnapshots: true
-}
-db.settings(settings)
+import SprintBacklogBoard from './../components/SprintBacklogBoard'
 
 export default {
   props: {
@@ -45,9 +23,7 @@ export default {
     teamRules: Object
   },
   components: {
-    'ProductBacklogItem': ProductBacklogItem,
-    'draggable': draggable,
-    'TaskLane': TaskLane
+    'SprintBacklogBoard': SprintBacklogBoard
   }
 }
 </script>
