@@ -10,37 +10,23 @@ const teamId = location.pathname.split('/')[2]
 const teamRef = db.collection('ScrumTeams').doc(teamId)
 
 export default {
-  create (params, callback, errorCallback) {
-    teamRef.collection('Sprints').add({
-      'sprintNumber': params.sprintNumber,
-      'startDate': params.startDate,
-      'endDate': params.endDate
-    })
-    .then(doc => {
-      callback(doc.id)
-    })
-    .catch(error => {
-      errorCallback(error)
-    })
-  }
+  start (params, callback) {
+    const newDocRef = teamRef.collection('Sprints').doc()
+    const newDocId = newDocRef.id
+    const itemsRef = teamRef.collection('Sprints').doc(newDocId).collection('ProductBacklogItems')
 
-  setCurrentSprint (sprintId, callback, errorCallback) {
-    teamRef.update({
-      'CurrentSprint': sprintId
-    })
-    .then(() => {
-      callback()
-    })
-    .catch(error => {
-      errorCallback(error)
-    })
-  }
-
-  pushItemsIntoSprint (items, sprintId, callback) {
+    // 一括書き込み開始
     const batch = db.batch()
-    const itemsRef = teamRef.collection('Sprints').doc(sprintId).collection('SprintItems')
-    items.forEach(item => {
+    batch.set(newDocRef, {
+      sprintNumber: params.sprintNumber,
+      startDate: params.startDate,
+      endDate: params.endDate
+    })
+    params.items.forEach(item => {
       batch.set(itemsRef.doc(item.id), item)
+    })
+    batch.update(teamRef, {
+      currentSprintId: newDocId
     })
 
     batch.commit().then(() => {
