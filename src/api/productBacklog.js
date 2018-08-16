@@ -25,23 +25,25 @@ export default {
       })
   },
 
-  add (newItem, callback, errorCallback) {
-    return db.runTransaction(transaction => {
-      return transaction.get(teamRef).then(doc => {
-        const data = doc.data()
-        const newCount = data.totalItemCount + 1
-        const newItemRef = pblRef.doc()
-        transaction.set(newItemRef, Object.assign(newItem, {
-          status: 'todo',
-          number: newCount,
-          order: newCount
-        }))
-        transaction.update(teamRef, { totalItemCount: newCount })
+  add (newItem) {
+    return new Promise((resolve, reject) => {
+      return db.runTransaction(transaction => {
+        return transaction.get(teamRef).then(doc => {
+          const data = doc.data()
+          const newCount = data.totalItemCount + 1
+          const newItemRef = pblRef.doc()
+          transaction.set(newItemRef, Object.assign(newItem, {
+            status: 'todo',
+            number: newCount,
+            order: newCount
+          }))
+          transaction.update(teamRef, { totalItemCount: newCount })
+        })
+      }).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(error)
       })
-    }).then(() => {
-      callback()
-    }).catch(error => {
-      errorCallback(error)
     })
   },
 

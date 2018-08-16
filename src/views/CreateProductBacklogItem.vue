@@ -64,18 +64,16 @@ export default {
       router.go(-1)
     },
     submit: function () {
-      let payload = {}
-      payload['newItem'] = {
+      this.create({
         'title': this.title,
         'estimate': this.estimate
-      }
-      payload['callback'] = () => {
+      })
+      .then(() => {
         router.go(-1)
-      }
-      payload['errorCallback'] = (error) => {
+      })
+      .catch(error => {
         console.error(error)
-      }
-      this.create(payload)
+      })
     }
   }
 }

@@ -16,9 +16,15 @@ const actions = {
     })
   },
 
-  addProductBacklogItem ({ commit }, payload) {
-    commit('startUpdatePB')
-    productBacklog.add(payload.newItem, payload.callback, payload.errorCallback)
+  addProductBacklogItem ({ commit }, newItem) {
+    return new Promise((resolve, reject) => {
+      productBacklog.add(newItem).then(() => {
+        commit('startUpdatePB')
+        resolve()
+      }, error => {
+        reject(error)
+      })
+    })
   },
 
   moveProductBacklogItem ({ commit }, payload) {
