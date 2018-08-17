@@ -68,12 +68,12 @@ export default {
         'title': this.title,
         'estimate': this.estimate
       })
-      .then(() => {
-        router.go(-1)
-      })
-      .catch(error => {
-        console.error(error)
-      })
+        .then(() => {
+          router.go(-1)
+        })
+        .catch(error => {
+          console.error(error)
+        })
     }
   }
 }

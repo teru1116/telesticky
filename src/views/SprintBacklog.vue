@@ -8,7 +8,9 @@
       </h2>
     </div>
     <SprintBacklogBoard
-      :items=activeSprint.items
+      :activeSprintId="activeSprint.id"
+      :items="activeSprint.items"
+      :tasks="activeSprint.tasks"
       :teamRules="teamRules"
     />
   </div>

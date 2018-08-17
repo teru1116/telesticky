@@ -56,13 +56,13 @@ export default {
   ]),
   methods: {
     ...mapActions({
-      getActiveSprint: 'getActiveSprint',
+      listenActiveSprint: 'listenActiveSprint',
       listenProductBacklog: 'listenProductBacklog',
       getTeamRules: 'getTeamRules'
     })
   },
   created: function () {
-    this.getActiveSprint()
+    this.listenActiveSprint()
     this.listenProductBacklog()
     this.getTeamRules()
   }

@@ -10,48 +10,107 @@ const teamId = location.pathname.split('/')[2]
 const teamRef = db.collection('ScrumTeams').doc(teamId)
 
 export default {
-  get (callback) {
-    teamRef.get()
-      .then(doc => {
-        callback(doc.data().activeSprintData)
+  getActiveSprintId () {
+    return new Promise((resolve, reject) => {
+      teamRef.get().then(doc => {
+        resolve(doc.data().activeSprintId)
       })
+    })
   },
 
-  create (params) {
+  listenSprintDoc (sprintId) {
+    const sprintRef = teamRef.collection('Sprints').doc(sprintId)
+
+    // listen Sprints/{activeSprint}
+    return new Promise((resolve, reject) => {
+      sprintRef.onSnapshot(doc => {
+        resolve(doc.data())
+      })
+    })
+  },
+
+  listenSprintItems (sprintId) {
+    const sprintItemsRef = teamRef.collection('Sprints').doc(sprintId).collection('ProductBacklogItems')
+
+    // listen Sprints/{activeSprint}/ProductBacklogItems
+    return new Promise((resolve, reject) => {
+      sprintItemsRef.onSnapshot(snapshot => {
+        let items = []
+        snapshot.forEach(doc => {
+          items.push(Object.assign(doc.data(), { id: doc.id }))
+        })
+        resolve(items)
+      })
+    })
+  },
+
+  listenSprintItemTasks (sprintId, itemIds) {
+    const sprintItemsRef = teamRef.collection('Sprints').doc(sprintId).collection('ProductBacklogItems')
+
+    // listen Sprints/{activeSprint}/ProductBacklogItems/{eachItem}/Tasks
+    return new Promise((resolve, reject) => {
+      let tasks = {}
+      itemIds.forEach((itemId, index) => {
+        if (!tasks[itemId]) { tasks[itemId] = [] }
+        sprintItemsRef.doc(itemId).collection('Tasks').onSnapshot(snapshot => {
+          snapshot.forEach(doc => {
+            tasks[itemId].push(Object.assign(doc.data(), { id: doc.id }))
+          })
+          resolve(tasks)
+        })
+      })
+    })
+  },
+
+  createSprint (sprint, callback) {
     const newDocRef = teamRef.collection('Sprints').doc()
     const newDocId = newDocRef.id
     const itemsRef = teamRef.collection('Sprints').doc(newDocId).collection('ProductBacklogItems')
 
     // 一括書き込み開始
     const batch = db.batch()
+
     // SprintsコレクションにDocを新規追加
     batch.set(newDocRef, {
-      sprintNumber: params.sprintNumber,
-      sprintGoal: params.sprintGoal,
-      startDate: params.startDate,
-      endDate: params.endDate
+      sprintNumber: sprint.sprintNumber,
+      startDate: sprint.startDate,
+      endDate: sprint.endDate,
+      sprintGoal: sprint.sprintGoal,
+      planDescription: sprint.planDescription
     })
-    // SprintsコレクションのDocにitemsコレクションを作成
-    params.items.forEach(item => {
+
+    // sprintドキュメントにProductBacklogItemsコレクションを作成
+    sprint.items.forEach(item => {
       batch.set(itemsRef.doc(item.id), item)
     })
-    // teamのDocのactiveSprintDataを更新
-    const activeSprintData = {
-      id: newDocId,
-      sprintNumber: params.sprintNumber,
-      sprintGoal: params.sprintGoal,
-      startDate: params.startDate,
-      endDate: params.endDate,
-      items: params.items
-    }
+
+    // teamドキュメントのactiveSprintIdを更新
     batch.update(teamRef, {
-      activeSprintData: activeSprintData
+      activeSprintId: newDocId
     })
+
     // commit
     return new Promise((resolve, reject) => {
       batch.commit().then(() => {
-        resolve(activeSprintData)
+        callback()
       })
+    })
+  },
+
+  addTask (sprintId, itemId, newTask) {
+    const tasksRef = teamRef.collection('Sprints').doc(sprintId).collection('ProductBacklogItems').doc(itemId).collection('Tasks')
+
+    return new Promise((resolve, reject) => {
+      tasksRef.add({
+        title: newTask.title,
+        status: newTask.status
+      })
+        .then(doc => {
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
     })
   }
 }
