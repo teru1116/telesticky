@@ -20,7 +20,7 @@
           <button
             v-if="!inputMode"
             @click="inputNewTask"
-            class="enabled"
+            :class="isUpdating ? '' : 'enabled'"
           >
             +
           </button>
@@ -87,6 +87,10 @@ export default {
 
         this.create(payload).then(() => {
           this.isUpdating = false
+          this.newTask = {
+            title: '',
+            status: 0
+          }
         })
       }
     }
