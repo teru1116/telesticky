@@ -74,16 +74,14 @@ export default {
       this.inputMode = true
     },
     onFinishInputTask: function (e) {
-      if (!this.newTask.title) {
-        this.inputMode = false
-      } else {
+      this.inputMode = false
+      if (this.newTask.title) {
+        this.isUpdating = true
+
         let payload = {}
         payload['sprintId'] = this.activeSprintId
         payload['itemId'] = this.item.id
         payload['newTask'] = this.newTask
-
-        this.inputMode = false
-        this.isUpdating = true
 
         this.create(payload).then(() => {
           this.isUpdating = false

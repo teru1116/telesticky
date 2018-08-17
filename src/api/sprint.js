@@ -48,19 +48,6 @@ export default {
     const sprintItemsRef = teamRef.collection('Sprints').doc(sprintId).collection('ProductBacklogItems')
 
     // listen Sprints/{activeSprint}/ProductBacklogItems/{eachItem}/Tasks
-    // return new Promise((resolve, reject) => {
-    //   let tasks = {}
-    //   itemIds.forEach((itemId, index) => {
-    //     if (!tasks[itemId]) { tasks[itemId] = [] }
-    //     sprintItemsRef.doc(itemId).collection('Tasks').onSnapshot(snapshot => {
-    //       snapshot.forEach(doc => {
-    //         tasks[itemId].push(Object.assign(doc.data(), { id: doc.id }))
-    //       })
-    //       resolve(tasks)
-    //     })
-    //   })
-    // })
-
     let tasks = {}
     itemIds.forEach((itemId, index) => {
       sprintItemsRef.doc(itemId).collection('Tasks').onSnapshot(snapshot => {

@@ -45,13 +45,7 @@ const actions = {
             items.forEach(item => {
               itemIds.push(item.id)
             })
-
-            // sprint.listenSprintItemTasks(activeSprintId, itemIds)
-            //   .then(tasks => {
-            //     commit('setTasks', tasks)
-            //   })
-
-            // Promise使わずに通常のcallbackでテスト
+            
             sprint.listenSprintItemTasks(activeSprintId, itemIds, (tasks) => {
               commit('setTasks', tasks)
             })
