@@ -81,7 +81,8 @@ export default {
         'teamName': this.teamName,
         'config': {
           'estimationUnit': 'story-points',
-          'status': ['To Do', 'Doing', 'Done']
+          'taskStatusList': ['To Do', 'Doing', 'Done'],
+          'itemStatusList': ['Not Ready', 'Ready', 'To Do', 'Doing', 'Done']
         }
       })
         .then(docRef => {

@@ -11,6 +11,8 @@
         <ProductBacklogItem
           v-for="item in items"
           :data="item"
+          :estimationUnit="teamRules.estimationUnit"
+          :itemStatusList="teamRules.itemStatusList"
           :key="item.id"
           type="small"
         />

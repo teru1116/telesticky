@@ -23,6 +23,7 @@ export default {
   props: {
     data: Object,
     estimationUnit: String,
+    itemStatusList: Array,
     isInPlanning: Boolean,
     borderPosition: Number,
     type: String
