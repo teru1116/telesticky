@@ -11,28 +11,23 @@ export default {
   props: {
     task: Object,
     index: Number,
+    baseX: Number,
     sprintId: String,
     itemId: String
   },
   data: function () {
     return {
-      left: 0,
-      top: 0
+      isDragging: false
     }
   },
-  created: function () {
-    let columnNumber = 0
-    let rowNumber = 0
-    if (this.task.status === 0) {
-      if (this.index <= 3) {
-        columnNumber = this.index % 2
-        rowNumber = Math.floor(this.index / 2)
-      } else {
-        columnNumber = Math.floor(this.index / 2)
-        rowNumber = this.index % 2
-      }
-      this.left = columnNumber * 124 + columnNumber * 4
-      this.top = rowNumber * 64 + rowNumber * 4
+  computed: {
+    left: function () {
+      const columnNumber = this.index <= 3 ? this.index % 2 : Math.floor(this.index / 2)
+      return columnNumber * 124 + columnNumber * 4
+    },
+    top: function () {
+      const rowNumber = this.index <= 3 ? Math.floor(this.index / 2) : this.index % 2
+      return rowNumber * 64 + rowNumber * 4
     }
   }
 }

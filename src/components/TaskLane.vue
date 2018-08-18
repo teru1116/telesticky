@@ -1,9 +1,9 @@
 <template>
   <ol>
     <li
-      v-for="(taskList, index) in itemTasks"
-      :key="index"
-      :style="{ width: columnWidths[index] + 'px' }"
+      v-for="(taskList, status) in itemTasks"
+      :key="status"
+      :style="{ width: columnWidths[status] + 'px' }"
       class="task-status-column"
     >
       <ul>
@@ -11,7 +11,8 @@
           v-for="(task, index) in taskList"
           :task="task"
           :index="index"
-          :activeSprintId="activeSprintId"
+          :baseX="baseXs[status]"
+          :sprintId="activeSprintId"
           :itemId="item.id"
           :key="index"
           class="task-card"
@@ -68,6 +69,15 @@ export default {
     todoTaskCount: function () {
       return this.itemTasks[0].length
     },
+    baseXs: function () {
+      let results = []
+      let total = 0
+      for (let i = 0; i < this.taskStatusList.length; i++) {
+        results.push(total)
+        total = total + this.columnWidths[i] + 4
+      }
+      return results
+    },
     addButtonX: function () {
       const column = this.todoTaskCount <= 3 ? this.todoTaskCount % 2 : Math.floor(this.todoTaskCount / 2)
       return column * 124 + column * 4
@@ -116,7 +126,7 @@ ol {
     width: 252px;
     height: 132px;
     margin: 0 4px 8px 0;
-    background-color: #f5f5f5;
+    background-color: #fff;
 
     ul {
       display: flex;
