@@ -36,7 +36,7 @@
           v-for="item in items"
           :activeSprintId="activeSprintId"
           :item="item"
-          :itemTasks="tasks[item.id]"
+          :itemTasks="tasks[item.id] ? tasks[item.id] : []"
           :taskStatusList="teamRules.taskStatusList"
           :columnWidths="taskStatusHeaderWidths"
           :parentRefs="$refs"

@@ -1,44 +1,48 @@
 <template>
-  <ol>
-    <li
-      v-for="(taskList, status) in itemTasks"
-      :key="status"
-      :style="{ width: columnWidths[status] + 'px' }"
-      class="task-status-column"
-    >
-      <ul>
-        <TaskCard
-          v-for="(task, index) in taskList"
-          :task="task"
-          :index="index"
-          :baseX="baseXs[status]"
-          :sprintId="activeSprintId"
-          :itemId="item.id"
-          :parentRefs="parentRefs"
-          :key="index"
-          class="task-card"
-        />
-        <li
-          v-if="status === 0"
-          class="task-card-add"
-          :style="{ left: addButtonX + 'px', top: addButtonY + 'px' }"
-        >
-          <button
-            v-if="!inputMode"
-            @click="inputNewTask"
-            :class="isUpdating ? '' : 'enabled'"
-          >
-            +
-          </button>
-          <textarea
-            v-if="inputMode"
-            v-model="newTask.title"
-            @blur="onFinishInputTask"
+  <li
+    class="tasklane"
+  >
+    <ol>
+      <li
+        v-for="(status, statusIndex) in taskStatusList"
+        :key="statusIndex"
+        :style="{ width: columnWidths[statusIndex] + 'px' }"
+        class="task-status-column"
+      >
+        <ul>
+          <TaskCard
+            v-for="(task, index) in itemTasks[statusIndex]"
+            :task="task"
+            :index="index"
+            :baseX="baseXs[statusIndex]"
+            :sprintId="activeSprintId"
+            :itemId="item.id"
+            :parentRefs="parentRefs"
+            :key="index"
+            class="task-card"
           />
-        </li>
-      </ul>
-    </li>
-  </ol>
+          <li
+            v-if="statusIndex === 0"
+            class="task-card-add"
+            :style="{ left: addButtonX + 'px', top: addButtonY + 'px' }"
+          >
+            <button
+              v-if="!inputMode"
+              @click="inputNewTask"
+              :class="isUpdating ? '' : 'enabled'"
+            >
+              +
+            </button>
+            <textarea
+              v-if="inputMode"
+              v-model="newTask.title"
+              @blur="onFinishInputTask"
+            />
+          </li>
+        </ul>
+      </li>
+    </ol>
+  </li>
 </template>
 
 <script>
@@ -69,7 +73,7 @@ export default {
   },
   computed: {
     todoTaskCount: function () {
-      return this.itemTasks[0].length
+      return this.itemTasks.length ? this.itemTasks[0].length : 0
     },
     baseXs: function () {
       let results = []
@@ -120,40 +124,45 @@ export default {
 </script>
 
 <style scoped lang="scss">
-ol {
-  display: flex;
-  position: relative;
+li.tasklane {
+  height: 132px;
+  margin-bottom: 8px;
 
-  li.task-status-column {
-    width: 252px;
-    height: 132px;
-    margin: 0 4px 8px 0;
-    background-color: #fff;
+  ol {
+    display: flex;
+    position: relative;
 
-    ul {
-      display: flex;
+    li.task-status-column {
+      width: 252px;
+      height: 132px;
+      margin-right: 4px;
+      background-color: #fff;
 
-      li.task-card-add {
-        position: absolute;
-        width: 118px;
-        height: 58px;
-        background-color: #fff;
-        border-radius: 4px;
+      ul {
+        display: flex;
 
-        button {
+        li.task-card-add {
+          position: absolute;
           width: 124px;
           height: 64px;
-        }
-
-        textarea {
-          width: 100%;
-          height: 100%;
-          font-size: 12px;
-          outline: 0;
-          resize: none;
-          border: 1px solid #d6d6d6;
+          background-color: #fff;
           border-radius: 4px;
-          padding: 2px;
+
+          button {
+            width: 100%;
+            height: 100%;
+          }
+
+          textarea {
+            width: 118px;
+            height: 58px;
+            font-size: 12px;
+            outline: 0;
+            resize: none;
+            border: 1px solid #d6d6d6;
+            border-radius: 4px;
+            padding: 2px;
+          }
         }
       }
     }
