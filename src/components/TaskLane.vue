@@ -129,8 +129,8 @@ ol {
         border-radius: 4px;
 
         button {
-          width: 100%;
-          height: 100%;
+          width: 124px;
+          height: 64px;
         }
 
         textarea {

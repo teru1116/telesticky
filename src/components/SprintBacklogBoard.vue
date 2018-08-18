@@ -71,7 +71,7 @@ export default {
         for (let i = 0; i < this.teamRules.taskStatusList.length; i++) {
           if (!results[i]) results.push(252)
           if (!this.tasks[key][i]) continue
-          let taskCount = this.tasks[key][i].length
+          let taskCount = this.tasks[key][i].length + 1
           if (taskCount <= 3) continue
           results[i] = Math.ceil(taskCount / 2) * 124 + (Math.ceil(taskCount / 2) - 1) * 4
         }
