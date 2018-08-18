@@ -34,9 +34,10 @@
       </ol>
       <ol>
         <TaskLane
-          v-for="item in items"
+          v-for="(item, index) in items"
           :activeSprintId="activeSprintId"
           :item="item"
+          :itemIndex="index"
           :itemTasks="tasks[item.id] ? tasks[item.id] : []"
           :taskStatusList="teamRules.taskStatusList"
           :columnWidths="taskStatusHeaderWidths"

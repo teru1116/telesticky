@@ -17,6 +17,7 @@
             :baseXs="baseXs"
             :sprintId="activeSprintId"
             :itemId="item.id"
+            :itemIndex="itemIndex"
             :parentRefs="parentRefs"
             :key="index"
             class="task-card"
@@ -53,6 +54,7 @@ export default {
   props: {
     activeSprintId: String,
     item: Object,
+    itemIndex: Number,
     itemTasks: Array,
     taskStatusList: Array,
     columnWidths: Array,

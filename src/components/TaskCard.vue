@@ -17,6 +17,7 @@ export default {
     baseXs: Array,
     sprintId: String,
     itemId: String,
+    itemIndex: Number,
     parentRefs: Object
   },
   data: function () {
@@ -46,7 +47,7 @@ export default {
     onTouchMove: function (e) {
       this.parentRefs.sprintBoard.addEventListener('mouseup', this.onTouchUp, false)
       this.draggingX = e.pageX - 550
-      this.draggingY = e.pageY - 180
+      this.draggingY = e.pageY - (180 + this.itemIndex * 132 + this.itemIndex * 8)
     },
     onTouchUp: function (e) {
       this.parentRefs.sprintBoard.removeEventListener('mousemove', this.onTouchMove, false)
