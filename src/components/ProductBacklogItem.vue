@@ -63,7 +63,7 @@ li {
 
   &.small {
     width: 160px;
-    height: 80px;
+    height: 126px;
     margin: 0 0 8px;
     padding: 2px 2px;
 

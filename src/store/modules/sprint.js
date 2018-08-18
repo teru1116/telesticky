@@ -45,7 +45,7 @@ const actions = {
             items.forEach(item => {
               itemIds.push(item.id)
             })
-            
+
             sprint.listenSprintItemTasks(activeSprintId, itemIds, (tasks) => {
               commit('setTasks', tasks)
             })

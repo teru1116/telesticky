@@ -53,7 +53,9 @@ export default {
       sprintItemsRef.doc(itemId).collection('Tasks').onSnapshot(snapshot => {
         tasks[itemId] = []
         snapshot.forEach(doc => {
-          tasks[itemId].push(Object.assign(doc.data(), { id: doc.id }))
+          let data = doc.data()
+          if (!tasks[itemId][data.status]) tasks[itemId][data.status] = []
+          tasks[itemId][data.status].push(Object.assign(data, { id: doc.id }))
         })
         callback(tasks)
       })

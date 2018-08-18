@@ -1,21 +1,25 @@
 <template>
   <ol>
     <li
-      v-for="(taskList, index) in statusTaskList"
+      v-for="(taskList, index) in itemTasks"
       :key="index"
+      :style="{ width: columnWidths[index] + 'px' }"
       class="task-status-column"
     >
       <ul>
-        <li
+        <TaskCard
           v-for="(task, index) in taskList"
+          :task="task"
+          :index="index"
+          :activeSprintId="activeSprintId"
+          :itemId="item.id"
           :key="index"
           class="task-card"
-        >
-          {{ task.title }}
-        </li>
+        />
         <li
           v-if="index === 0"
-          class="task-card task-card-add"
+          class="task-card-add"
+          :style="{ left: addButtonX + 'px', top: addButtonY + 'px' }"
         >
           <button
             v-if="!inputMode"
@@ -37,13 +41,15 @@
 
 <script>
 import { mapActions } from 'vuex'
+import TaskCard from './TaskCard'
 
 export default {
   props: {
     activeSprintId: String,
     item: Object,
-    itemTaskList: Array,
-    taskStatusList: Array
+    itemTasks: Array,
+    taskStatusList: Array,
+    columnWidths: Array
   },
   data: function () {
     return {
@@ -55,15 +61,20 @@ export default {
       }
     }
   },
+  components: {
+    'TaskCard': TaskCard
+  },
   computed: {
-    statusTaskList: function () {
-      if (!this.itemTaskList) return []
-      let results = []
-      this.itemTaskList.forEach(task => {
-        if (!results[task.status]) { results[task.status] = [] }
-        results[task.status].push(task)
-      })
-      return results
+    todoTaskCount: function () {
+      return this.itemTasks[0].length
+    },
+    addButtonX: function () {
+      const column = this.todoTaskCount <= 3 ? this.todoTaskCount % 2 : Math.floor(this.todoTaskCount / 2)
+      return column * 124 + column * 4
+    },
+    addButtonY: function () {
+      const row = this.todoTaskCount <= 3 ? Math.floor(this.todoTaskCount / 2) : this.todoTaskCount % 2
+      return row * 64 + row * 4
     }
   },
   methods: {
@@ -99,37 +110,38 @@ export default {
 <style scoped lang="scss">
 ol {
   display: flex;
+  position: relative;
 
   li.task-status-column {
-    width: 200px;
-    height: 86px;
+    width: 252px;
+    height: 132px;
     margin: 0 4px 8px 0;
     background-color: #f5f5f5;
 
     ul {
       display: flex;
 
-      li.task-card {
-        width: 80px;
-        height: 40px;
-        font-size: 11px;
-        font-weight: 300;
+      li.task-card-add {
+        position: absolute;
+        width: 118px;
+        height: 58px;
         background-color: #fff;
+        border-radius: 4px;
 
-        &.task-card-add {
-          button {
-            width: 100%;
-            height: 100%;
-          }
-          textarea {
-            width: 100%;
-            height: 100%;
-            font-size: 12px;
-            outline: 0;
-            resize: none;
-            border: 1px solid #E5E5E9;
-            padding: 2px;
-          }
+        button {
+          width: 100%;
+          height: 100%;
+        }
+
+        textarea {
+          width: 100%;
+          height: 100%;
+          font-size: 12px;
+          outline: 0;
+          resize: none;
+          border: 1px solid #d6d6d6;
+          border-radius: 4px;
+          padding: 2px;
         }
       }
     }

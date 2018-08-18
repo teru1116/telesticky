@@ -25,6 +25,7 @@
         <li
           v-for="(taskStatus, index) in teamRules.taskStatusList"
           :key="index"
+          :style="{ width: taskStatusHeaderWidths[index] + 'px' }"
         >
           {{ taskStatus }}
         </li>
@@ -34,8 +35,9 @@
           v-for="item in items"
           :activeSprintId="activeSprintId"
           :item="item"
-          :itemTaskList="tasks[item.id]"
+          :itemTasks="tasks[item.id]"
           :taskStatusList="teamRules.taskStatusList"
+          :columnWidths="taskStatusHeaderWidths"
           :key="item.id"
         />
       </ol>
@@ -60,6 +62,22 @@ export default {
     'ProductBacklogItem': ProductBacklogItem,
     'draggable': draggable,
     'TaskLane': TaskLane
+  },
+  computed: {
+    taskStatusHeaderWidths: function () {
+      let results = []
+      const keys = Object.keys(this.tasks)
+      keys.forEach((key, index) => {
+        for (let i = 0; i < this.teamRules.taskStatusList.length; i++) {
+          if (!results[i]) results.push(252)
+          if (!this.tasks[key][i]) continue
+          let taskCount = this.tasks[key][i].length
+          if (taskCount <= 3) continue
+          results[i] = Math.ceil(taskCount / 2) * 124 + (Math.ceil(taskCount / 2) - 1) * 4
+        }
+      })
+      return results
+    }
   }
 }
 </script>
@@ -96,7 +114,7 @@ div#board-container {
     ol#task-column-header {
       display: flex;
       li {
-        width: 200px;
+        width: 252px;
         height: 24px;
         margin: 0 4px 8px 0;
         text-align: center;
