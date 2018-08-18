@@ -6,7 +6,7 @@
     <div
       class="card-footer"
     >
-      <p>{{ data.estimate + estimationUnit}}</p>
+      <p>{{ data.estimate + ' ' + estimationUnit}}</p>
       <select
         v-model="status"
       >
@@ -50,7 +50,7 @@ li {
 
   h3 {
     font-size: 12px!important;
-    height: 80px;
+    height: 100px;
     text-align: left;
     margin: 0!important;
     padding: 0;
@@ -58,6 +58,21 @@ li {
 
   .card-footer {
     display: flex;
+    height: 26px;
+
+    p {
+      width: 40px;
+      line-height: 24px;
+      font-weight: 400!important;
+      margin: 0;
+    }
+
+    select {
+      width: 114px;
+      height: 24px;
+      margin-left: 4px;
+      cursor: pointer;
+    }
   }
 }
 </style>
