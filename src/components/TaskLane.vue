@@ -14,6 +14,7 @@
           :baseX="baseXs[status]"
           :sprintId="activeSprintId"
           :itemId="item.id"
+          :parentRefs="parentRefs"
           :key="index"
           class="task-card"
         />
@@ -50,7 +51,8 @@ export default {
     item: Object,
     itemTasks: Array,
     taskStatusList: Array,
-    columnWidths: Array
+    columnWidths: Array,
+    parentRefs: Object
   },
   data: function () {
     return {

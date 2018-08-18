@@ -1,6 +1,7 @@
 <template>
   <div
     id="board-container"
+    ref="sprintBoard"
   >
     <div
       id="pb-column"
@@ -38,6 +39,7 @@
           :itemTasks="tasks[item.id]"
           :taskStatusList="teamRules.taskStatusList"
           :columnWidths="taskStatusHeaderWidths"
+          :parentRefs="$refs"
           :key="item.id"
         />
       </ol>

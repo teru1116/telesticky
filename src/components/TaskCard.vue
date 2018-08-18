@@ -1,6 +1,7 @@
 <template>
   <li
-    :style="{ left: left + 'px', top: top + 'px' }"
+    :style="isDragging ? { left: draggingX + 'px', top: draggingY + 'px', zIndex: '1000' } : { left: left + 'px', top: top + 'px' }"
+    @mousedown="onMouseDown"
   >
     {{ task.title }}
   </li>
@@ -13,11 +14,14 @@ export default {
     index: Number,
     baseX: Number,
     sprintId: String,
-    itemId: String
+    itemId: String,
+    parentRefs: Object
   },
   data: function () {
     return {
-      isDragging: false
+      isDragging: false,
+      draggingX: 0,
+      draggingY: 0
     }
   },
   computed: {
@@ -28,6 +32,25 @@ export default {
     top: function () {
       const rowNumber = this.index <= 3 ? Math.floor(this.index / 2) : this.index % 2
       return rowNumber * 64 + rowNumber * 4
+    }
+  },
+  methods: {
+    onMouseDown: function () {
+      this.draggingX = this.left
+      this.draggingY = this.top
+      this.isDragging = true
+      this.parentRefs.sprintBoard.addEventListener('mousemove', this.onTouchMove, false)
+    },
+    onTouchMove: function (e) {
+      this.parentRefs.sprintBoard.addEventListener('mouseup', this.onTouchUp, false)
+      console.log(e.pageX, e.pageY)
+      this.draggingX = e.pageX - 550
+      this.draggingY = e.pageY - 180
+    },
+    onTouchUp: function (e) {
+      this.parentRefs.sprintBoard.removeEventListener('mousemove', this.onTouchMove, false)
+      // TODO: draggingX, draggingYの数値から異動先のstatusを判定し、action実行
+      this.isDragging = false
     }
   }
 }
