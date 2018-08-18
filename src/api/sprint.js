@@ -57,7 +57,10 @@ export default {
           if (!tasks[itemId][data.status]) tasks[itemId][data.status] = []
           tasks[itemId][data.status].push(Object.assign(data, { id: doc.id }))
         })
-        callback(tasks)
+        // NOTE: tasksが全部揃ってからcallback()を呼ぶ. 逐一呼ぶと最初しかObserverが付加されなかったため
+        if (Object.keys(tasks).length === itemIds.length) {
+          callback(tasks)
+        }
       })
     })
   },
