@@ -8,13 +8,12 @@
     >
       <h4>プロダクトバックログ<br />アイテム</h4>
       <draggable>
-        <ProductBacklogItem
+        <SprintProductBacklogItem
           v-for="item in items"
           :data="item"
           :estimationUnit="teamRules.estimationUnit"
           :itemStatusList="teamRules.itemStatusList"
           :key="item.id"
-          type="small"
         />
       </draggable>
     </div>
@@ -51,7 +50,7 @@
 
 <script>
 // components
-import ProductBacklogItem from './ProductBacklogItem'
+import SprintProductBacklogItem from './SprintProductBacklogItem'
 import draggable from 'vuedraggable'
 import TaskLane from './TaskLane'
 
@@ -63,7 +62,7 @@ export default {
     teamRules: Object
   },
   components: {
-    'ProductBacklogItem': ProductBacklogItem,
+    'SprintProductBacklogItem': SprintProductBacklogItem,
     'draggable': draggable,
     'TaskLane': TaskLane
   },
