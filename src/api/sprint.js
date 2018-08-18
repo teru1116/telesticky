@@ -112,5 +112,22 @@ export default {
           reject(error)
         })
     })
+  },
+
+  updateTask (sprintId, itemId, taskId, task) {
+    const taskRef = teamRef.collection('Sprints').doc(sprintId).collection('ProductBacklogItems').doc(itemId).collection('Tasks').doc(taskId)
+
+    return new Promise((resolve, reject) => {
+      taskRef.update({
+        title: task.title,
+        status: task.status
+      })
+        .then(doc => {
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
   }
 }

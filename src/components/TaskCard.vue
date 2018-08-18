@@ -8,11 +8,13 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   props: {
     task: Object,
     index: Number,
-    baseX: Number,
+    baseXs: Array,
     sprintId: String,
     itemId: String,
     parentRefs: Object
@@ -27,7 +29,7 @@ export default {
   computed: {
     left: function () {
       const columnNumber = this.index <= 3 ? this.index % 2 : Math.floor(this.index / 2)
-      return this.baseX + columnNumber * 124 + columnNumber * 4
+      return this.baseXs[this.task.status] + columnNumber * 124 + columnNumber * 4
     },
     top: function () {
       const rowNumber = this.index <= 3 ? Math.floor(this.index / 2) : this.index % 2
@@ -43,15 +45,41 @@ export default {
     },
     onTouchMove: function (e) {
       this.parentRefs.sprintBoard.addEventListener('mouseup', this.onTouchUp, false)
-      console.log(e.pageX, e.pageY)
       this.draggingX = e.pageX - 550
       this.draggingY = e.pageY - 180
     },
     onTouchUp: function (e) {
       this.parentRefs.sprintBoard.removeEventListener('mousemove', this.onTouchMove, false)
-      // TODO: draggingX, draggingYの数値から異動先のstatusを判定し、action実行
+      this.parentRefs.sprintBoard.removeEventListener('mouseup', this.onTouchUp, false)
       this.isDragging = false
-    }
+
+      // draggingXの値から移動先のstatusを判定
+      if (this.draggingY < -40 || this.draggingY > 100) return
+      let status = 0
+      for (let statusIndex = 0; statusIndex < this.baseXs.length; statusIndex++) {
+        if (this.draggingX > this.baseXs[statusIndex]) {
+          status = statusIndex
+        } else {
+          break
+        }
+      }
+      if (status === this.task.status) return
+
+      // 更新処理実行
+      const payload = {
+        'sprintId': this.sprintId,
+        'itemId': this.itemId,
+        'taskId': this.task.id,
+        'task': {
+          'title': this.task.title,
+          'status': status
+        }
+      }
+      this.update(payload)
+    },
+    ...mapActions({
+      update: 'updateTask'
+    })
   }
 }
 </script>

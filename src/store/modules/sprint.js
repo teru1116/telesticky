@@ -63,6 +63,18 @@ const actions = {
           reject(error)
         })
     })
+  },
+
+  updateTask ({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      sprint.updateTask(payload.sprintId, payload.itemId, payload.taskId, payload.task)
+        .then(() => {
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
   }
 }
 

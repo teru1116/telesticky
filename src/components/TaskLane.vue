@@ -14,7 +14,7 @@
             v-for="(task, index) in itemTasks[statusIndex]"
             :task="task"
             :index="index"
-            :baseX="baseXs[statusIndex]"
+            :baseXs="baseXs"
             :sprintId="activeSprintId"
             :itemId="item.id"
             :parentRefs="parentRefs"
