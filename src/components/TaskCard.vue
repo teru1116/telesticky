@@ -23,7 +23,7 @@ export default {
   computed: {
     left: function () {
       const columnNumber = this.index <= 3 ? this.index % 2 : Math.floor(this.index / 2)
-      return columnNumber * 124 + columnNumber * 4
+      return this.baseX + columnNumber * 124 + columnNumber * 4
     },
     top: function () {
       const rowNumber = this.index <= 3 ? Math.floor(this.index / 2) : this.index % 2

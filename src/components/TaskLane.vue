@@ -18,7 +18,7 @@
           class="task-card"
         />
         <li
-          v-if="index === 0"
+          v-if="status === 0"
           class="task-card-add"
           :style="{ left: addButtonX + 'px', top: addButtonY + 'px' }"
         >
