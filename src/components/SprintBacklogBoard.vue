@@ -13,6 +13,7 @@
           :data="item"
           :estimationUnit="teamRules.estimationUnit"
           :itemStatusList="teamRules.itemStatusList"
+          :activeSprintId="activeSprintId"
           :key="item.id"
         />
       </draggable>

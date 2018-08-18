@@ -71,6 +71,7 @@
     </div>
     <router-view
       :estimationUnit="teamRules.estimationUnit"
+      :initialItemStatus="teamRules.initialItemStatus"
       :selectedItems="productBacklog.slice(0, borderPosition)"
       :activeSprint="activeSprint"
     />

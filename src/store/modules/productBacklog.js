@@ -30,6 +30,10 @@ const actions = {
   moveProductBacklogItem ({ commit }, payload) {
     // commit('startUpdatePB')
     productBacklog.move(payload.movedItem, payload.newIndex, payload.isRaised, payload.relatedItems)
+  },
+
+  changeStatusProductBacklogItem ({ commit }, payload) {
+    productBacklog.changeStatus(payload.sprintId, payload.itemId, payload.status)
   }
 }
 

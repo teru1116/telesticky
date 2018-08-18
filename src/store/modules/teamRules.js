@@ -3,7 +3,9 @@ import teamRules from '../../api/teamRules'
 const state = {
   itemStatusList: [],
   taskStatusList: [],
-  estimationUnit: ''
+  estimationUnit: '',
+  initialItemStatus: 0,
+  initialSprintItemStatus: 0
 }
 
 // getters
@@ -21,6 +23,8 @@ const mutations = {
     state.taskStatusList = payload.taskStatusList
     state.estimationUnit = payload.estimationUnit
     state.itemStatusList = payload.itemStatusList
+    state.initialItemStatus = payload.initialItemStatus
+    state.initialSprintItemStatus = payload.initialSprintItemStatus
   }
 }
 

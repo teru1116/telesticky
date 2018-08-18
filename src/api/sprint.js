@@ -78,8 +78,7 @@ export default {
       sprintNumber: sprint.sprintNumber,
       startDate: sprint.startDate,
       endDate: sprint.endDate,
-      sprintGoal: sprint.sprintGoal,
-      planDescription: sprint.planDescription
+      sprintGoal: sprint.sprintGoal
     })
 
     // sprintドキュメントにProductBacklogItemsコレクションを作成
@@ -95,7 +94,7 @@ export default {
     // commit
     return new Promise((resolve, reject) => {
       batch.commit().then(() => {
-        callback()
+        resolve()
       })
     })
   },

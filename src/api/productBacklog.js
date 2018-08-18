@@ -33,7 +33,6 @@ export default {
           const newCount = data.totalItemCount + 1
           const newItemRef = pblRef.doc()
           transaction.set(newItemRef, Object.assign(newItem, {
-            status: 'todo',
             number: newCount,
             order: newCount
           }))
@@ -71,5 +70,14 @@ export default {
           })
         }
       })
+  },
+
+  changeStatus (sprintId, itemId, status) {
+    teamRef.collection('Sprints').doc(sprintId).collection('ProductBacklogItems').doc(itemId).update({
+      status: status
+    })
+    pblRef.doc(itemId).update({
+      status: status
+    })
   }
 }

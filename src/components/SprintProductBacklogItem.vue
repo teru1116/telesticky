@@ -9,13 +9,14 @@
       <p>{{ data.estimate + ' ' + estimationUnit}}</p>
       <select
         v-model="status"
+        @change="onStatusChanged"
       >
         <option
-          v-for="(itemStatus, index) in itemStatusList"
-          :value="itemStatus"
-          :key="index"
+          v-for="(statusName, status) in itemStatusList"
+          :value="status"
+          :key="status"
         >
-          {{ itemStatus }}
+          {{ statusName }}
         </option>
       </select>
     </div>
@@ -23,16 +24,31 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   props: {
     data: Object,
     estimationUnit: String,
-    itemStatusList: Array
+    itemStatusList: Array,
+    activeSprintId: String
   },
   data: function () {
     return {
       status: this.data.status
     }
+  },
+  methods: {
+    onStatusChanged: function () {
+      this.changeStatus({
+        'sprintId': this.activeSprintId,
+        'itemId': this.data.id,
+        'status': this.status
+      })
+    },
+    ...mapActions({
+      changeStatus: 'changeStatusProductBacklogItem'
+    })
   }
 }
 </script>

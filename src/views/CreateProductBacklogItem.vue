@@ -48,7 +48,8 @@ import router from './../router'
 
 export default {
   props: {
-    estimationUnit: String
+    estimationUnit: String,
+    initialItemStatus: Number
   },
   data: function () {
     return {
@@ -66,7 +67,8 @@ export default {
     submit: function () {
       this.create({
         'title': this.title,
-        'estimate': this.estimate
+        'estimate': this.estimate,
+        'status': this.initialItemStatus
       })
         .then(() => {
           router.go(-1)
