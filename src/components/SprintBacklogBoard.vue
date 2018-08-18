@@ -7,7 +7,11 @@
       id="pb-column"
     >
       <h4>プロダクトバックログ<br />アイテム</h4>
-      <draggable>
+      <draggable
+        element="ol"
+        v-model="items"
+        @end="onItemDragged"
+      >
         <SprintProductBacklogItem
           v-for="item in items"
           :data="item"
@@ -82,6 +86,31 @@ export default {
         }
       })
       return results
+    }
+  },
+  methods: {
+    onItemDragged: function (event) {
+      if (event.type !== 'end') return
+      const newIndex = event.newIndex
+      const oldIndex = event.oldIndex
+      if (newIndex === oldIndex) return
+
+      // 移動したアイテム
+      const movedItem = this.items[newIndex]
+      console.log('移動したアイテムを正しく取得できていること', movedItem)
+      // 優先度を上げたか下げたか（orderの数値が下がっていれば優先度が上げられたことになる）
+      const isRaised = (newIndex < oldIndex)
+      console.log('優先度を上げたか？', isRaised)
+      // アイテムの移動に伴って位置が変わる全てのアイテム
+      const relatedItems = isRaised ? this.items.slice(newIndex, oldIndex + 1) : this.items.slice(oldIndex, newIndex + 1)
+      console.log('アイテムの移動に伴って位置が変わる全てのアイテム', relatedItems)
+      // order更新処理開始
+      // this.move({
+      //   'movedItem': movedItem,
+      //   'newIndex': newIndex,
+      //   'isRaised': isRaised,
+      //   'relatedItems': relatedItems
+      // })
     }
   }
 }
