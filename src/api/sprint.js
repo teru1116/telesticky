@@ -34,7 +34,7 @@ export default {
 
     // listen Sprints/{activeSprint}/ProductBacklogItems
     return new Promise((resolve, reject) => {
-      sprintItemsRef.onSnapshot(snapshot => {
+      sprintItemsRef.orderBy('order').onSnapshot(snapshot => {
         let items = []
         snapshot.forEach(doc => {
           items.push(Object.assign(doc.data(), { id: doc.id }))
@@ -130,6 +130,48 @@ export default {
         .catch(error => {
           reject(error)
         })
+    })
+  },
+
+  moveProductBacklogItem (sprintId, movedItem, newIndex, oldIndex, isRaised, relatedItems) {
+    const batch = db.batch()
+    const pblRef = teamRef.collection('ProductBacklog')
+    const sprintPblItemRef = teamRef.collection('Sprints').doc(sprintId).collection('ProductBacklogItems')
+
+    // 移動分
+    let diff = 0
+    // order値を下げた場合
+    if (isRaised) {
+      // 動かしたアイテムのorderを更新
+      diff = oldIndex - newIndex
+      batch.update(pblRef.doc(movedItem.id), { order: movedItem.order - diff })
+      batch.update(sprintPblItemRef.doc(movedItem.id), { order: movedItem.order - diff })
+      // 影響を受けたアイテムのorderを更新
+      relatedItems.forEach((item, index) => {
+        if (item.id === movedItem.id) return
+        batch.update(pblRef.doc(item.id), { order: item.order + 1 })
+        batch.update(sprintPblItemRef.doc(item.id), { order: item.order + 1 })
+      })
+    }
+    // order値を上げた場合
+    if (!isRaised) {
+      // 動かしたアイテムのorderを更新
+      diff = newIndex - oldIndex
+      batch.update(pblRef.doc(movedItem.id), { order: movedItem.order + diff })
+      batch.update(sprintPblItemRef.doc(movedItem.id), { order: movedItem.order + diff })
+      // 影響を受けたアイテムのorderを更新
+      relatedItems.forEach((item, index) => {
+        if (item.id === movedItem.id) return
+        batch.update(pblRef.doc(item.id), { order: item.order - 1 })
+        batch.update(sprintPblItemRef.doc(item.id), { order: item.order - 1 })
+      })
+    }
+
+    // commit
+    return new Promise((resolve, reject) => {
+      batch.commit().then(() => {
+        resolve()
+      })
     })
   }
 }

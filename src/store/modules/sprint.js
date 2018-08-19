@@ -75,6 +75,25 @@ const actions = {
           reject(error)
         })
     })
+  },
+
+  moveSprintBacklogItem ({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      sprint.moveProductBacklogItem(
+        payload.sprintId,
+        payload.movedItem,
+        payload.newIndex,
+        payload.oldIndex,
+        payload.isRaised,
+        payload.relatedItems
+      )
+        .then(() => {
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
   }
 }
 

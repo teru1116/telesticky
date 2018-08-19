@@ -1,7 +1,7 @@
 <template>
   <li>
     <h3>
-      {{ data.title }}
+      {{ data.title + ' / ' + data.order }}
     </h3>
     <div
       class="card-footer"

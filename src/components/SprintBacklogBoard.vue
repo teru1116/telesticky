@@ -55,6 +55,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 // components
 import SprintProductBacklogItem from './SprintProductBacklogItem'
 import draggable from 'vuedraggable'
@@ -97,21 +99,23 @@ export default {
 
       // 移動したアイテム
       const movedItem = this.items[newIndex]
-      console.log('移動したアイテムを正しく取得できていること', movedItem)
       // 優先度を上げたか下げたか（orderの数値が下がっていれば優先度が上げられたことになる）
       const isRaised = (newIndex < oldIndex)
-      console.log('優先度を上げたか？', isRaised)
       // アイテムの移動に伴って位置が変わる全てのアイテム
       const relatedItems = isRaised ? this.items.slice(newIndex, oldIndex + 1) : this.items.slice(oldIndex, newIndex + 1)
-      console.log('アイテムの移動に伴って位置が変わる全てのアイテム', relatedItems)
       // order更新処理開始
-      // this.move({
-      //   'movedItem': movedItem,
-      //   'newIndex': newIndex,
-      //   'isRaised': isRaised,
-      //   'relatedItems': relatedItems
-      // })
-    }
+      this.moveItem({
+        'sprintId': this.activeSprintId,
+        'movedItem': movedItem,
+        'newIndex': newIndex,
+        'oldIndex': oldIndex,
+        'isRaised': isRaised,
+        'relatedItems': relatedItems
+      })
+    },
+    ...mapActions({
+      moveItem: 'moveSprintBacklogItem'
+    })
   }
 }
 </script>
