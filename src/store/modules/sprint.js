@@ -32,24 +32,22 @@ const actions = {
       .then(activeSprintId => {
         commit('setActiveSprintId', activeSprintId)
 
-        sprint.listenSprintDoc(activeSprintId)
-          .then(sprintData => {
-            commit('setSprintData', sprintData)
+        sprint.listenSprintDoc(activeSprintId, (sprintData) => {
+          commit('setSprintData', sprintData)
+        })
+
+        sprint.listenSprintItems(activeSprintId, (items) => {
+          commit('setItems', items)
+
+          let itemIds = []
+          items.forEach(item => {
+            itemIds.push(item.id)
           })
 
-        sprint.listenSprintItems(activeSprintId)
-          .then(items => {
-            commit('setItems', items)
-
-            let itemIds = []
-            items.forEach(item => {
-              itemIds.push(item.id)
-            })
-
-            sprint.listenSprintItemTasks(activeSprintId, itemIds, (tasks) => {
-              commit('setTasks', tasks)
-            })
+          sprint.listenSprintItemTasks(activeSprintId, itemIds, (tasks) => {
+            commit('setTasks', tasks)
           })
+        })
       })
   },
 

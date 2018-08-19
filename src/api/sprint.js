@@ -18,29 +18,26 @@ export default {
     })
   },
 
-  listenSprintDoc (sprintId) {
+  // NOTE: listenはPromiseではリアクティブ更新がされなかったため、callback方式に差し替え
+  listenSprintDoc (sprintId, callback) {
     const sprintRef = teamRef.collection('Sprints').doc(sprintId)
 
     // listen Sprints/{activeSprint}
-    return new Promise((resolve, reject) => {
-      sprintRef.onSnapshot(doc => {
-        resolve(doc.data())
-      })
+    sprintRef.onSnapshot(doc => {
+      callback(doc.data())
     })
   },
 
-  listenSprintItems (sprintId) {
+  listenSprintItems (sprintId, callback) {
     const sprintItemsRef = teamRef.collection('Sprints').doc(sprintId).collection('ProductBacklogItems')
 
     // listen Sprints/{activeSprint}/ProductBacklogItems
-    return new Promise((resolve, reject) => {
-      sprintItemsRef.orderBy('order').onSnapshot(snapshot => {
-        let items = []
-        snapshot.forEach(doc => {
-          items.push(Object.assign(doc.data(), { id: doc.id }))
-        })
-        resolve(items)
+    sprintItemsRef.orderBy('order').onSnapshot(snapshot => {
+      let items = []
+      snapshot.forEach(doc => {
+        items.push(Object.assign(doc.data(), { id: doc.id }))
       })
+      callback(items)
     })
   },
 
