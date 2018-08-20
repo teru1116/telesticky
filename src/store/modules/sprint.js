@@ -1,10 +1,8 @@
-import sprint from '../../api/sprint'
+import api from '../../api/sprint'
 
 // initial state
 const state = {
-  id: '', // Sprintデータへのクエリ発行用
-  items: [], // Sprints/{doc}/ProductBacklogItems. [{productBacklogObject}, ...]
-  tasks: {}, // Sprints/{doc}/ProductBacklogItems/{doc}/Tasks. {itemId: [{taskObject}, ...]}
+  id: '',
   sprintNumber: 0,
   startDate: new Date(),
   endDate: new Date(),
@@ -12,14 +10,11 @@ const state = {
   planDescription: ''
 }
 
-// getters
-const getters = {}
-
 // actions
 const actions = {
-  createSprintAndStart ({ commit }, payload) {
+  createAndStartSprint ({ commit }, payload) {
     return new Promise((resolve, reject) => {
-      sprint.createSprint(payload).then(insertedData => {
+      api.createAndStartSprint(payload).then(insertedData => {
         resolve()
       }, error => {
         reject(error)
@@ -27,70 +22,13 @@ const actions = {
     })
   },
 
-  listenActiveSprint ({ commit }) {
-    sprint.getActiveSprintId()
-      .then(activeSprintId => {
-        commit('setActiveSprintId', activeSprintId)
+  listenSprint ({ commit }) {
+    api.getActiveSprintId().then(activeSprintId => {
+      commit('setActiveSprintId', activeSprintId)
 
-        sprint.listenSprintDoc(activeSprintId, (sprintData) => {
-          commit('setSprintData', sprintData)
-        })
-
-        sprint.listenSprintItems(activeSprintId, (items) => {
-          commit('setItems', items)
-
-          let itemIds = []
-          items.forEach(item => {
-            itemIds.push(item.id)
-          })
-
-          sprint.listenSprintItemTasks(activeSprintId, itemIds, (tasks) => {
-            commit('setTasks', tasks)
-          })
-        })
+      api.listenSprint(activeSprintId, (sprintData) => {
+        commit('setSprintData', sprintData)
       })
-  },
-
-  addTask ({ commit }, payload) {
-    return new Promise((resolve, reject) => {
-      sprint.addTask(payload.sprintId, payload.itemId, payload.newTask)
-        .then(() => {
-          resolve()
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
-  },
-
-  updateTask ({ commit }, payload) {
-    return new Promise((resolve, reject) => {
-      sprint.updateTask(payload.sprintId, payload.itemId, payload.taskId, payload.task)
-        .then(() => {
-          resolve()
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
-  },
-
-  moveSprintBacklogItem ({ commit }, payload) {
-    return new Promise((resolve, reject) => {
-      sprint.moveProductBacklogItem(
-        payload.sprintId,
-        payload.movedItem,
-        payload.newIndex,
-        payload.oldIndex,
-        payload.isRaised,
-        payload.relatedItems
-      )
-        .then(() => {
-          resolve()
-        })
-        .catch(error => {
-          reject(error)
-        })
     })
   }
 }
@@ -108,20 +46,11 @@ const mutations = {
     state.endDate = payload.endDate
     state.sprintGoal = payload.sprintGoal
     state.planDescription = payload.planDescription
-  },
-
-  setItems (state, payload) {
-    state.items = payload
-  },
-
-  setTasks (state, payload) {
-    state.tasks = payload
   }
 }
 
 export default {
   state,
-  getters,
   actions,
   mutations
 }

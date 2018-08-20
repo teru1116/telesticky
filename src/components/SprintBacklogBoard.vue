@@ -9,11 +9,11 @@
       <h4>プロダクトバックログ<br />アイテム</h4>
       <draggable
         element="ol"
-        v-model="items"
+        v-model="sprintItems"
         @end="onItemDragged"
       >
         <SprintProductBacklogItem
-          v-for="item in items"
+          v-for="item in sprintItems"
           :data="item"
           :estimationUnit="teamRules.estimationUnit"
           :itemStatusList="teamRules.itemStatusList"
@@ -39,7 +39,7 @@
       </ol>
       <ol>
         <TaskLane
-          v-for="(item, index) in items"
+          v-for="(item, index) in sprintItems"
           :activeSprintId="activeSprintId"
           :item="item"
           :itemIndex="index"
@@ -65,7 +65,7 @@ import TaskLane from './TaskLane'
 export default {
   props: {
     activeSprintId: String,
-    items: Array,
+    sprintItems: Array,
     tasks: Object,
     teamRules: Object
   },

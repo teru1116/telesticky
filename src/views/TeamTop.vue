@@ -36,9 +36,8 @@
       class="main-content"
     >
       <router-view
-        :activeSprint="sprint"
-        :productBacklog="productBacklog.activeItems"
-        :isUpdatingPB="productBacklog.isUpdatingPB"
+        :sprint="sprint"
+        :productBacklog="productBacklog"
         :teamRules="teamRules"
       />
     </div>
@@ -56,14 +55,14 @@ export default {
   ]),
   methods: {
     ...mapActions({
-      listenActiveSprint: 'listenActiveSprint',
-      listenProductBacklog: 'listenProductBacklog',
+      listenItems: 'listenItems',
+      listenSprint: 'listenSprint',
       getTeamRules: 'getTeamRules'
     })
   },
   created: function () {
-    this.listenActiveSprint()
-    this.listenProductBacklog()
+    this.listenItems()
+    this.listenSprint()
     this.getTeamRules()
   }
 }

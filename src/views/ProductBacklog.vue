@@ -48,12 +48,12 @@
     >
       <draggable
         element="ol"
-        v-model="productBacklog"
+        v-model="productBacklog.items"
         @end="onItemDragged"
         :options="isUpdating ? {disabled: true} : {disabled: false}"
       >
         <ProductBacklogItem
-          v-for="item in productBacklog"
+          v-for="item in productBacklog.items"
           :data="item"
           :estimationUnit="teamRules.estimationUnit"
           :isInPlanning="isInPlanning"
@@ -72,7 +72,7 @@
     <router-view
       :estimationUnit="teamRules.estimationUnit"
       :initialItemStatus="teamRules.initialItemStatus"
-      :selectedItems="productBacklog.slice(0, borderPosition)"
+      :selectedItems="productBacklog.items.slice(0, borderPosition)"
       :activeSprint="activeSprint"
     />
   </div>
@@ -98,9 +98,8 @@ const rowMargin = 16
 
 export default {
   props: {
-    activeSprint: Object,
-    productBacklog: Array,
-    isUpdatingPB: Boolean,
+    sprint: Object,
+    productBacklog: Object,
     teamRules: Object
   },
   data: function () {
@@ -120,7 +119,7 @@ export default {
       let index = 0
       let total = 0
       while (index <= this.borderPosition - 1) {
-        let item = this.productBacklog[index]
+        let item = this.productBacklog.items[index]
         total = total + item.estimate
         index++
       }
@@ -136,7 +135,7 @@ export default {
         rawColumn = 3
       }
 
-      return Math.min(rawColumn, Math.ceil(this.productBacklog.length / maxRow))
+      return Math.min(rawColumn, Math.ceil(this.productBacklog.items.length / maxRow))
     },
     activeRow: function () {
       let rawRow = 0
@@ -149,8 +148,8 @@ export default {
       }
 
       // 限界突破判定
-      if (this.activeColumn === Math.ceil(this.productBacklog.length / maxRow) && this.productBacklog.length % maxRow !== 0) {
-        return Math.min(rawRow, this.productBacklog.length % maxRow)
+      if (this.activeColumn === Math.ceil(this.productBacklog.items.length / maxRow) && this.productBacklog.items.length % maxRow !== 0) {
+        return Math.min(rawRow, this.productBacklog.items.length % maxRow)
       }
       return rawRow
     },
@@ -160,8 +159,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      move: 'moveProductBacklogItem',
-      startSprint: 'startSprintWithItems'
+      move: 'moveItem',
+      startSprint: 'createAndStartSprint'
     }),
     showCreateItemView: function () {
       return router.push('product_backlog/create_item')
@@ -195,7 +194,7 @@ export default {
       // 優先度を上げたか下げたか（orderの数値が下がっていれば優先度が上げられたことになる）
       const isRaised = (newIndex < oldIndex)
       // アイテムの移動に伴って位置が変わる全てのアイテム
-      const relatedItems = isRaised ? this.productBacklog.slice(newIndex, oldIndex + 1) : this.productBacklog.slice(oldIndex, newIndex + 1)
+      const relatedItems = isRaised ? this.productBacklog.items.slice(newIndex, oldIndex + 1) : this.productBacklog.items.slice(oldIndex, newIndex + 1)
       // order更新処理開始
       this.move({
         'movedItem': movedItem,

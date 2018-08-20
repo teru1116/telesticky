@@ -53,10 +53,10 @@ export default {
   },
   methods: {
     ...mapActions({
-      createSprintAndStart: 'createSprintAndStart'
+      createAndStartSprint: 'createAndStartSprint'
     }),
     submit: function () {
-      this.createSprintAndStart(
+      this.createAndStartSprint(
         Object.assign(this.$data, { 'items': this.selectedItems })
       )
         .then(() => {

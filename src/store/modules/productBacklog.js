@@ -1,25 +1,29 @@
-import productBacklog from '../../api/productBacklog'
+import api from '../../api/productBacklog'
 
 const state = {
-  // Close分を含まないプロダクトバックログ
-  activeItems: [],
-  // プロダクトバックログ書き込み中か
-  isUpdatingPB: false
+  items: [],
+  tasks: {}
 }
 
-// TODO: getters
-
 const actions = {
-  listenProductBacklog ({ commit }) {
-    productBacklog.listen(productBacklog => {
-      commit('setProductBacklog', productBacklog)
+  listenItems ({ commit }) {
+    api.listenItems(items => {
+      commit('setItems', items)
+
+      let itemIds = []
+      items.forEach(item => {
+        itemIds.push(item.id)
+      })
+
+      api.listenTasks(itemIds, (tasks) => {
+        commit('setTasks', tasks)
+      })
     })
   },
 
-  addProductBacklogItem ({ commit }, newItem) {
+  addItem ({ commit }, newItem) {
     return new Promise((resolve, reject) => {
-      productBacklog.add(newItem).then(() => {
-        commit('startUpdatePB')
+      api.addItem(newItem).then(() => {
         resolve()
       }, error => {
         reject(error)
@@ -27,25 +31,43 @@ const actions = {
     })
   },
 
-  moveProductBacklogItem ({ commit }, payload) {
-    // commit('startUpdatePB')
-    productBacklog.move(payload.movedItem, payload.newIndex, payload.isRaised, payload.relatedItems)
+  moveItem ({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      api.moveItem(
+        payload.movedItem,
+        payload.newIndex,
+        payload.oldIndex,
+        payload.isRaised,
+        payload.relatedItems
+      )
+        .then(() => {
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
   },
 
-  changeStatusProductBacklogItem ({ commit }, payload) {
-    productBacklog.changeStatus(payload.sprintId, payload.itemId, payload.status)
+  addTask ({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      api.addTask(payload.itemId, payload.newTask).then(() => {
+        resolve()
+      }, error => {
+        reject(error)
+      })
+    })
   }
 }
 
 const mutations = {
   // FIXME: 一旦ProductBacklogの更新が発生したら全入れ替え
-  setProductBacklog (state, items) {
-    state.activeItems = items
-    state.isUpdatingPB = false
+  setItems (state, items) {
+    state.items = items
   },
 
-  startUpdatePB (state) {
-    state.isUpdatingPB = true
+  setTasks (state, payload) {
+    state.tasks = payload
   }
 }
 

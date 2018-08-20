@@ -4,13 +4,13 @@
       class="pbl-header"
     >
       <h2>
-        スプリント {{ activeSprint.sprintNumber === 0 ? '' : activeSprint.sprintNumber }}
+        スプリント {{ sprint.sprintNumber === 0 ? '' : sprint.sprintNumber }}
       </h2>
     </div>
     <SprintBacklogBoard
-      :activeSprintId="activeSprint.id"
-      :items="activeSprint.items"
-      :tasks="activeSprint.tasks"
+      :activeSprintId="sprint.id"
+      :sprintItems="sprintItems"
+      :tasks="productBacklog.tasks"
       :teamRules="teamRules"
     />
   </div>
@@ -21,11 +21,23 @@ import SprintBacklogBoard from './../components/SprintBacklogBoard'
 
 export default {
   props: {
-    activeSprint: Object,
+    sprint: Object,
+    productBacklog: Object,
     teamRules: Object
   },
   components: {
     'SprintBacklogBoard': SprintBacklogBoard
+  },
+  computed: {
+    sprintItems: function () {
+      let results = []
+      this.productBacklog.items.forEach(item => {
+        if (item.isInCurrentSprint === true) {
+          results.push(item)
+        }
+      })
+      return results
+    }
   }
 }
 </script>
