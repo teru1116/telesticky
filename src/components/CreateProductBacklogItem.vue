@@ -3,20 +3,50 @@
     <md-toolbar>
       <h2>新規プロダクトバックログアイテム作成</h2>
     </md-toolbar>
-    <div
-       class="dialog-body"
-     >
+    <md-dialog-content>
       <md-field>
         <label>タイトル</label>
-        <md-input
+        <md-textarea
           v-model="title"
+          md-autogrow
         />
       </md-field>
       <md-field>
         <label>見積り</label>
         <md-input
-          v-model.number="estimate"
+          v-model="estimate"
+          type="number"
+          class="estimate"
         />
+      </md-field>
+      <md-field
+        v-if="!isDescriptionPreview"
+      >
+        <label>詳細（Markdownで入力できます）</label>
+        <md-textarea
+          v-model="description"
+        >
+        </md-textarea>
+      </md-field>
+      <div
+        v-if="isDescriptionPreview"
+        class="markdown-preview"
+      >
+        <VueMarkdown
+          :source="description"
+        />
+      </div>
+      <md-field>
+        <label>価値</label>
+        <md-textarea
+          v-model="value"
+          md-autogrow
+        >
+        </md-textarea>
+      </md-field>
+        <!-- TODO: definitions of done -->
+        <!-- TODO: checkbox for Ready -->
+        <!-- TODO: actions: delete save -->
       </md-field>
       <md-dialog-actions>
         <md-button
@@ -26,11 +56,12 @@
           プロダクトバックログに追加する
         </md-button>
       </md-dialog-actions>
-    </div>
+    </md-dialog-content>
   </div>
 </template>
 
 <script>
+import VueMarkdown from 'vue-markdown'
 import { mapActions } from 'vuex'
 
 export default {
@@ -41,7 +72,13 @@ export default {
   data: function () {
     return {
       'title': '',
-      'estimate': 0
+      'estimate': null,
+      'order': '',
+      'description': '',
+      'isDescriptionPreview': false,
+      'value': '',
+      'isReady': true,
+      'definitionsOfDone': []
     }
   },
   methods: {
@@ -61,6 +98,9 @@ export default {
           console.error(error)
         })
     }
+  },
+  components: {
+    VueMarkdown
   }
 }
 </script>
@@ -68,7 +108,7 @@ export default {
 <style scoped lang="scss">
 .md-toolbar {
   background-color: #03a9f4!important;
-  margin-bottom: 24px;
+  padding: 0 24px;
 
   h2 {
     font-size: 20px;
@@ -77,7 +117,17 @@ export default {
   }
 }
 
-.dialog-body {
-  padding: 0 16px;
+.md-dialog-content {
+  width: 600px;
+  padding: 16px 24px 32px;
+  overflow-y: scroll;
+
+  .md-input {
+  }
+
+  .markdown-preview {
+    width: 100%;
+    height: 300px;
+  }
 }
 </style>
