@@ -1,16 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import SignUp from '@/views/SignUp'
-import SignIn from '@/views/SignIn'
-import Container from '@/views/Container'
-import Teams from '@/views/Teams'
-import TeamCreate from '@/views/TeamCreate'
-import Invited from '@/views/Invited'
-import TeamTop from '@/views/TeamTop'
-import ProductBacklog from '@/views/ProductBacklog'
-import CreateProductBacklogItem from '@/views/CreateProductBacklogItem'
-import CreateSprint from '@/views/CreateSprint'
-import SprintBacklog from '@/views/SprintBacklog'
+import SignUp from '@/components/SignUp'
+import SignIn from '@/components/SignIn'
+import Container from '@/components/Container'
+import Teams from '@/components/Teams'
+import TeamCreate from '@/components/TeamCreate'
+import Invited from '@/components/Invited'
+import TeamTop from '@/components/TeamTop'
+import ProductBacklog from '@/components/ProductBacklog'
+import CreateSprint from '@/components/CreateSprint'
+import SprintBacklog from '@/components/SprintBacklog'
 
 Vue.use(Router)
 
@@ -59,11 +58,6 @@ export default new Router({
               name: 'ProductBacklog',
               component: ProductBacklog,
               children: [
-                {
-                  path: 'create_item',
-                  name: 'CreateProductBacklogItem',
-                  component: CreateProductBacklogItem
-                },
                 {
                   path: 'create_sprint',
                   name: 'CreateSprint',

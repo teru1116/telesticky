@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <!-- FIXME -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <router-view/>
   </div>
 </template>
@@ -20,24 +22,24 @@ html, body {
   color: #222222;
 
   h2 {
-    font-size: 24px;
-    font-weight: lighter;
+    font-size: 20px;
+    font-weight: 400;
   }
 
   h3 {
-    font-size: 18px;
-    font-weight: lighter;
+    font-size: 16px;
+    font-weight: 400;
     margin: 12px 0 4px;
   }
 
   p {
     font-size: 14px;
-    font-weight: lighter;
+    font-weight: 400;
   }
 
   small {
     font-size: 12px;
-    font-weight: lighter;
+    font-weight: 400;
     display: block;
     margin: 4px 0 8px;
   }
@@ -54,20 +56,15 @@ html, body {
 
   button {
     cursor: pointer;
-    text-align: center;
-    padding: 3px 10px 4px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    border: 1px solid #d9d9d9;
-    color: #d9d9d9;
-    outline: none;
-    font-size: 15px;
-    line-height: 19px;
+  }
 
-    &.enabled {
-      border: 1px solid #4cabff;
-      color: #0088ff;
+  .dummy-toolbar {
+    background-color: rgba(255, 255, 255, 0.0);
+    display: flex;
+    margin: -83px 0 0px;
+    padding: 0 16px;
+    * {
+      z-index: 12;
     }
   }
 }

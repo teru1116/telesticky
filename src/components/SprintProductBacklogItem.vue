@@ -1,25 +1,29 @@
 <template>
   <li>
-    <h3>
-      {{ data.title + ' / ' + data.order }}
-    </h3>
-    <div
-      class="card-footer"
-    >
-      <p>{{ data.estimate + ' ' + estimationUnit}}</p>
-      <select
-        v-model="status"
-        @change="onStatusChanged"
+    <md-card>
+      <h3>
+        {{ data.title }}
+      </h3>
+      <div
+        class="card-footer"
       >
-        <option
-          v-for="(statusName, status) in itemStatusList"
-          :value="status"
-          :key="status"
-        >
-          {{ statusName }}
-        </option>
-      </select>
-    </div>
+        <p>{{ data.estimate + ' ' + estimationUnit}}</p>
+        <md-field>
+          <md-select
+            v-model="status"
+            md-selected="onStatusChanged"
+          >
+            <md-option
+              v-for="(statusName, status) in itemStatusList"
+              :value="status"
+              :key="status"
+            >
+              {{ statusName }}
+            </md-option>
+          </md-select>
+        </md-field>
+      </div>
+    </md-card>
   </li>
 </template>
 
@@ -55,39 +59,47 @@ export default {
 
 <style scoped lang="scss">
 li {
-  width: 160px;
-  height: 126px;
-  margin: 0 0 8px;
-  padding: 2px 2px;
-  border: 1px solid #d6d6d6;
-  border-radius: 4px;
-  list-style: none;
-  position: relative;
+  .md-card {
+    width: 160px;
+    height: 132px;
+    background-color: #fff;
+    margin: 0 0 8px;
+    padding: 4px 0;
+    cursor: pointer;
+  }
 
   h3 {
     font-size: 12px!important;
-    height: 100px;
-    text-align: left;
     margin: 0!important;
-    padding: 0;
+    height: 96px;
+    text-align: left;
+    margin: 0;
+    padding: 0 12px;
   }
 
   .card-footer {
+    border-top: 1px solid rgba(0,0,0,.12);
+    padding: 0 12px;
     display: flex;
-    height: 26px;
 
     p {
-      width: 40px;
-      line-height: 24px;
+      width: 48px;
+      line-height: 30px;
+      font-size: 12px!important;
       font-weight: 400!important;
-      margin: 0;
+      margin: 2px 0 0;
     }
 
-    select {
-      width: 114px;
-      height: 24px;
-      margin-left: 4px;
-      cursor: pointer;
+    .md-field {
+      width: 88px;
+      margin: -16px 0 0;
+
+      .md-select {
+        .md-input {
+          font-family: inherit;
+          font-size: 90%;
+        }
+      }
     }
   }
 }

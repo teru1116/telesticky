@@ -1,18 +1,23 @@
 <template>
   <li>
-    <h3>
-      {{ data.title }}
-    </h3>
-    <div
-      class="card-footer"
-    >
-      <p>{{ data.estimate + estimationUnit + ' ' + data.order }}</p>
-    </div>
-    <div
-      v-if="isInPlanning && borderPosition == data.order"
-      class="planning-border"
-    >
-    </div>
+    <md-card>
+      <h3>
+        {{ data.title }}
+      </h3>
+      <md-divider></md-divider>
+      <div
+        class="card-footer"
+      >
+        <span>
+          {{ data.estimate + ' ' + estimationUnit }}
+        </span>
+        <md-checkbox
+          v-if="isSelectionMode"
+          v-model="isChecked"
+          @change="$emit('onItemCheck', { 'item': data, 'isChecked': isChecked })"
+        />
+      </div>
+    </md-card>
   </li>
 </template>
 
@@ -21,42 +26,49 @@ export default {
   props: {
     data: Object,
     estimationUnit: String,
-    itemStatusList: Array,
-    isInPlanning: Boolean,
-    borderPosition: Number
+    isSelectionMode: Boolean
+  },
+  data: function () {
+    return {
+      isChecked: false
+    }
   }
 }
 </script>
 
 <style scoped lang="scss">
 li {
-  width: 280px;
-  height: 160px;
-  border: 1px solid #d6d6d6;
-  border-radius: 4px;
   margin: 0 16px 16px 0;
-  padding: 4px 4px;
-  list-style: none;
-  position: relative;
+
+  .md-card {
+    width: 272px;
+    height: 152px;
+    background-color: #fff;
+    margin: 0;
+    padding: 8px 0;
+    cursor: pointer;
+  }
 
   h3 {
-    height: 120px;
+    height: 88px;
     text-align: left;
     margin: 0;
-    padding: 0;
+    padding: 0 12px;
   }
 
   .card-footer {
-    text-align: left;
-  }
+    padding: 0 12px;
+    display: flex;
 
-  .planning-border {
-    position: absolute;
-    bottom: -8px;
-    left: -8px;
-    width: 296px;
-    height: 2px;
-    background-color: #0088ff;
+    span {
+      padding: 8px 0;
+      flex: 1;
+    }
+
+    .md-checkbox {
+      width: 24px;
+      margin: 8px 0;
+    }
   }
 }
 </style>
