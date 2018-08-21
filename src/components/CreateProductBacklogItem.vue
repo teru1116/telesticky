@@ -55,7 +55,39 @@
           >
           </md-textarea>
         </md-field>
-        <!-- TODO: definitions of done -->
+        <div
+          class="multi-inputs-dod"
+        >
+          <label>
+            完成の定義
+          </label>
+          <ul>
+            <li
+              v-for="(itemDod, index) in definitionsOfItemDone"
+              :key="index"
+            >
+              <md-field>
+                <md-textarea
+                  v-model="itemDod.title"
+                  md-autogrow
+                >
+                </md-textarea>
+              </md-field>
+              <md-button
+                v-if="definitionsOfItemDone.length !== 1"
+                @click="definitionsOfItemDone.splice(index, 1)"
+              >
+                <md-icon>clear</md-icon>
+              </md-button>
+            </li>
+          </ul>
+          <md-button
+            v-if="showsDodAddButton"
+            @click="definitionsOfItemDone.push({'title': ''})"
+          >
+            <md-icon>add</md-icon>
+          </md-button>
+        </div>
         <div
           class="input-isready"
         >
@@ -63,7 +95,7 @@
             v-model="isReady"
           />
           <span>
-            準備完了（Ready）
+            準備完了（Ready）なアイテムか
           </span>
         </div>
       </div>
@@ -98,7 +130,15 @@ export default {
       'showsDescriptionPreview': false,
       'value': '',
       'isReady': true,
-      'additionalDefinitionsOfDone': this.definitionsOfDone
+      'definitionsOfItemDone': this.definitionsOfDone
+    }
+  },
+  computed: {
+    showsDodAddButton: function () {
+      for (let i = 0; i < this.definitionsOfItemDone.length; i++) {
+        if (!this.definitionsOfItemDone[i]['title']) return false
+      }
+      return true
     }
   },
   methods: {
@@ -159,6 +199,24 @@ export default {
       .md-button.markdown-preview-button {
         margin: -16px 0 0;
         float: right;
+      }
+
+      .multi-inputs-dod {
+        margin-bottom: 24px;
+        ul {
+          padding-left: 16px;
+          list-style: none;
+          li {
+            display: flex;
+            .md-button {
+              margin-top: 16px;
+            }
+          }
+        }
+        .md-button {
+          min-width: 0;
+          margin: 0 0 0 16px;
+        }
       }
 
       .input-isready {
