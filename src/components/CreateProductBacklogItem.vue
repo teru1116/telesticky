@@ -12,6 +12,7 @@
           <md-textarea
             v-model="title"
             md-autogrow
+            required
           />
         </md-field>
         <md-field>
@@ -41,7 +42,7 @@
         </div>
         <md-button
           v-if="description"
-          class="md-dense md-primary"
+          class="md-dense md-primary markdown-preview-button"
           @click="showsDescriptionPreview = !showsDescriptionPreview"
         >
           {{ showsDescriptionPreview ? '編集' : 'プレビュー' }}
@@ -54,9 +55,17 @@
           >
           </md-textarea>
         </md-field>
-          <!-- TODO: definitions of done -->
-          <!-- TODO: checkbox for Ready -->
-          <!-- TODO: actions: delete save -->
+        <!-- TODO: definitions of done -->
+        <div
+          class="input-isready"
+        >
+          <md-checkbox
+            v-model="isReady"
+          />
+          <span>
+            準備完了（Ready）
+          </span>
+        </div>
       </div>
       <md-dialog-actions>
         <md-button
@@ -68,7 +77,7 @@
         <md-button
           @click="submit"
           class="md-raised md-primary"
-          :disabled="title.length >= 1"
+          :disabled="!title"
         >
           プロダクトバックログに追加
         </md-button>
@@ -151,6 +160,17 @@ export default {
       .markdown-preview {
         width: 100%;
         min-height: 40px;
+      }
+
+      .md-button.markdown-preview-button {
+        margin: -16px 0 0;
+        float: right;
+      }
+
+      .input-isready {
+        span {
+          vertical-align: text-bottom;
+        }
       }
     }
 
