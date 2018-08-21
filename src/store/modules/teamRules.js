@@ -5,7 +5,8 @@ const state = {
   taskStatusList: [],
   estimationUnit: '',
   initialItemStatus: 0,
-  initialSprintItemStatus: 0
+  initialSprintItemStatus: 0,
+  definitionsOfDone: []
 }
 
 // getters
@@ -25,6 +26,7 @@ const mutations = {
     state.itemStatusList = payload.itemStatusList
     state.initialItemStatus = payload.initialItemStatus
     state.initialSprintItemStatus = payload.initialSprintItemStatus
+    state.definitionsOfDone = payload.definitionsOfDone
   }
 }
 

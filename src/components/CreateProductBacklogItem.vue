@@ -70,12 +70,6 @@
       <md-dialog-actions>
         <md-button
           @click="submit"
-          class="md-raised"
-        >
-          削除
-        </md-button>
-        <md-button
-          @click="submit"
           class="md-raised md-primary"
           :disabled="!title"
         >
@@ -93,7 +87,8 @@ import { mapActions } from 'vuex'
 export default {
   props: {
     estimationUnit: String,
-    initialItemStatus: Number
+    initialItemStatus: Number,
+    definitionsOfDone: Array
   },
   data: function () {
     return {
@@ -103,7 +98,7 @@ export default {
       'showsDescriptionPreview': false,
       'value': '',
       'isReady': true,
-      'definitionsOfDone': []
+      'additionalDefinitionsOfDone': this.definitionsOfDone
     }
   },
   methods: {
@@ -143,8 +138,6 @@ export default {
 }
 
 .md-dialog-container {
-  width: 680px;
-
   .md-toolbar {
     height: 48px;
   }
@@ -152,6 +145,7 @@ export default {
   .md-dialog-content {
     max-height: calc(80vh - 48px);
     overflow-y: auto;
+    width: 680px;
     padding: 0;
 
     .dialog-content-inner {

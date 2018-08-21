@@ -54,6 +54,7 @@
         <CreateItemDialogContent
           :estimationUnit="teamRules.estimationUnit"
           :initialItemStatus="teamRules.initialItemStatus"
+          :definitionsOfDone="teamRules.definitionsOfDone"
           :selectedItems="selectedItems"
           v-on:onCreateItemFinish="showDialog = false"
         />
