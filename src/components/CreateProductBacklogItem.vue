@@ -20,7 +20,7 @@
         />
       </md-field>
       <md-field
-        v-if="!isDescriptionPreview"
+        v-if="!showsDescriptionPreview"
       >
         <label>詳細（Markdownで入力できます）</label>
         <md-textarea
@@ -29,13 +29,20 @@
         </md-textarea>
       </md-field>
       <div
-        v-if="isDescriptionPreview"
+        v-if="showsDescriptionPreview"
         class="markdown-preview"
       >
         <VueMarkdown
           :source="description"
         />
       </div>
+      <md-button
+        v-if="description"
+        class="md-dense md-primary"
+        @click="showsDescriptionPreview = !showsDescriptionPreview"
+      >
+        {{ showsDescriptionPreview ? '編集' : 'プレビュー' }}
+      </md-button>
       <md-field>
         <label>価値</label>
         <md-textarea
@@ -51,6 +58,7 @@
       <md-dialog-actions>
         <md-button
           @click="submit"
+          class="md-raised md-primary"
           :disabled="title.length >= 1"
         >
           プロダクトバックログに追加する
@@ -73,9 +81,8 @@ export default {
     return {
       'title': '',
       'estimate': null,
-      'order': '',
       'description': '',
-      'isDescriptionPreview': false,
+      'showsDescriptionPreview': false,
       'value': '',
       'isReady': true,
       'definitionsOfDone': []
@@ -127,7 +134,7 @@ export default {
 
   .markdown-preview {
     width: 100%;
-    height: 300px;
+    min-height: 40px;
   }
 }
 </style>
