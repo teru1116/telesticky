@@ -3,12 +3,8 @@
     class="board-container"
     ref="sprintBoard"
   >
-    <div
-      class="pb-column"
-    >
-      <div
-        class="board-header"
-      >
+    <div class="pb-column">
+      <div class="board-header">
         プロダクトバックログ<br />アイテム
       </div>
       <draggable
@@ -26,21 +22,19 @@
         />
       </draggable>
     </div>
-    <div
-      id="task-column"
-    >
-      <h4>作業</h4>
-      <ol
-        id="task-column-header"
-      >
-        <li
-          v-for="(taskStatus, index) in teamRules.taskStatusList"
-          :key="index"
-          :style="{ width: taskStatusHeaderWidths[index] + 'px' }"
-        >
-          {{ taskStatus }}
-        </li>
-      </ol>
+    <div class="task-column">
+      <div class="board-header">
+        <div>作業</div>
+        <ol class="board-sub-header">
+          <li
+            v-for="(taskStatus, index) in teamRules.taskStatusList"
+            :key="index"
+            :style="{ width: taskStatusHeaderWidths[index] + 'px' }"
+          >
+            {{ taskStatus }}
+          </li>
+        </ol>
+      </div>
       <ol>
         <TaskLane
           v-for="(item, index) in sprintItems"
@@ -126,7 +120,9 @@ export default {
 
 <style scoped lang="scss">
 .board-container {
+  position: absolute;
   display: flex;
+  margin: 0;
 
   .board-header {
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
@@ -144,30 +140,35 @@ export default {
       height: 64px;
     }
     ol {
-      padding: 16px;
+      padding: 16px!important;
     }
   }
-}
 
-div#task-column {
-  h4 {
-    width: calc(100% - 4px);
-    height: 24px;
-    margin-bottom: 4px;
-  }
-  ol#task-column-header {
-    display: flex;
-    padding: 0 16px;
+  .task-column {
+    .board-header {
+      > div {
+        height: 32px;
+        line-height: 32px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+      }
+      ol.board-sub-header {
+        display: flex;
+        height: 32px;
+        padding: 0 16px;
 
-    li {
-      width: 252px;
-      height: 24px;
-      margin: 0 4px 8px 0;
-      text-align: center;
-      background-color: #f5f5f5;
-      font-size: 13px;
-      line-height: 24px;
-      font-weight: 300;
+        li {
+          width: 252px;
+          line-height: 31px;
+          text-align: center;
+          font-size: 13px;
+          font-weight: 300;
+          border-right: 1px solid rgba(0,0,0,0.12);
+
+          &:last-child {
+            border-right: 0;
+          }
+        }
+      }
     }
   }
 }
