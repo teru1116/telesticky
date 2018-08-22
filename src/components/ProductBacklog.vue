@@ -1,16 +1,8 @@
 <template>
   <div>
-    <div
-      class="dummy-toolbar"
-    >
-      <h2
-        :style="menuVisible ? { marginLeft: '0' } : { marginLeft: '48px' }"
-      >
-        プロダクトバックログ
-      </h2>
-      <div
-        class="pbl-header-right"
-      >
+    <div class="dummy-toolbar">
+      <h2 :style="menuVisible ? { marginLeft: '0' } : { marginLeft: '48px' }">プロダクトバックログ</h2>
+      <div class="pbl-header-right">
         <md-button
           @click="startSprintPlanning"
         >
@@ -18,12 +10,8 @@
         </md-button>
       </div>
     </div>
-    <div
-      class="pb-content"
-    >
-      <md-content
-        class="pb-items-column md-elevation-1"
-      >
+    <div class="pb-content">
+      <md-content class="pb-items-column md-elevation-1">
         <draggable
           element="ol"
           v-model="productBacklog.items"
@@ -43,9 +31,7 @@
           @click="showDialog=true"
           class="md-fab md-primary add-button"
         >
-          <md-icon>
-            add
-          </md-icon>
+          <md-icon>add</md-icon>
         </md-button>
       </md-content>
       <md-dialog
@@ -84,9 +70,7 @@
             <dt>選択中のアイテムの見積り値合計</dt>
             <dd>{{ selectedTotalEstimate + ' ' + teamRules.estimationUnit }}</dd>
           </dl>
-          <div
-            class="planning-actions"
-          >
+          <div class="planning-actions">
             <md-button class="md-raised">
               今スプリントのアイテムを変更する
             </md-button>
