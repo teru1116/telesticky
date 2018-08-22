@@ -38,7 +38,7 @@
             <li
               v-for="(taskStatus, index) in teamRules.taskStatusList"
               :key="index"
-              :style="{ width: taskColumnWidths[index] + laneSidePadding * 2.5 + 'px' }"
+              :style="{ width: taskColumnWidths[index] + 'px' }"
             >
               {{ taskStatus }}
             </li>
@@ -103,11 +103,17 @@ export default {
       const keys = Object.keys(this.sprintTasks)
       keys.forEach((key, index) => {
         for (let i = 0; i < this.teamRules.taskStatusList.length; i++) {
-          if (!results[i]) results.push(this.taskCardWidth * 2 + this.taskCardMargin)
-          if (!this.sprintTasks[key][i]) continue
-          let cardCount = i === 0 ? this.sprintTasks[key][i].length + 1 : this.sprintTasks[key][i].length
-          if (cardCount <= 4) continue
-          let value = Math.ceil(cardCount / 2) * this.taskCardWidth + (Math.ceil(cardCount / 2) - 1) * this.taskCardMargin
+          if (!results[i]) { results.push(this.taskCardWidth * 2 + this.taskCardMargin + this.laneSidePadding * 2) }
+          if (!this.sprintTasks[key] || !this.sprintTasks[key][i]) { continue }
+          // タスクカードの枚数
+          let cardCount = this.sprintTasks[key][i].length
+          if (i === 0) { cardCount = cardCount + 1 }
+          if (cardCount <= 4) { continue }
+          // 幅を算出
+          const rowCount = 2
+          const columnCount = Math.ceil(cardCount / rowCount)
+          let value = this.taskCardWidth * columnCount + this.taskCardMargin * (columnCount - 1) + this.laneSidePadding * 2
+          // 最大値を適用
           results[i] = results[i] ? Math.max(results[i], value) : value
         }
       })

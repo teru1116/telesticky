@@ -7,7 +7,7 @@
       <li
         v-for="(status, statusIndex) in taskStatusList"
         :key="statusIndex"
-        :style="{ width: `${columnWidths[statusIndex] + laneSidePadding * 2.5}px`, height: `${itemCardHeight + verticalPadding * 2}px`, padding: `${verticalPadding}px ${laneSidePadding}px`}"
+        :style="{ width: `${columnWidths[statusIndex]}px`, height: `${itemCardHeight + verticalPadding * 2}px` }"
         class="task-status-column"
       >
         <ul>
@@ -89,24 +89,24 @@ export default {
       return (this.itemCardHeight - this.taskCardMargin) / 2
     },
     todoTaskCount: function () {
-      return this.itemTasks.length ? this.itemTasks[0].length : 0
+      return this.itemTasks[0] ? this.itemTasks[0].length : 0
     },
     baseXs: function () {
       let results = []
       let total = 0
       for (let i = 0; i < this.taskStatusList.length; i++) {
         results.push(total)
-        total = total + this.columnWidths[i] + 4
+        total = total + this.columnWidths[i]
       }
       return results
     },
     addButtonX: function () {
-      const column = this.todoTaskCount <= 3 ? this.todoTaskCount % 2 : Math.floor(this.todoTaskCount / 2)
-      return this.laneSidePadding + column * 124 + column * 4
+      const columnNumber = this.todoTaskCount <= 3 ? this.todoTaskCount % 2 : Math.floor(this.todoTaskCount / 2)
+      return this.laneSidePadding + columnNumber * this.taskCardWidth + columnNumber * this.taskCardMargin
     },
     addButtonY: function () {
-      const row = this.todoTaskCount <= 3 ? Math.floor(this.todoTaskCount / 2) : this.todoTaskCount % 2
-      return this.verticalPadding + row * 64 + row * 4
+      const rowNumber = this.todoTaskCount <= 3 ? Math.floor(this.todoTaskCount / 2) : this.todoTaskCount % 2
+      return this.verticalPadding + rowNumber * this.taskCardHeight + rowNumber * this.taskCardMargin
     }
   },
   methods: {

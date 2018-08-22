@@ -3,7 +3,9 @@
     :style="style"
     @mousedown="onMouseDown"
   >
-    {{ task.title }}
+    <md-card>
+      {{ task.title }}
+    </md-card>
   </li>
 </template>
 
@@ -21,6 +23,7 @@ export default {
     parentRefs: Object,
     taskCardWidth: Number,
     taskCardHeight: Number,
+    taskCardMargin: Number,
     laneSidePadding: Number,
     verticalPadding: Number
   },
@@ -43,8 +46,8 @@ export default {
     },
     left: function () {
       const columnNumber = this.index <= 3 ? this.index % 2 : Math.floor(this.index / 2)
-      const baseX = this.baseXs[this.task.status] + this.laneSidePadding + this.laneSidePadding * 2 * this.task.status
-      return baseX + columnNumber * 124 + columnNumber * 4
+      const baseX = this.baseXs[this.task.status] + this.laneSidePadding
+      return baseX + columnNumber * this.taskCardWidth + columnNumber * this.taskCardMargin
     },
     top: function () {
       const rowNumber = this.index <= 3 ? Math.floor(this.index / 2) : this.index % 2
@@ -100,8 +103,12 @@ li {
   font-size: 11px;
   font-weight: 300;
   background-color: #fff;
-  border: 1px solid #d6d6d6;
-  padding: 2px;
-  border-radius: 2px;
+
+  .md-card {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 2px;
+  }
 }
 </style>
