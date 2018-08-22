@@ -1,12 +1,16 @@
 <template>
-  <div
-    id="board-container"
+  <md-card
+    class="board-container"
     ref="sprintBoard"
   >
     <div
-      id="pb-column"
+      class="pb-column"
     >
-      <h4>プロダクトバックログ<br />アイテム</h4>
+      <div
+        class="board-header"
+      >
+        プロダクトバックログ<br />アイテム
+      </div>
       <draggable
         element="ol"
         v-model="sprintItems"
@@ -43,7 +47,7 @@
           :activeSprintId="activeSprintId"
           :item="item"
           :itemIndex="index"
-          :itemTasks="tasks[item.id] ? tasks[item.id] : []"
+          :itemTasks="sprintTasks[item.id] ? sprintTasks[item.id] : []"
           :taskStatusList="teamRules.taskStatusList"
           :columnWidths="taskStatusHeaderWidths"
           :parentRefs="$refs"
@@ -51,7 +55,7 @@
         />
       </ol>
     </div>
-  </div>
+  </md-card>
 </template>
 
 <script>
@@ -66,7 +70,7 @@ export default {
   props: {
     activeSprintId: String,
     sprintItems: Array,
-    tasks: Object,
+    sprintTasks: Object,
     teamRules: Object
   },
   components: {
@@ -77,12 +81,12 @@ export default {
   computed: {
     taskStatusHeaderWidths: function () {
       let results = []
-      const keys = Object.keys(this.tasks)
+      const keys = Object.keys(this.sprintTasks)
       keys.forEach((key, index) => {
         for (let i = 0; i < this.teamRules.taskStatusList.length; i++) {
           if (!results[i]) results.push(252)
-          if (!this.tasks[key][i]) continue
-          let taskCount = i === 0 ? this.tasks[key][i].length + 1 : this.tasks[key][i].length
+          if (!this.sprintTasks[key][i]) continue
+          let taskCount = i === 0 ? this.sprintTasks[key][i].length + 1 : this.sprintTasks[key][i].length
           if (taskCount <= 4) continue
           results[i] = Math.ceil(taskCount / 2) * 124 + (Math.ceil(taskCount / 2) - 1) * 4
         }
@@ -121,46 +125,49 @@ export default {
 </script>
 
 <style scoped lang="scss">
-h4 {
-  text-align: center;
-  background-color: #f5f5f5;
-  font-size: 13px;
-  line-height: 24px;
-  font-weight: 300;
-  margin: 0;
-  padding: 0;
-}
-
-div#board-container {
+.board-container {
   display: flex;
 
-  div#pb-column {
-    width: 166px;
-    margin-right: 16px;
-    h4 {
-      height: 52px;
-      margin-bottom: 8px;
-    }
+  .board-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
   }
 
-  div#task-column {
-    h4 {
-      width: calc(100% - 4px);
-      height: 24px;
-      margin-bottom: 4px;
+  .pb-column {
+    width: 192px;
+    border-right: 1px solid rgba(0,0,0,0.12);
+
+    .board-header {
+      width: 192px;
+      height: 64px;
     }
-    ol#task-column-header {
-      display: flex;
-      li {
-        width: 252px;
-        height: 24px;
-        margin: 0 4px 8px 0;
-        text-align: center;
-        background-color: #f5f5f5;
-        font-size: 13px;
-        line-height: 24px;
-        font-weight: 300;
-      }
+    ol {
+      padding: 16px;
+    }
+  }
+}
+
+div#task-column {
+  h4 {
+    width: calc(100% - 4px);
+    height: 24px;
+    margin-bottom: 4px;
+  }
+  ol#task-column-header {
+    display: flex;
+    padding: 0 16px;
+
+    li {
+      width: 252px;
+      height: 24px;
+      margin: 0 4px 8px 0;
+      text-align: center;
+      background-color: #f5f5f5;
+      font-size: 13px;
+      line-height: 24px;
+      font-weight: 300;
     }
   }
 }

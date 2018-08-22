@@ -82,6 +82,8 @@
           <router-view
             :sprint="sprint"
             :productBacklog="productBacklog"
+            :sprintItems="productBacklog.items.filter(item => {return item.isSelectedForSprint})"
+            :sprintTasks="sprintTasks"
             :teamRules="teamRules"
             :menuVisible="menuVisible"
           />
@@ -105,6 +107,19 @@ export default {
       let path = this.$route.path.split('/')[3]
       if (path === 'sprint_backlog') return `スプリント ${this.sprint.sprintNumber === 0 ? '' : this.sprint.sprintNumber}`
       if (path === 'product_backlog') return 'プロダクトバックログ'
+    },
+    sprintTasks () {
+      let sprintTasks = {}
+      let sprintItemIds = []
+      this.productBacklog.items.forEach(item => {
+        if (item.isSelectedForSprint) {
+          sprintItemIds.push(item.id)
+        }
+      })
+      sprintItemIds.forEach(itemId => {
+        sprintTasks[itemId] = this.productBacklog.tasks[itemId]
+      })
+      return sprintTasks
     }
   },
   data: function () {

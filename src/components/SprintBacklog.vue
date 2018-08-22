@@ -17,7 +17,7 @@
       <SprintBacklogBoard
         :activeSprintId="sprint.id"
         :sprintItems="sprintItems"
-        :tasks="productBacklog.tasks"
+        :sprintTasks="sprintTasks"
         :teamRules="teamRules"
       />
     </div>
@@ -30,23 +30,13 @@ import SprintBacklogBoard from './../components/SprintBacklogBoard'
 export default {
   props: {
     sprint: Object,
-    productBacklog: Object,
+    sprintItems: Array,
+    sprintTasks: Object,
     teamRules: Object,
     menuVisible: Boolean
   },
   components: {
     'SprintBacklogBoard': SprintBacklogBoard
-  },
-  computed: {
-    sprintItems: function () {
-      let results = []
-      this.productBacklog.items.forEach(item => {
-        if (item.isInCurrentSprint === true) {
-          results.push(item)
-        }
-      })
-      return results
-    }
   }
 }
 </script>
@@ -63,7 +53,7 @@ export default {
   }
 
   .sb-content {
-    padding: 0 16px;
+    padding: 24px 16px;
   }
 }
 </style>

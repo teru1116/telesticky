@@ -8,7 +8,7 @@
         class="card-footer"
       >
         <p>{{ data.estimate + ' ' + estimationUnit}}</p>
-        <md-field>
+        <!-- <md-field>
           <md-select
             v-model="status"
             md-selected="onStatusChanged"
@@ -21,7 +21,7 @@
               {{ statusName }}
             </md-option>
           </md-select>
-        </md-field>
+        </md-field> -->
       </div>
     </md-card>
   </li>
@@ -63,7 +63,7 @@ li {
     width: 160px;
     height: 132px;
     background-color: #fff;
-    margin: 0 0 8px;
+    margin: 0 0 16px;
     padding: 4px 0;
     cursor: pointer;
   }
