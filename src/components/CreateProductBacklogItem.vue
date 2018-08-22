@@ -18,7 +18,7 @@
         <md-field>
           <label>見積り</label>
           <md-input
-            v-model="estimate"
+            v-model.number="estimate"
             type="number"
             class="estimate"
           />
