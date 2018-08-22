@@ -1,17 +1,19 @@
 <template>
   <li>
     <md-card>
-      <h3>
-        {{ data.title }}
-      </h3>
-      <md-divider></md-divider>
-      <div
-        class="card-footer"
-      >
+      <h3>{{ data.title }}</h3>
+      <md-divider/>
+      <div class="card-footer">
         <span
           :style="data.estimate === null ? { color: '#999' } : {}"
         >
           {{ data.estimate !== null ? data.estimate + ' ' + estimationUnit : '見積り未入力' }}
+        </span>
+        <span
+          v-if="data.isSelectedForSprint || !data.isReady"
+          class="item-status-label"
+        >
+          {{ data.isSelectedForSprint ? 'This Sprint' : !data.isReady ? 'Not ready' : '' }}
         </span>
         <md-checkbox
           v-if="isSelectionMode"
@@ -65,6 +67,16 @@ li {
     span {
       padding: 8px 0;
       flex: 1;
+
+      &.item-status-label {
+        background-color: #448aff;
+        padding: 2px 8px;
+        color: #fff;
+        flex: none;
+        height: 25px;
+        margin: auto;
+        border-radius: 4px;
+      }
     }
 
     .md-checkbox {
