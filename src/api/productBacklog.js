@@ -120,12 +120,15 @@ export default {
 
   moveTask (itemId, taskId, status) {
     const taskRef = pbRef.doc(itemId).collection('Tasks').doc(taskId)
-    taskRef.update({status: status})
-      .then(() => {
-        resolve()
-      })
-      .catch(error => {
-        reject(error)
-      })
+
+    return new Promise((resolve, reject) => {
+      taskRef.update({status: status})
+        .then(() => {
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
   }
 }

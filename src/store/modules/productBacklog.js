@@ -64,7 +64,7 @@ const actions = {
       api.moveTask(
         payload.itemId,
         payload.taskId,
-        payload.status,
+        payload.status
       )
         .then(() => {
           resolve()
