@@ -57,6 +57,22 @@ const actions = {
         reject(error)
       })
     })
+  },
+
+  moveTask ({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      api.moveTask(
+        payload.itemId,
+        payload.taskId,
+        payload.status,
+      )
+        .then(() => {
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
   }
 }
 

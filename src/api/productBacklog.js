@@ -116,5 +116,16 @@ export default {
           reject(error)
         })
     })
+  },
+
+  moveTask (itemId, taskId, status) {
+    const taskRef = pbRef.doc(itemId).collection('Tasks').doc(taskId)
+    taskRef.update({status: status})
+      .then(() => {
+        resolve()
+      })
+      .catch(error => {
+        reject(error)
+      })
   }
 }

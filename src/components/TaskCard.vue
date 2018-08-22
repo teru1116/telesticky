@@ -57,7 +57,7 @@ export default {
     },
     onTouchMove: function (e) {
       this.parentRefs.sprintBoard.addEventListener('mouseup', this.onTouchUp, false)
-      this.draggingX = e.pageX - 550
+      this.draggingX = e.pageX - 280
       this.draggingY = e.pageY - (180 + this.itemIndex * 132 + this.itemIndex * 8)
     },
     onTouchUp: function (e) {
@@ -78,19 +78,14 @@ export default {
       if (status === this.task.status) return
 
       // 更新処理実行
-      const payload = {
-        'sprintId': this.sprintId,
+      this.move({
         'itemId': this.itemId,
         'taskId': this.task.id,
-        'task': {
-          'title': this.task.title,
-          'status': status
-        }
-      }
-      this.update(payload)
+        'status': status
+      })
     },
     ...mapActions({
-      update: 'updateTask'
+      move: 'moveTask'
     })
   }
 }
