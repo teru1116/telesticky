@@ -11,6 +11,7 @@
       </div>
     </div>
     <div class="pb-content">
+      <!-- show items -->
       <md-content class="pb-items-column md-elevation-1">
         <draggable
           element="ol"
@@ -28,14 +29,16 @@
           />
         </draggable>
         <md-button
-          @click="showDialog=true"
+          @click="showsCreateItemDialog=true"
           class="md-fab md-primary add-button"
         >
           <md-icon>add</md-icon>
         </md-button>
       </md-content>
+
+      <!-- add item -->
       <md-dialog
-        :md-active.sync="showDialog"
+        :md-active.sync="showsCreateItemDialog"
       >
         <CreateItemDialogContent
           :estimationUnit="teamRules.estimationUnit"
@@ -53,6 +56,8 @@
       >
         <span>プロダクトバックログにアイテムが追加されました</span>
       </md-snackbar>
+
+      <!-- selection mode -->
       <md-content
         class="pb-planning-column md-elevation-10"
         :class="isSelectionMode ? 'show' : ''"
@@ -76,13 +81,28 @@
             </md-button>
             <md-button
               class="md-raised md-primary"
-              @click="$router.push('product_backlog/create_sprint')"
+              @click="showsCreateSprintDialog = true"
             >
               新しいスプリントを開始する
             </md-button>
           </div>
         </div>
       </md-content>
+      <md-dialog
+        :md-active.sync="showsCreateSprintDialog"
+      >
+        <CreateSprintDialogContent
+          v-on:onCreateSprintFinish="onCreateSprintFinish"
+        />
+      </md-dialog>
+      <md-snackbar
+        :md-position="'center'"
+        :md-duration="4000"
+        :md-active.sync="isCorrectlyCreatedSprint"
+        md-persistent
+      >
+        <span>新しいスプリントが開始されました</span>
+      </md-snackbar>
     </div>
   </div>
 </template>
@@ -91,8 +111,9 @@
 import { mapActions } from 'vuex'
 // components
 import draggable from 'vuedraggable'
-import ProductBacklogItem from './../components/ProductBacklogItem'
-import CreateProductBacklogItem from './../components/CreateProductBacklogItem'
+import ProductBacklogItem from './ProductBacklogItem'
+import CreateItemDialogContent from './CreateItemDialogContent'
+import CreateSprintDialogContent from './CreateSprintDialogContent'
 
 export default {
   props: {
@@ -104,16 +125,19 @@ export default {
   data: function () {
     return {
       isUpdating: false,
-      showDialog: false,
+      showsCreateItemDialog: false,
+      isCorrectlyAdded: false,
       isSelectionMode: false,
       selectedItems: [],
-      isCorrectlyAdded: false
+      showsCreateSprintDialog: false,
+      isCorrectlyCreatedSprint: false
     }
   },
   components: {
-    'draggable': draggable,
-    'ProductBacklogItem': ProductBacklogItem,
-    'CreateItemDialogContent': CreateProductBacklogItem
+    draggable,
+    ProductBacklogItem,
+    CreateItemDialogContent,
+    CreateSprintDialogContent
   },
   computed: {
     selectedTotalEstimate: function () {
@@ -154,7 +178,7 @@ export default {
       })
     },
     onCreateItemFinish: function () {
-      this.showDialog = false
+      this.showsCreateItemDialog = false
       this.isCorrectlyAdded = true
     },
     onItemCheck: function (param) {

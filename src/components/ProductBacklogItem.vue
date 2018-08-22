@@ -9,9 +9,9 @@
         class="card-footer"
       >
         <span
-          :style="data.estimate　=== null ? { color: '#999' } : {}"
+          :style="data.estimate === null ? { color: '#999' } : {}"
         >
-          {{ data.estimate　!== null ? data.estimate + ' ' + estimationUnit : '見積り未入力' }}
+          {{ data.estimate !== null ? data.estimate + ' ' + estimationUnit : '見積り未入力' }}
         </span>
         <md-checkbox
           v-if="isSelectionMode"
