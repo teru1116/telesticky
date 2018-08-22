@@ -76,9 +76,7 @@
       </md-app-drawer>
 
       <md-app-content>
-        <div
-          class="container"
-        >
+        <div class="container">
           <router-view
             :sprint="sprint"
             :productBacklog="productBacklog"

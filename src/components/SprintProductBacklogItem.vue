@@ -1,5 +1,7 @@
 <template>
-  <li>
+  <li
+    :style="{ width: itemCardWidth + 'px', height: itemCardHeight + 'px', marginBottom: isLastChild ? '0' : verticalPadding * 2 + 'px' }"
+  >
     <md-card>
       <h3>
         {{ data.title }}
@@ -35,7 +37,11 @@ export default {
     data: Object,
     estimationUnit: String,
     itemStatusList: Array,
-    activeSprintId: String
+    activeSprintId: String,
+    itemCardWidth: Number,
+    itemCardHeight: Number,
+    verticalPadding: Number,
+    isLastChild: Boolean
   },
   data: function () {
     return {
@@ -59,11 +65,15 @@ export default {
 
 <style scoped lang="scss">
 li {
+  &:last-child {
+    margin: 0;
+  }
+
   .md-card {
-    width: 160px;
-    height: 132px;
+    width: 100%;
+    height: 100%;
     background-color: #fff;
-    margin: 0 0 16px;
+    margin: 0;
     padding: 4px 0;
     cursor: pointer;
   }

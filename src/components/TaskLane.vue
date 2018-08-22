@@ -1,12 +1,13 @@
 <template>
   <li
     class="tasklane"
+    :style="{ height: `${itemCardHeight + verticalPadding * 2}px` }"
   >
     <ol>
       <li
         v-for="(status, statusIndex) in taskStatusList"
         :key="statusIndex"
-        :style="{ width: columnWidths[statusIndex] + 'px' }"
+        :style="{ width: `${columnWidths[statusIndex] + laneSidePadding * 3}px`, height: `${itemCardHeight + verticalPadding * 2}px`, padding: `${verticalPadding}px ${laneSidePadding}px`}"
         class="task-status-column"
       >
         <ul>
@@ -20,20 +21,23 @@
             :itemIndex="itemIndex"
             :parentRefs="parentRefs"
             :key="index"
+            :taskCardWidth="taskCardWidth"
+            :taskCardHeight="taskCardHeight"
+            :taskCardMargin="taskCardMargin"
             class="task-card"
           />
           <li
             v-if="statusIndex === 0"
             class="task-card-add"
-            :style="{ left: addButtonX + 'px', top: addButtonY + 'px' }"
+            :style="{ left: addButtonX + 'px', top: addButtonY + 'px', width: taskCardWidth + 'px', height: taskCardHeight + 'px' }"
           >
-            <button
+            <md-button
               v-if="!inputMode"
               @click="inputNewTask"
               :class="isUpdating ? '' : 'enabled'"
             >
-              +
-            </button>
+              <md-icon>add</md-icon>
+            </md-button>
             <textarea
               v-if="inputMode"
               v-model="newTask.title"
@@ -58,7 +62,12 @@ export default {
     itemTasks: Array,
     taskStatusList: Array,
     columnWidths: Array,
-    parentRefs: Object
+    parentRefs: Object,
+    itemCardHeight: Number,
+    taskCardWidth: Number,
+    taskCardMargin: Number,
+    laneSidePadding: Number,
+    verticalPadding: Number
   },
   data: function () {
     return {
@@ -74,6 +83,9 @@ export default {
     'TaskCard': TaskCard
   },
   computed: {
+    taskCardHeight: function () {
+      return (this.itemCardHeight - this.taskCardMargin) / 2
+    },
     todoTaskCount: function () {
       return this.itemTasks.length ? this.itemTasks[0].length : 0
     },
@@ -127,43 +139,38 @@ export default {
 
 <style scoped lang="scss">
 li.tasklane {
-  height: 132px;
-  margin-bottom: 8px;
 
   ol {
     display: flex;
     position: relative;
 
     li.task-status-column {
-      width: 252px;
-      height: 132px;
-      margin-right: 4px;
-      background-color: #fff;
+      border-right: 1px solid rgba(0,0,0,0.12);
 
       ul {
-        display: flex;
+        position: relative;
+        width: 100%;
+        height: 100%;
 
         li.task-card-add {
           position: absolute;
-          width: 124px;
-          height: 64px;
           background-color: #fff;
-          border-radius: 4px;
 
-          button {
+          .md-button {
             width: 100%;
             height: 100%;
+            margin: 0;
           }
 
           textarea {
-            width: 118px;
-            height: 58px;
+            width: 100%;
+            height: 100%;
+            margin: 0;
             font-size: 12px;
             outline: 0;
             resize: none;
             border: 1px solid #d6d6d6;
-            border-radius: 4px;
-            padding: 2px;
+            border-radius: 2px;
           }
         }
       }

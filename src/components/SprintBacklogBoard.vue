@@ -1,55 +1,70 @@
 <template>
-  <md-card
-    class="board-container"
-    ref="sprintBoard"
-  >
-    <div class="pb-column">
-      <div class="board-header">
-        プロダクトバックログ<br />アイテム
-      </div>
-      <draggable
-        element="ol"
-        v-model="sprintItems"
-        @end="onItemDragged"
+  <div ref="sprintBoard">
+    <md-card class="board-container">
+      <div
+        class="pb-column"
+        :style="{ width: itemCardWidth + laneSidePadding * 2 + 'px' }"
       >
-        <SprintProductBacklogItem
-          v-for="item in sprintItems"
-          :data="item"
-          :estimationUnit="teamRules.estimationUnit"
-          :itemStatusList="teamRules.itemStatusList"
-          :activeSprintId="activeSprintId"
-          :key="item.id"
-        />
-      </draggable>
-    </div>
-    <div class="task-column">
-      <div class="board-header">
-        <div>作業</div>
-        <ol class="board-sub-header">
-          <li
-            v-for="(taskStatus, index) in teamRules.taskStatusList"
-            :key="index"
-            :style="{ width: taskStatusHeaderWidths[index] + 'px' }"
-          >
-            {{ taskStatus }}
-          </li>
+        <div
+          class="board-header"
+          :style="{ width: itemCardWidth + laneSidePadding * 2 + 'px' }"
+        >
+          プロダクトバックログ<br />アイテム
+        </div>
+        <draggable
+          element="ol"
+          v-model="sprintItems"
+          @end="onItemDragged"
+          :style="{ padding: `${verticalPadding}px ${laneSidePadding}px` }"
+        >
+          <SprintProductBacklogItem
+            v-for="(item, index) in sprintItems"
+            :data="item"
+            :estimationUnit="teamRules.estimationUnit"
+            :itemStatusList="teamRules.itemStatusList"
+            :activeSprintId="activeSprintId"
+            :itemCardWidth="itemCardWidth"
+            :itemCardHeight="itemCardHeight"
+            :verticalPadding="verticalPadding"
+            :isLastChild="index + 1 === sprintItems.length"
+            :key="item.id"
+          />
+        </draggable>
+      </div>
+      <div class="task-column">
+        <div class="board-header">
+          <div>作業</div>
+          <ol class="board-sub-header">
+            <li
+              v-for="(taskStatus, index) in teamRules.taskStatusList"
+              :key="index"
+              :style="{ width: taskColumnWidths[index] + laneSidePadding * 3 + 'px' }"
+            >
+              {{ taskStatus }}
+            </li>
+          </ol>
+        </div>
+        <ol>
+          <TaskLane
+            v-for="(item, index) in sprintItems"
+            :activeSprintId="activeSprintId"
+            :item="item"
+            :itemIndex="index"
+            :itemTasks="sprintTasks[item.id] ? sprintTasks[item.id] : []"
+            :taskStatusList="teamRules.taskStatusList"
+            :columnWidths="taskColumnWidths"
+            :parentRefs="$refs"
+            :itemCardHeight="itemCardHeight"
+            :taskCardWidth="taskCardWidth"
+            :taskCardMargin="taskCardMargin"
+            :laneSidePadding="laneSidePadding"
+            :verticalPadding="verticalPadding"
+            :key="item.id"
+          />
         </ol>
       </div>
-      <ol>
-        <TaskLane
-          v-for="(item, index) in sprintItems"
-          :activeSprintId="activeSprintId"
-          :item="item"
-          :itemIndex="index"
-          :itemTasks="sprintTasks[item.id] ? sprintTasks[item.id] : []"
-          :taskStatusList="teamRules.taskStatusList"
-          :columnWidths="taskStatusHeaderWidths"
-          :parentRefs="$refs"
-          :key="item.id"
-        />
-      </ol>
-    </div>
-  </md-card>
+    </md-card>
+  </div>
 </template>
 
 <script>
@@ -72,17 +87,28 @@ export default {
     'draggable': draggable,
     'TaskLane': TaskLane
   },
+  data: function () {
+    return {
+      itemCardWidth: 160,
+      itemCardHeight: 132,
+      laneSidePadding: 16,
+      verticalPadding: 8,
+      taskCardWidth: 120,
+      taskCardMargin: 4
+    }
+  },
   computed: {
-    taskStatusHeaderWidths: function () {
+    taskColumnWidths: function () {
       let results = []
       const keys = Object.keys(this.sprintTasks)
       keys.forEach((key, index) => {
         for (let i = 0; i < this.teamRules.taskStatusList.length; i++) {
-          if (!results[i]) results.push(252)
+          if (!results[i]) results.push(this.taskCardWidth * 2 + this.taskCardMargin)
           if (!this.sprintTasks[key][i]) continue
-          let taskCount = i === 0 ? this.sprintTasks[key][i].length + 1 : this.sprintTasks[key][i].length
-          if (taskCount <= 4) continue
-          results[i] = Math.ceil(taskCount / 2) * 124 + (Math.ceil(taskCount / 2) - 1) * 4
+          let cardCount = i === 0 ? this.sprintTasks[key][i].length + 1 : this.sprintTasks[key][i].length
+          if (cardCount <= 4) continue
+          let value = Math.ceil(cardCount / 2) * this.taskCardWidth + (Math.ceil(cardCount / 2) - 1) * this.taskCardMargin
+          results[i] = results[i] ? Math.max(results[i], value) : value
         }
       })
       return results
@@ -122,7 +148,7 @@ export default {
 .board-container {
   position: absolute;
   display: flex;
-  margin: 0;
+  margin: 0 0 40px;
 
   .board-header {
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
@@ -132,23 +158,17 @@ export default {
   }
 
   .pb-column {
-    width: 192px;
     border-right: 1px solid rgba(0,0,0,0.12);
-
     .board-header {
-      width: 192px;
       height: 64px;
-    }
-    ol {
-      padding: 16px!important;
     }
   }
 
   .task-column {
     .board-header {
       > div {
-        height: 32px;
-        line-height: 32px;
+        height: 31px;
+        line-height: 31px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.12);
       }
       ol.board-sub-header {

@@ -1,6 +1,6 @@
 <template>
   <li
-    :style="isDragging ? { left: draggingX + 'px', top: draggingY + 'px', zIndex: '1000' } : { left: left + 'px', top: top + 'px' }"
+    :style="style"
     @mousedown="onMouseDown"
   >
     {{ task.title }}
@@ -18,7 +18,9 @@ export default {
     sprintId: String,
     itemId: String,
     itemIndex: Number,
-    parentRefs: Object
+    parentRefs: Object,
+    taskCardWidth: Number,
+    taskCardHeight: Number
   },
   data: function () {
     return {
@@ -28,6 +30,15 @@ export default {
     }
   },
   computed: {
+    style: function () {
+      return {
+        width: this.taskCardWidth + 'px',
+        height: this.taskCardHeight + 'px',
+        left: this.isDragging ? this.draggingX + 'px' : this.left + 'px',
+        top: this.isDragging ? this.draggingY + 'px' : this.top + 'px',
+        zIndex: this.isDragging ? '1000' : null
+      }
+    },
     left: function () {
       const columnNumber = this.index <= 3 ? this.index % 2 : Math.floor(this.index / 2)
       return this.baseXs[this.task.status] + columnNumber * 124 + columnNumber * 4
@@ -88,13 +99,11 @@ export default {
 <style scoped lang="scss">
 li {
   position: absolute;
-  width: 118px;
-  height: 58px;
   font-size: 11px;
   font-weight: 300;
   background-color: #fff;
   border: 1px solid #d6d6d6;
   padding: 2px;
-  border-radius: 4px;
+  border-radius: 2px;
 }
 </style>
