@@ -10,7 +10,7 @@
           {{ data.estimate !== null ? data.estimate + ' ' + estimationUnit : '見積り未入力' }}
         </span>
         <span
-          v-if="data.isSelectedForSprint || !data.isReady"
+          v-if="!isSelectionMode && (data.isSelectedForSprint || !data.isReady)"
           class="item-status-label"
         >
           {{ data.isSelectedForSprint ? 'This Sprint' : !data.isReady ? 'Not ready' : '' }}
