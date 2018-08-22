@@ -27,12 +27,15 @@
         </md-button>
       </md-dialog-actions>
     </md-dialog-content>
+    <md-progress-spinner
+      v-if="isProcessing"
+      md-mode="indeterminate"
+    />
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
-import router from './../router'
 
 export default {
   props: {
@@ -44,7 +47,8 @@ export default {
       'startDate': new Date(),
       'endDate': new Date(),
       'sprintNumber': this.activeSprint ? this.activeSprint.sprintNumber + 1 : 1,
-      'sprintGoal': ''
+      'sprintGoal': '',
+      'isProcessing': false
     }
   },
   methods: {
@@ -52,18 +56,21 @@ export default {
       createAndStartSprint: 'createAndStartSprint'
     }),
     submit: function () {
-      this.createAndStartSprint(
-        Object.assign(this.$data, { 'items': this.selectedItems })
-      )
+      this.createAndStartSprint({
+        'startDate': this.startDate,
+        'endDate': this.endDate,
+        'sprintNumber': this.sprintNumber,
+        'sprintGoal': this.sprintGoal,
+        'items': this.selectedItems
+      })
         .then(() => {
-          router.go(-1)
+          this.isProcessing = false
+          this.$emit('onCreateSprintFinish')
         })
         .catch(error => {
+          this.isProcessing = false
           console.error(error)
         })
-    },
-    close: function () {
-      router.go(-1)
     }
   }
 }
@@ -107,5 +114,11 @@ export default {
       z-index: 15;
     }
   }
+}
+
+.md-progress-spinner {
+  position: absolute;
+  top: calc(50% - 40px);
+  left: calc(50% - 30px);
 }
 </style>

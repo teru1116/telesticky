@@ -46,7 +46,7 @@ export default {
 
     // 選択したProductBacklogItemのスプリントフラグを更新
     payload.items.forEach(item => {
-      batch.update(pbRef.doc(item.id), { isInCurrentSprint: true })
+      batch.update(pbRef.doc(item.id), { isSelectedForSprint: true })
     })
 
     // teamドキュメントのactiveSprintIdを更新

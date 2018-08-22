@@ -93,6 +93,8 @@
       >
         <CreateSprintDialogContent
           v-on:onCreateSprintFinish="onCreateSprintFinish"
+          :activeSprint="sprint"
+          :selectedItems="selectedItems"
         />
       </md-dialog>
       <md-snackbar
@@ -194,6 +196,10 @@ export default {
           }
         }
       }
+    },
+    onCreateSprintFinish: function () {
+      this.showsCreateSprintDialog = false
+      this.isCorrectlyCreatedSprint = true
     }
   }
 }
