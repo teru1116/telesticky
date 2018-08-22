@@ -143,12 +143,16 @@ export default {
   },
   methods: {
     ...mapActions({
-      create: 'addProductBacklogItem'
+      addItem: 'addItem'
     }),
     submit: function () {
-      this.create({
+      this.addItem({
         'title': this.title,
         'estimate': this.estimate,
+        'description': this.description,
+        'value': this.value,
+        'isReady': this.isReady,
+        'definitionsOfItemDone': this.definitionsOfDone,
         'status': this.initialItemStatus
       })
         .then(() => {

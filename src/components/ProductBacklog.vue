@@ -56,9 +56,17 @@
           :initialItemStatus="teamRules.initialItemStatus"
           :definitionsOfDone="teamRules.definitionsOfDone"
           :selectedItems="selectedItems"
-          v-on:onCreateItemFinish="showDialog = false"
+          v-on:onCreateItemFinish="onCreateItemFinish"
         />
       </md-dialog>
+      <md-snackbar
+        :md-position="'center'"
+        :md-duration="4000"
+        :md-active.sync="isCorrectlyAdded"
+        md-persistent
+      >
+        <span>プロダクトバックログにアイテムが追加されました</span>
+      </md-snackbar>
       <md-content
         class="pb-planning-column md-elevation-10"
         :class="isSelectionMode ? 'show' : ''"
@@ -114,7 +122,8 @@ export default {
       isUpdating: false,
       showDialog: false,
       isSelectionMode: false,
-      selectedItems: []
+      selectedItems: [],
+      isCorrectlyAdded: false
     }
   },
   components: {
@@ -158,6 +167,10 @@ export default {
         'isRaised': isRaised,
         'relatedItems': relatedItems
       })
+    },
+    onCreateItemFinish: function () {
+      this.showDialog = false
+      this.isCorrectlyAdded = true
     },
     onItemCheck: function (param) {
       const item = param.item

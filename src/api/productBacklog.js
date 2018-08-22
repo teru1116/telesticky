@@ -35,7 +35,7 @@ export default {
           transaction.set(newItemRef, Object.assign(newItem, {
             number: newCount,
             order: newCount,
-            isInCurrentSprint: false
+            isSelectedForSprint: false
           }))
           transaction.update(teamRef, { totalItemCount: newCount })
         })
