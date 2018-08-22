@@ -109,6 +109,10 @@
         </md-button>
       </md-dialog-actions>
     </md-dialog-content>
+    <md-progress-spinner
+      v-if="isProcessing"
+      md-mode="indeterminate"
+    />
   </div>
 </template>
 
@@ -130,7 +134,8 @@ export default {
       'showsDescriptionPreview': false,
       'value': '',
       'isReady': true,
-      'definitionsOfItemDone': this.definitionsOfDone
+      'definitionsOfItemDone': this.definitionsOfDone,
+      'isProcessing': false
     }
   },
   computed: {
@@ -146,6 +151,7 @@ export default {
       addItem: 'addItem'
     }),
     submit: function () {
+      this.isProcessing = true
       this.addItem({
         'title': this.title,
         'estimate': this.estimate,
@@ -156,9 +162,11 @@ export default {
         'status': this.initialItemStatus
       })
         .then(() => {
+          this.isProcessing = false
           this.$emit('onCreateItemFinish')
         })
         .catch(error => {
+          this.isProcessing = false
           console.error(error)
         })
     }
@@ -241,5 +249,11 @@ export default {
       z-index: 15;
     }
   }
+}
+
+.md-progress-spinner {
+  position: absolute;
+  top: calc(50% - 40px);
+  left: calc(50% - 30px);
 }
 </style>
