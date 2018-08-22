@@ -38,7 +38,7 @@
             <li
               v-for="(taskStatus, index) in teamRules.taskStatusList"
               :key="index"
-              :style="{ width: taskColumnWidths[index] + laneSidePadding * 3 + 'px' }"
+              :style="{ width: taskColumnWidths[index] + laneSidePadding * 2.5 + 'px' }"
             >
               {{ taskStatus }}
             </li>

@@ -7,7 +7,7 @@
       <li
         v-for="(status, statusIndex) in taskStatusList"
         :key="statusIndex"
-        :style="{ width: `${columnWidths[statusIndex] + laneSidePadding * 3}px`, height: `${itemCardHeight + verticalPadding * 2}px`, padding: `${verticalPadding}px ${laneSidePadding}px`}"
+        :style="{ width: `${columnWidths[statusIndex] + laneSidePadding * 2.5}px`, height: `${itemCardHeight + verticalPadding * 2}px`, padding: `${verticalPadding}px ${laneSidePadding}px`}"
         class="task-status-column"
       >
         <ul>
@@ -24,6 +24,8 @@
             :taskCardWidth="taskCardWidth"
             :taskCardHeight="taskCardHeight"
             :taskCardMargin="taskCardMargin"
+            :laneSidePadding="laneSidePadding"
+            :verticalPadding="verticalPadding"
             class="task-card"
           />
           <li
@@ -100,11 +102,11 @@ export default {
     },
     addButtonX: function () {
       const column = this.todoTaskCount <= 3 ? this.todoTaskCount % 2 : Math.floor(this.todoTaskCount / 2)
-      return column * 124 + column * 4
+      return this.laneSidePadding + column * 124 + column * 4
     },
     addButtonY: function () {
       const row = this.todoTaskCount <= 3 ? Math.floor(this.todoTaskCount / 2) : this.todoTaskCount % 2
-      return row * 64 + row * 4
+      return this.verticalPadding + row * 64 + row * 4
     }
   },
   methods: {
@@ -139,7 +141,6 @@ export default {
 
 <style scoped lang="scss">
 li.tasklane {
-
   ol {
     display: flex;
     position: relative;
@@ -148,7 +149,6 @@ li.tasklane {
       border-right: 1px solid rgba(0,0,0,0.12);
 
       ul {
-        position: relative;
         width: 100%;
         height: 100%;
 

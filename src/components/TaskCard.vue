@@ -20,7 +20,9 @@ export default {
     itemIndex: Number,
     parentRefs: Object,
     taskCardWidth: Number,
-    taskCardHeight: Number
+    taskCardHeight: Number,
+    laneSidePadding: Number,
+    verticalPadding: Number
   },
   data: function () {
     return {
@@ -41,11 +43,12 @@ export default {
     },
     left: function () {
       const columnNumber = this.index <= 3 ? this.index % 2 : Math.floor(this.index / 2)
-      return this.baseXs[this.task.status] + columnNumber * 124 + columnNumber * 4
+      const baseX = this.baseXs[this.task.status] + this.laneSidePadding + this.laneSidePadding * 2 * this.task.status
+      return baseX + columnNumber * 124 + columnNumber * 4
     },
     top: function () {
       const rowNumber = this.index <= 3 ? Math.floor(this.index / 2) : this.index % 2
-      return rowNumber * 64 + rowNumber * 4
+      return this.verticalPadding + rowNumber * 64 + rowNumber * 4
     }
   },
   methods: {
