@@ -21,11 +21,13 @@
             :itemIndex="itemIndex"
             :parentRefs="parentRefs"
             :key="index"
+            :itemCardWidth="itemCardWidth"
             :taskCardWidth="taskCardWidth"
             :taskCardHeight="taskCardHeight"
             :taskCardMargin="taskCardMargin"
             :laneSidePadding="laneSidePadding"
             :verticalPadding="verticalPadding"
+            :menuVisible="menuVisible"
             class="task-card"
           />
           <li
@@ -65,11 +67,13 @@ export default {
     taskStatusList: Array,
     columnWidths: Array,
     parentRefs: Object,
+    itemCardWidth: Number,
     itemCardHeight: Number,
     taskCardWidth: Number,
     taskCardMargin: Number,
     laneSidePadding: Number,
-    verticalPadding: Number
+    verticalPadding: Number,
+    menuVisible: Boolean
   },
   data: function () {
     return {

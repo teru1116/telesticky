@@ -11,6 +11,7 @@
         :sprintItems="sprintItems"
         :sprintTasks="sprintTasks"
         :teamRules="teamRules"
+        :menuVisible="menuVisible"
       />
     </div>
   </div>

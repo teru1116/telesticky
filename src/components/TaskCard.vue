@@ -21,11 +21,13 @@ export default {
     itemId: String,
     itemIndex: Number,
     parentRefs: Object,
+    itemCardWidth: Number,
     taskCardWidth: Number,
     taskCardHeight: Number,
     taskCardMargin: Number,
     laneSidePadding: Number,
-    verticalPadding: Number
+    verticalPadding: Number,
+    menuVisible: Boolean
   },
   data: function () {
     return {
@@ -63,10 +65,16 @@ export default {
     },
     onTouchMove: function (e) {
       this.parentRefs.sprintBoard.addEventListener('mouseup', this.onTouchUp, false)
-      // FIXME: !menuVisible -> 0
-      const menuWidth = 280
-      this.draggingX = e.pageX - menuWidth
+
+      // マウス座標からカードのX座標を算出
+      const menuWidth = this.menuVisible ? 280 : 0
+      const leftMargin = menuWidth + this.itemCardWidth + this.laneSidePadding * 2 + 16
+      this.draggingX = e.pageX - leftMargin
+
+      // マウス座標からカードのX座標を算出
       this.draggingY = e.pageY - (180 + this.itemIndex * 132 + this.itemIndex * 8)
+
+      // FIXME: スクロールが考慮されていないため、ある程度スクロールした状態でmousemoveするとdraggingX/Yが期待と違う値になる
     },
     onTouchUp: function (e) {
       this.parentRefs.sprintBoard.removeEventListener('mousemove', this.onTouchMove, false)

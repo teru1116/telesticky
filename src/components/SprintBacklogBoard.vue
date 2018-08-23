@@ -59,11 +59,13 @@
               :taskStatusList="teamRules.taskStatusList"
               :columnWidths="taskColumnWidths"
               :parentRefs="$refs"
+              :itemCardWidth="itemCardWidth"
               :itemCardHeight="itemCardHeight"
               :taskCardWidth="taskCardWidth"
               :taskCardMargin="taskCardMargin"
               :laneSidePadding="laneSidePadding"
               :verticalPadding="verticalPadding"
+              :menuVisible="menuVisible"
               :key="item.id"
             />
           </ol>
@@ -86,7 +88,8 @@ export default {
     activeSprintId: String,
     sprintItems: Array,
     sprintTasks: Object,
-    teamRules: Object
+    teamRules: Object,
+    menuVisible: Boolean
   },
   components: {
     'SprintProductBacklogItem': SprintProductBacklogItem,
