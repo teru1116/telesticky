@@ -63,7 +63,9 @@ export default {
     },
     onTouchMove: function (e) {
       this.parentRefs.sprintBoard.addEventListener('mouseup', this.onTouchUp, false)
-      this.draggingX = e.pageX - 280
+      // FIXME: !menuVisible -> 0
+      const menuWidth = 280
+      this.draggingX = e.pageX - menuWidth
       this.draggingY = e.pageY - (180 + this.itemIndex * 132 + this.itemIndex * 8)
     },
     onTouchUp: function (e) {

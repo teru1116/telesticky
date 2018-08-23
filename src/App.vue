@@ -24,8 +24,15 @@ html, body {
     height: 64px;
     margin-top: -64px;
     padding: 0 16px;
+
     * {
       z-index: 12;
+      margin: auto 0;
+    }
+
+    h2 {
+      text-align: left;
+      color: #fff;
     }
   }
 

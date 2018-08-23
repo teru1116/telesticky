@@ -2,6 +2,8 @@
   <div class="board-scroll-view">
     <div ref="sprintBoard" class="board-scroll-content-view">
       <md-card class="board-container">
+
+        <!-- item column -->
         <div
           class="pb-column"
           :style="{ width: itemCardWidth + laneSidePadding * 2 + 'px' }"
@@ -32,6 +34,8 @@
             />
           </draggable>
         </div>
+
+        <!-- task columns -->
         <div class="task-column">
           <div class="board-header">
             <div>作業</div>
@@ -158,8 +162,11 @@ export default {
   overflow-y: scroll;
 
   .board-scroll-content-view {
-    .board-container {
-      display: inline-flex; /* 要素の幅を子要素の幅の合計にするため */
+    display: inline-block;    // 幅が子要素の幅で決まるようinlineを設定
+    padding: 16px;            // 上記により右側にもpaddingがあたるようにできた
+
+    .md-card.board-container {
+      display: inline-flex;   // 幅が子要素の幅で決まるようinlineを設定
       margin: 0;
 
       .board-header {

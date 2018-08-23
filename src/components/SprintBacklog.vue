@@ -32,17 +32,3 @@ export default {
   }
 }
 </script>
-
-<style scoped lang="scss">
-.toolbar-content {
-  height: 64px;
-  margin-top: -64px;
-
-  h2 {
-    z-index: 2;
-    font-size: 20px;
-    text-align: left;
-    color: #fff;
-  }
-}
-</style>

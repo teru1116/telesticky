@@ -11,54 +11,36 @@
         </md-button>
       </div>
     </div>
+
     <!-- コンテンツ部 -->
-    <div class="pb-content">
+    <div class="main-content-container">
 
       <!-- show items -->
       <md-content class="pb-items-column md-elevation-1">
-        <draggable
-          element="ol"
-          v-model="productBacklog.items"
-          @end="onItemDragged"
-          :options="isUpdating ? {disabled: true} : {disabled: false}"
-        >
-          <ProductBacklogItem
-            v-for="item in productBacklog.items"
-            :data="item"
-            :estimationUnit="teamRules.estimationUnit"
-            :isSelectionMode="isSelectionMode"
-            :key="item.id"
-            v-on:onItemCheck="onItemCheck"
-          />
-        </draggable>
-        <md-button
-          @click="showsCreateItemDialog=true"
-          class="md-fab md-primary add-button"
-        >
-          <md-icon>add</md-icon>
-        </md-button>
+        <div class="pb-items-column-scroll-view">
+          <draggable
+            element="ol"
+            v-model="productBacklog.items"
+            @end="onItemDragged"
+            :options="isUpdating ? { disabled: true } : { disabled: false }"
+          >
+            <ProductBacklogItem
+              v-for="item in productBacklog.items"
+              :data="item"
+              :estimationUnit="teamRules.estimationUnit"
+              :isSelectionMode="isSelectionMode"
+              :key="item.id"
+              v-on:onItemCheck="onItemCheck"
+            />
+          </draggable>
+          <md-button
+            @click="showsCreateItemDialog=true"
+            class="md-fab md-primary add-button"
+          >
+            <md-icon>add</md-icon>
+          </md-button>
+        </div>
       </md-content>
-
-      <!-- add item -->
-      <md-dialog
-        :md-active.sync="showsCreateItemDialog"
-      >
-        <CreateItemDialogContent
-          :estimationUnit="teamRules.estimationUnit"
-          :initialItemStatus="teamRules.initialItemStatus"
-          :definitionsOfDone="teamRules.definitionsOfDone"
-          :selectedItems="selectedItems"
-          v-on:onCreateItemFinish="onCreateItemFinish"
-        />
-      </md-dialog>
-      <md-snackbar
-        :md-position="'center'"
-        :md-duration="4000"
-        :md-active.sync="isCorrectlyAdded"
-        md-persistent
-      >
-        <span>プロダクトバックログにアイテムが追加されました</span>
-      </md-snackbar>
 
       <!-- selection mode -->
       <md-content
@@ -91,6 +73,7 @@
           </div>
         </div>
       </md-content>
+
       <md-dialog
         :md-active.sync="showsCreateSprintDialog"
       >
@@ -107,6 +90,27 @@
         md-persistent
       >
         <span>新しいスプリントが開始されました</span>
+      </md-snackbar>
+
+      <!-- add item dialog -->
+      <md-dialog
+        :md-active.sync="showsCreateItemDialog"
+      >
+        <CreateItemDialogContent
+          :estimationUnit="teamRules.estimationUnit"
+          :initialItemStatus="teamRules.initialItemStatus"
+          :definitionsOfDone="teamRules.definitionsOfDone"
+          :selectedItems="selectedItems"
+          v-on:onCreateItemFinish="onCreateItemFinish"
+        />
+      </md-dialog>
+      <md-snackbar
+        :md-position="'center'"
+        :md-duration="4000"
+        :md-active.sync="isCorrectlyAdded"
+        md-persistent
+      >
+        <span>プロダクトバックログにアイテムが追加されました</span>
       </md-snackbar>
     </div>
   </div>
@@ -151,6 +155,9 @@ export default {
         total += item.estimate
       })
       return total
+    },
+    columnNumber: function () {
+      return 0
     }
   },
   methods: {
@@ -230,35 +237,35 @@ export default {
   }
 }
 
-.pb-content {
-  display: flex;
-  height: calc(100vh - 58px);
+.main-content-container {
+  display: flex;              // items-columnとplanning-columnを横並びに
+  height: calc(100vh - 64px); // viewportからtool-barを引いた高さ
 
   .pb-items-column {
-    flex: 1;
-    padding: 24px 16px 0;
-    position: relative;
+    flex: 1;                  // 右側のplanning-columnに対して幅可変
+    position: relative;       // add button の位置基準
 
-    ol {
-      display: flex;
-      flex-direction: column;
-      flex-wrap: wrap;
-      align-content: baseline;
-      height: 560px;
-      margin: 32px 0 0;
-      padding: 0;
-      position: relative;
-    }
+    .pb-items-column-scroll-view {
+      overflow: scroll;       // 子要素のカード群をコンテンツとするScrollView
 
-    .md-button.add-button {
-      position: absolute;
-      bottom: 24px;
-      right: 24px;
-      z-index: 999;
-      background-color: var(--md-theme-demo-light-accent,#ff5252)!important;
+      ol {
+        height: calc(100vh - 64px);   // viewportからtool-barを引いた高さ
+        display: inline-flex;         // 幅が子要素の幅で決まるようinlineのflexを設定, したもののflex-wrapで折り返した分の幅は反映されなかった...
+        flex-direction: column;       // 縦方向に並べる
+        flex-wrap: wrap;              // 折り返す
+        padding: 16px!important;      // 幅が子要素に関係ない値になっているので右側のpaddingだけ実質あたっていない. 追々スタイリング方法を考える TODO
+      }
 
-      .md-icon {
-        color: #fff;
+      .md-button.add-button {
+        position: absolute;
+        bottom: 24px;
+        right: 24px;
+        z-index: 999;
+        background-color: var(--md-theme-demo-light-accent,#ff5252)!important;
+
+        .md-icon {
+          color: #fff;
+        }
       }
     }
   }
