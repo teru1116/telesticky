@@ -18,6 +18,21 @@ html, body {
 }
 
 #app {
+  .toolbar-content {
+    background-color: rgba(255, 255, 255, 0.0);
+    display: flex;
+    height: 64px;
+    margin-top: -64px;
+    padding: 0 16px;
+    * {
+      z-index: 12;
+    }
+  }
+
+  .main-content-container {
+    height: calc(100vh - 64px);
+  }
+
   font-family: "SF Pro Text","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
   color: #222222;
 
@@ -56,16 +71,6 @@ html, body {
 
   button {
     cursor: pointer;
-  }
-
-  .dummy-toolbar {
-    background-color: rgba(255, 255, 255, 0.0);
-    display: flex;
-    margin: -83px 0 0px;
-    padding: 0 16px;
-    * {
-      z-index: 12;
-    }
   }
 }
 </style>

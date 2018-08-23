@@ -148,6 +148,10 @@ li.tasklane {
     li.task-status-column {
       border-right: 1px solid rgba(0,0,0,0.12);
 
+      &:last-child {
+        border: 0;
+      }
+
       ul {
         width: 100%;
         height: 100%;

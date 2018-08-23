@@ -1,69 +1,71 @@
 <template>
-  <div ref="sprintBoard">
-    <md-card class="board-container">
-      <div
-        class="pb-column"
-        :style="{ width: itemCardWidth + laneSidePadding * 2 + 'px' }"
-      >
+  <div class="board-scroll-view">
+    <div ref="sprintBoard" class="board-scroll-content-view">
+      <md-card class="board-container">
         <div
-          class="board-header"
+          class="pb-column"
           :style="{ width: itemCardWidth + laneSidePadding * 2 + 'px' }"
         >
-          プロダクトバックログ<br />アイテム
+          <div
+            class="board-header"
+            :style="{ width: itemCardWidth + laneSidePadding * 2 + 'px' }"
+          >
+            プロダクトバックログ<br />アイテム
+          </div>
+          <draggable
+            element="ol"
+            v-model="sprintItems"
+            @end="onItemDragged"
+            :style="{ padding: `${verticalPadding}px ${laneSidePadding}px` }"
+          >
+            <SprintProductBacklogItem
+              v-for="(item, index) in sprintItems"
+              :data="item"
+              :estimationUnit="teamRules.estimationUnit"
+              :itemStatusList="teamRules.itemStatusList"
+              :activeSprintId="activeSprintId"
+              :itemCardWidth="itemCardWidth"
+              :itemCardHeight="itemCardHeight"
+              :verticalPadding="verticalPadding"
+              :isLastChild="index + 1 === sprintItems.length"
+              :key="item.id"
+            />
+          </draggable>
         </div>
-        <draggable
-          element="ol"
-          v-model="sprintItems"
-          @end="onItemDragged"
-          :style="{ padding: `${verticalPadding}px ${laneSidePadding}px` }"
-        >
-          <SprintProductBacklogItem
-            v-for="(item, index) in sprintItems"
-            :data="item"
-            :estimationUnit="teamRules.estimationUnit"
-            :itemStatusList="teamRules.itemStatusList"
-            :activeSprintId="activeSprintId"
-            :itemCardWidth="itemCardWidth"
-            :itemCardHeight="itemCardHeight"
-            :verticalPadding="verticalPadding"
-            :isLastChild="index + 1 === sprintItems.length"
-            :key="item.id"
-          />
-        </draggable>
-      </div>
-      <div class="task-column">
-        <div class="board-header">
-          <div>作業</div>
-          <ol class="board-sub-header">
-            <li
-              v-for="(taskStatus, index) in teamRules.taskStatusList"
-              :key="index"
-              :style="{ width: taskColumnWidths[index] + 'px' }"
-            >
-              {{ taskStatus }}
-            </li>
+        <div class="task-column">
+          <div class="board-header">
+            <div>作業</div>
+            <ol class="board-sub-header">
+              <li
+                v-for="(taskStatus, index) in teamRules.taskStatusList"
+                :key="index"
+                :style="{ width: taskColumnWidths[index] + 'px' }"
+              >
+                {{ taskStatus }}
+              </li>
+            </ol>
+          </div>
+          <ol>
+            <TaskLane
+              v-for="(item, index) in sprintItems"
+              :activeSprintId="activeSprintId"
+              :item="item"
+              :itemIndex="index"
+              :itemTasks="sprintTasks[item.id] ? sprintTasks[item.id] : []"
+              :taskStatusList="teamRules.taskStatusList"
+              :columnWidths="taskColumnWidths"
+              :parentRefs="$refs"
+              :itemCardHeight="itemCardHeight"
+              :taskCardWidth="taskCardWidth"
+              :taskCardMargin="taskCardMargin"
+              :laneSidePadding="laneSidePadding"
+              :verticalPadding="verticalPadding"
+              :key="item.id"
+            />
           </ol>
         </div>
-        <ol>
-          <TaskLane
-            v-for="(item, index) in sprintItems"
-            :activeSprintId="activeSprintId"
-            :item="item"
-            :itemIndex="index"
-            :itemTasks="sprintTasks[item.id] ? sprintTasks[item.id] : []"
-            :taskStatusList="teamRules.taskStatusList"
-            :columnWidths="taskColumnWidths"
-            :parentRefs="$refs"
-            :itemCardHeight="itemCardHeight"
-            :taskCardWidth="taskCardWidth"
-            :taskCardMargin="taskCardMargin"
-            :laneSidePadding="laneSidePadding"
-            :verticalPadding="verticalPadding"
-            :key="item.id"
-          />
-        </ol>
-      </div>
-    </md-card>
+      </md-card>
+    </div>
   </div>
 </template>
 
@@ -151,47 +153,53 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.board-container {
-  position: absolute;
-  display: flex;
-  margin: 0 0 40px;
+.board-scroll-view {
+  overflow-x: scroll;
+  overflow-y: scroll;
 
-  .board-header {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-    text-align: center;
-    display: table-cell;
-    vertical-align: middle;
-  }
+  .board-scroll-content-view {
+    .board-container {
+      display: inline-flex; /* 要素の幅を子要素の幅の合計にするため */
+      margin: 0;
 
-  .pb-column {
-    border-right: 1px solid rgba(0,0,0,0.12);
-    .board-header {
-      height: 64px;
-    }
-  }
-
-  .task-column {
-    .board-header {
-      > div {
-        height: 31px;
-        line-height: 31px;
+      .board-header {
         border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        text-align: center;
+        display: table-cell;
+        vertical-align: middle;
       }
-      ol.board-sub-header {
-        display: flex;
-        height: 32px;
-        padding: 0 16px;
 
-        li {
-          width: 252px;
-          line-height: 31px;
-          text-align: center;
-          font-size: 13px;
-          font-weight: 300;
-          border-right: 1px solid rgba(0,0,0,0.12);
+      .pb-column {
+        border-right: 1px solid rgba(0,0,0,0.12);
+        .board-header {
+          height: 64px;
+        }
+      }
 
-          &:last-child {
-            border-right: 0;
+      .task-column {
+        .board-header {
+          > div {
+            height: 31px;
+            line-height: 31px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+          }
+          ol.board-sub-header {
+            display: flex;
+            height: 32px;
+            padding: 0 16px;
+
+            li {
+              width: 252px;
+              line-height: 31px;
+              text-align: center;
+              font-size: 13px;
+              font-weight: 300;
+              border-right: 1px solid rgba(0,0,0,0.12);
+
+              &:last-child {
+                border-right: 0;
+              }
+            }
           }
         }
       }

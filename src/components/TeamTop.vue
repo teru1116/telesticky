@@ -76,16 +76,14 @@
       </md-app-drawer>
 
       <md-app-content>
-        <div class="container">
-          <router-view
-            :sprint="sprint"
-            :productBacklog="productBacklog"
-            :sprintItems="productBacklog.items.filter(item => {return item.isSelectedForSprint})"
-            :sprintTasks="sprintTasks"
-            :teamRules="teamRules"
-            :menuVisible="menuVisible"
-          />
-        </div>
+        <router-view
+          :sprint="sprint"
+          :productBacklog="productBacklog"
+          :sprintItems="productBacklog.items.filter(item => {return item.isSelectedForSprint})"
+          :sprintTasks="sprintTasks"
+          :teamRules="teamRules"
+          :menuVisible="menuVisible"
+        />
       </md-app-content>
     </md-app>
   </div>
@@ -146,12 +144,16 @@ export default {
 <style scoped lang="scss">
 .md-app {
   height: 100vh;
+  padding: 0;
 
-  #toggle-menu-button {
-    left: 64px;
+  .md-app-toolbar {
+    height: 64px;
+    background-color: #03a9f4!important;
+    z-index: 11;
   }
 
   .md-app-drawer {
+    width: 260px;
     background-color: #2d323e!important;
     .md-toolbar {
       .md-icon {
@@ -165,20 +167,11 @@ export default {
       }
     }
   }
-}
 
-.md-app-toolbar {
-  height: 64px;
-  background-color: #03a9f4!important;
-  z-index: 11;
-  margin-bottom: 24px;
-}
-
-.md-drawer {
-  width: 260px;
-}
-
-.md-app-content {
-  padding: 0;
+  .md-app-content {
+    padding: 0;
+    border: 0;
+    height: auto;
+  }
 }
 </style>

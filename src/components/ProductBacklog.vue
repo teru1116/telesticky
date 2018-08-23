@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="dummy-toolbar">
+    <!-- app-toolbarはコンテンツcomponent側で制御 -->
+    <div class="toolbar-content">
       <h2 :style="menuVisible ? { marginLeft: '0' } : { marginLeft: '48px' }">プロダクトバックログ</h2>
       <div class="pbl-header-right">
         <md-button
@@ -10,7 +11,9 @@
         </md-button>
       </div>
     </div>
+    <!-- コンテンツ部 -->
     <div class="pb-content">
+
       <!-- show items -->
       <md-content class="pb-items-column md-elevation-1">
         <draggable
@@ -206,7 +209,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.dummy-toolbar {
+.toolbar-content {
   h2 {
     z-index: 2;
     font-size: 20px;
