@@ -5,9 +5,14 @@
       <h2 :style="menuVisible ? { marginLeft: '0' } : { marginLeft: '48px' }">プロダクトバックログ</h2>
       <div class="pbl-header-right">
         <md-button
-          @click="startSprintPlanning"
+          @click="onNewSprintButtonClick"
         >
-          {{ isSelectionMode ? 'キャンセル' : 'スプリントに追加' }}
+          新しいスプリント
+        </md-button>
+        <md-button
+          @click="onEditSprintButtonClick"
+        >
+          今スプリントのアイテムを変更
         </md-button>
       </div>
     </div>
@@ -165,7 +170,10 @@ export default {
       move: 'moveItem',
       startSprint: 'createAndStartSprint'
     }),
-    startSprintPlanning: function () {
+    onNewSprintButtonClick: function () {
+      this.isSelectionMode = !this.isSelectionMode
+    },
+    onEditSprintButtonClick: function () {
       this.isSelectionMode = !this.isSelectionMode
     },
     onItemDragged: function (event) {
@@ -231,8 +239,7 @@ export default {
       color: #444;
       background-color: #fff;
       float: right;
-      margin: 8px 0 0 8px;
-      z-index: 2;
+      margin-left: 8px;
     }
   }
 }

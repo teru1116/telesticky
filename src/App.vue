@@ -25,7 +25,7 @@ html, body {
     margin-top: -64px;
     padding: 0 16px;
 
-    * {
+    > * {
       z-index: 12;
       margin: auto 0;
     }
