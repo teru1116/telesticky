@@ -17,6 +17,17 @@
       </div>
     </div>
 
+    <!-- alert -->
+    <md-dialog-confirm
+      :md-active.sync="showsAlertNewSprint"
+      md-title="新しいスプリントを作成します。よろしいですか？"
+      md-content="まだ前のスプリント期間が終了していません。<br />スプリント期間は固定であるべきです。<br />本当に新しいスプリントを作成しますか？"
+      md-confirm-text="OK"
+      md-cancel-text="キャンセル"
+      @md-cancel="showsAlertNewSprint = false"
+      @md-confirm="onConfirm"
+    />
+
     <!-- コンテンツ部 -->
     <div class="main-content-container">
 
@@ -139,7 +150,7 @@ export default {
   data: function () {
     return {
       isUpdating: false,
-      showsCreateItemDialog: false,
+      showsAlertNewSprint: false,
       isCorrectlyAdded: false,
       isSelectionMode: false,
       selectedItems: [],
@@ -171,7 +182,8 @@ export default {
       startSprint: 'createAndStartSprint'
     }),
     onNewSprintButtonClick: function () {
-      this.isSelectionMode = !this.isSelectionMode
+      // TODO: if today < sprint.endDate
+      this.showsAlertNewSprint = true
     },
     onEditSprintButtonClick: function () {
       this.isSelectionMode = !this.isSelectionMode
