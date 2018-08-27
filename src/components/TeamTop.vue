@@ -67,7 +67,7 @@
 
           <md-list-item>
             <router-link
-              to="/"
+              to="team_settings"
             >
               <span>設定</span>
             </router-link>

@@ -9,6 +9,7 @@ import Invited from '@/components/Invited'
 import TeamTop from '@/components/TeamTop'
 import ProductBacklog from '@/components/ProductBacklog'
 import SprintBacklog from '@/components/SprintBacklog'
+import Settings from '@/components/TeamSettings'
 
 Vue.use(Router)
 
@@ -61,6 +62,11 @@ export default new Router({
               path: 'sprint_backlog',
               name: 'SprintBacklog',
               component: SprintBacklog
+            },
+            {
+              path: 'team_settings',
+              name: 'TeamSettings',
+              component: Settings
             }
           ]
         }

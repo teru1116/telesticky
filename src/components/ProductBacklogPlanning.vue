@@ -63,7 +63,7 @@
         />
         <md-button
           class="md-raised md-primary button-start-sprint"
-          @click="showsCreateSprintDialog = true"
+          @click="onStartSprintButtonClick"
         >
           新しいスプリントを開始する
         </md-button>
@@ -73,6 +73,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   props: {
     team: Object,
@@ -93,6 +95,23 @@ export default {
       startDate: new Date(),
       // FIXME: [Vue Warn] expected Date, got Number
       endDate: new Date().setDate(new Date().getDate() + this.team.sprintDuration)
+    }
+  },
+  methods: {
+    ...mapActions({
+      startSprint: 'createAndStartSprint'
+    }),
+    onStartSprintButtonClick: function () {
+      this.startSprint({
+        'sprintNumber': this.team.totalSprintCount + 1,
+        'startDate': this.startDate,
+        'endDate': this.endDate,
+        'sprintGoal': this.sprintGoal,
+        'items': this.selectedItems
+      })
+        .then(() => {
+          this.$emit('onFinishPlanning')
+        })
     }
   }
 }

@@ -69,6 +69,7 @@
           :team="team"
           :selectedItems="selectedItems"
           v-on:cancelPlanning="mode = 'default'"
+          v-on:finishPlanning="onFinishPlanning"
         />
       </md-content>
       <md-snackbar
@@ -107,7 +108,7 @@
 <script>
 import { mapActions } from 'vuex'
 // util
-import util from '@/utils'
+// import util from '@/utils'
 // components
 import draggable from 'vuedraggable'
 import ProductBacklogItem from './ProductBacklogItem'
@@ -145,8 +146,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      move: 'moveItem',
-      startSprint: 'createAndStartSprint'
+      move: 'moveItem'
     }),
     onNewSprintButtonClick: function () {
       this.startCreatingNewSprint()
@@ -159,6 +159,10 @@ export default {
     },
     startCreatingNewSprint: function () {
       this.mode = 'planning'
+    },
+    onFinishPlanning: function () {
+      this.mode = 'default'
+      this.isCorrectlyCreatedSprint = true
     },
     onEditSprintButtonClick: function () {
       this.isSelectionMode = !this.isSelectionMode

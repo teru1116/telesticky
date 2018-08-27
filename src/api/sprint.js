@@ -49,9 +49,10 @@ export default {
       batch.update(pbRef.doc(item.id), { isSelectedForSprint: true })
     })
 
-    // teamドキュメントのactiveSprintIdを更新
+    // teamドキュメントを更新
     batch.update(teamRef, {
-      activeSprintId: newSprintId
+      activeSprintId: newSprintId,
+      totalSprintCount: payload.sprintNumber
     })
 
     // commit

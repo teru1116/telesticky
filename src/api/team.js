@@ -13,7 +13,20 @@ export default {
   get (callback) {
     teamRef.get()
       .then(doc => {
-        callback(Object.assign(doc.data().config, { id: doc.id }))
+        callback(Object.assign(doc.data(), { id: doc.id }))
       })
+  },
+
+  update (param) {
+    console.log(param)
+    return new Promise((resolve, reject) => {
+      teamRef.update(param)
+        .then(() => {
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
   }
 }
