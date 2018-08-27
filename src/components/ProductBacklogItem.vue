@@ -10,13 +10,13 @@
           {{ data.estimate !== null ? data.estimate + ' ' + estimationUnit : '見積り未入力' }}
         </span>
         <span
-          v-if="!isSelectionMode && (data.isSelectedForSprint || !data.isReady)"
+          v-if="mode === 'default' && (data.isSelectedForSprint || !data.isReady)"
           class="item-status-label"
         >
           {{ data.isSelectedForSprint ? 'This Sprint' : !data.isReady ? 'Not ready' : '' }}
         </span>
         <md-checkbox
-          v-if="isSelectionMode"
+          v-if="mode === 'planning'"
           v-model="isChecked"
           @change="$emit('onItemCheck', { 'item': data, 'isChecked': isChecked })"
         />
@@ -29,8 +29,8 @@
 export default {
   props: {
     data: Object,
-    estimationUnit: String,
-    isSelectionMode: Boolean
+    mode: String,
+    estimationUnit: String
   },
   data: function () {
     return {

@@ -81,7 +81,7 @@
           :productBacklog="productBacklog"
           :sprintItems="productBacklog.items.filter(item => {return item.isSelectedForSprint})"
           :sprintTasks="sprintTasks"
-          :teamRules="teamRules"
+          :team="team"
           :menuVisible="menuVisible"
         />
       </md-app-content>
@@ -97,7 +97,7 @@ export default {
     ...mapState([
       'sprint',
       'productBacklog',
-      'teamRules'
+      'team'
     ]),
     currentMenu () {
       let path = this.$route.path.split('/')[3]
@@ -127,7 +127,7 @@ export default {
     ...mapActions({
       listenItems: 'listenItems',
       listenSprint: 'listenSprint',
-      getTeamRules: 'getTeamRules'
+      getTeam: 'getTeam'
     }),
     toggleMenu () {
       this.menuVisible = !this.menuVisible
@@ -136,7 +136,7 @@ export default {
   created: function () {
     this.listenItems()
     this.listenSprint()
-    this.getTeamRules()
+    this.getTeam()
   }
 }
 </script>

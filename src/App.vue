@@ -33,6 +33,20 @@ html, body {
     h2 {
       text-align: left;
       color: #fff;
+      font-size: 20px;
+      text-align: left;
+      color: #fff;
+    }
+
+    .pbl-header-right {
+      flex: 1;
+
+      .md-button {
+        color: #444;
+        background-color: #fff;
+        float: right;
+        margin-left: 8px;
+      }
     }
   }
 
@@ -78,6 +92,15 @@ html, body {
 
   button {
     cursor: pointer;
+  }
+}
+
+// force potisioning md-date-picker
+.md-datepicker-dialog {
+  top: 40%!important;
+
+  .md-datepicker-body-content {
+    height: 264px!important;
   }
 }
 </style>

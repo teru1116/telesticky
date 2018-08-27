@@ -23,8 +23,8 @@
             <SprintProductBacklogItem
               v-for="(item, index) in sprintItems"
               :data="item"
-              :estimationUnit="teamRules.estimationUnit"
-              :itemStatusList="teamRules.itemStatusList"
+              :estimationUnit="team.estimationUnit"
+              :itemStatusList="team.itemStatusList"
               :activeSprintId="activeSprintId"
               :itemCardWidth="itemCardWidth"
               :itemCardHeight="itemCardHeight"
@@ -41,7 +41,7 @@
             <div>作業</div>
             <ol class="board-sub-header">
               <li
-                v-for="(taskStatus, index) in teamRules.taskStatusList"
+                v-for="(taskStatus, index) in team.taskStatusList"
                 :key="index"
                 :style="{ width: taskColumnWidths[index] + 'px' }"
               >
@@ -56,7 +56,7 @@
               :item="item"
               :itemIndex="index"
               :itemTasks="sprintTasks[item.id] ? sprintTasks[item.id] : []"
-              :taskStatusList="teamRules.taskStatusList"
+              :taskStatusList="team.taskStatusList"
               :columnWidths="taskColumnWidths"
               :parentRefs="$refs"
               :itemCardWidth="itemCardWidth"
@@ -88,7 +88,7 @@ export default {
     activeSprintId: String,
     sprintItems: Array,
     sprintTasks: Object,
-    teamRules: Object,
+    team: Object,
     menuVisible: Boolean
   },
   components: {
@@ -111,7 +111,7 @@ export default {
       let results = []
       const keys = Object.keys(this.sprintTasks)
       keys.forEach((key, index) => {
-        for (let i = 0; i < this.teamRules.taskStatusList.length; i++) {
+        for (let i = 0; i < this.team.taskStatusList.length; i++) {
           if (!results[i]) { results.push(this.taskCardWidth * 2 + this.taskCardMargin + this.laneSidePadding * 2) }
           if (!this.sprintTasks[key] || !this.sprintTasks[key][i]) { continue }
           // タスクカードの枚数

@@ -1,11 +1,12 @@
 <template>
   <div>
-    <!-- app-toolbarはコンテンツcomponent側で制御 -->
+    <!-- toolbar content -->
     <div class="toolbar-content">
       <h2 :style="menuVisible ? { marginLeft: '0' } : { marginLeft: '48px' }">プロダクトバックログ</h2>
       <div class="pbl-header-right">
         <md-button
           @click="onNewSprintButtonClick"
+          :disabled="mode === 'planning'"
         >
           新しいスプリント
         </md-button>
@@ -25,7 +26,7 @@
       md-confirm-text="OK"
       md-cancel-text="キャンセル"
       @md-cancel="showsAlertNewSprint = false"
-      @md-confirm="onConfirm"
+      @md-confirm="startCreatingNewSprint"
     />
 
     <!-- コンテンツ部 -->
@@ -43,8 +44,8 @@
             <ProductBacklogItem
               v-for="item in productBacklog.items"
               :data="item"
-              :estimationUnit="teamRules.estimationUnit"
-              :isSelectionMode="isSelectionMode"
+              :estimationUnit="team.estimationUnit"
+              :mode="mode"
               :key="item.id"
               v-on:onItemCheck="onItemCheck"
             />
@@ -58,47 +59,18 @@
         </div>
       </md-content>
 
-      <!-- selection mode -->
+      <!-- planning mode -->
       <md-content
         class="pb-planning-column md-elevation-10"
-        :class="isSelectionMode ? 'show' : ''"
+        :class="mode === 'planning' ? 'show' : ''"
       >
-        <div
-          v-if="isSelectionMode"
-        >
-          <p>
-            スプリントで届けるプロダクトバックログアイテムを選択します。<br />
-            選択し終えたら、スプリントバックログ画面で、より詳細な計画づくりをします。
-          </p>
-          <dl>
-            <dt>選択中のアイテム数</dt>
-            <dd>{{ selectedItems.length }} 個</dd>
-            <dt>選択中のアイテムの見積り値合計</dt>
-            <dd>{{ selectedTotalEstimate + ' ' + teamRules.estimationUnit }}</dd>
-          </dl>
-          <div class="planning-actions">
-            <md-button class="md-raised">
-              今スプリントのアイテムを変更する
-            </md-button>
-            <md-button
-              class="md-raised md-primary"
-              @click="showsCreateSprintDialog = true"
-            >
-              新しいスプリントを開始する
-            </md-button>
-          </div>
-        </div>
-      </md-content>
-
-      <md-dialog
-        :md-active.sync="showsCreateSprintDialog"
-      >
-        <CreateSprintDialogContent
-          v-on:onCreateSprintFinish="onCreateSprintFinish"
-          :activeSprint="sprint"
+        <ProductBacklogPlanning
+          v-if="mode === 'planning'"
+          :team="team"
           :selectedItems="selectedItems"
+          v-on:cancelPlanning="mode = 'default'"
         />
-      </md-dialog>
+      </md-content>
       <md-snackbar
         :md-position="'center'"
         :md-duration="4000"
@@ -113,9 +85,9 @@
         :md-active.sync="showsCreateItemDialog"
       >
         <CreateItemDialogContent
-          :estimationUnit="teamRules.estimationUnit"
-          :initialItemStatus="teamRules.initialItemStatus"
-          :definitionsOfDone="teamRules.definitionsOfDone"
+          :estimationUnit="team.estimationUnit"
+          :initialItemStatus="team.initialItemStatus"
+          :definitionsOfDone="team.definitionsOfDone"
           :selectedItems="selectedItems"
           v-on:onCreateItemFinish="onCreateItemFinish"
         />
@@ -134,44 +106,39 @@
 
 <script>
 import { mapActions } from 'vuex'
+// util
+import util from '@/utils'
 // components
 import draggable from 'vuedraggable'
 import ProductBacklogItem from './ProductBacklogItem'
+import ProductBacklogPlanning from './ProductBacklogPlanning'
 import CreateItemDialogContent from './CreateItemDialogContent'
-import CreateSprintDialogContent from './CreateSprintDialogContent'
 
 export default {
   props: {
     sprint: Object,
     productBacklog: Object,
-    teamRules: Object,
+    team: Object,
     menuVisible: Boolean
   },
   data: function () {
     return {
+      mode: 'default', // default/planning/sprint_update
       isUpdating: false,
       showsAlertNewSprint: false,
+      showsCreateItemDialog: false,
       isCorrectlyAdded: false,
-      isSelectionMode: false,
       selectedItems: [],
-      showsCreateSprintDialog: false,
       isCorrectlyCreatedSprint: false
     }
   },
   components: {
     draggable,
     ProductBacklogItem,
-    CreateItemDialogContent,
-    CreateSprintDialogContent
+    ProductBacklogPlanning,
+    CreateItemDialogContent
   },
   computed: {
-    selectedTotalEstimate: function () {
-      let total = 0
-      this.selectedItems.forEach(item => {
-        total += item.estimate
-      })
-      return total
-    },
     columnNumber: function () {
       return 0
     }
@@ -182,8 +149,16 @@ export default {
       startSprint: 'createAndStartSprint'
     }),
     onNewSprintButtonClick: function () {
-      // TODO: if today < sprint.endDate
-      this.showsAlertNewSprint = true
+      this.startCreatingNewSprint()
+      // const today = new Date()
+      // if (this.sprint && !util.isLater(today, this.sprint.endDate)) {
+      //   this.showsAlertNewSprint = true
+      // } else {
+      //   this.startCreatingNewSprint()
+      // }
+    },
+    startCreatingNewSprint: function () {
+      this.mode = 'planning'
     },
     onEditSprintButtonClick: function () {
       this.isSelectionMode = !this.isSelectionMode
@@ -236,26 +211,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.toolbar-content {
-  h2 {
-    z-index: 2;
-    font-size: 20px;
-    text-align: left;
-    color: #fff;
-  }
-
-  .pbl-header-right {
-    flex: 1;
-
-    .md-button {
-      color: #444;
-      background-color: #fff;
-      float: right;
-      margin-left: 8px;
-    }
-  }
-}
-
 .main-content-container {
   display: flex;              // items-columnとplanning-columnを横並びに
   height: calc(100vh - 64px); // viewportからtool-barを引いた高さ
@@ -295,31 +250,8 @@ export default {
     z-index: 10;
 
     &.show {
-      width: 320px;
+      width: 380px;
       padding: 16px;
-    }
-
-    dl {
-      dt {
-        float: left;
-        clear: both;
-        width: 224px;
-        font-weight: 600;
-      }
-
-      dt, dd {
-        padding: 8px 0;
-      }
-    }
-
-    .planning-actions {
-      margin-top: 40px;
-      text-align: center;
-
-      .md-button {
-        width: 240px;
-        margin: 0 auto 16px;
-      }
     }
   }
 }

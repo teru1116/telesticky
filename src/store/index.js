@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 import productBacklog from './modules/productBacklog'
 import sprint from './modules/sprint'
 import members from './modules/members'
-import teamRules from './modules/teamRules'
+import team from './modules/team'
 
 Vue.use(Vuex)
 
@@ -13,6 +13,6 @@ export default new Vuex.Store({
     productBacklog,
     sprint,
     members,
-    teamRules
+    team
   }
 })
