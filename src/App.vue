@@ -7,8 +7,17 @@
 </template>
 
 <script>
+import router from './router'
+import firebase from './firebase'
+
 export default {
-  name: 'App'
+  name: 'App',
+  created: function () {
+    // firebase auth observer
+    firebase.auth().onAuthStateChanged(user => {
+      user ? router.push('/teams') : router.push('/sign_in')
+    })
+  }
 }
 </script>
 

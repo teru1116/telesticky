@@ -7,8 +7,8 @@ const settings = {
 db.settings(settings)
 
 const teamId = location.pathname.split('/')[2]
-const teamRef = db.collection('ScrumTeams').doc(teamId)
-const pbRef = teamRef.collection('ProductBacklog')
+const teamRef = teamId ? db.collection('ScrumTeams').doc(teamId) : null
+const pbRef = teamId ? teamRef.collection('ProductBacklog') : null
 
 export default {
   listenItems (callback) {

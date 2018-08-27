@@ -1,55 +1,55 @@
 <template>
   <div>
-    <input
-      v-model="email"
-      placeholder="メールアドレス"
+    <md-field>
+      <label>メールアドレス</label>
+      <md-input
+        v-model="email"
+      />
+    </md-field>
+
+    <md-field>
+      <label>パスワード</label>
+      <md-input
+        v-model="password"
+        type="password"
+      />
+    </md-field>
+
+    <md-button
+      @click="submit"
     >
-    <input
-      v-model="password"
-      type="password"
-      placeholder="パスワード"
-    >
-    <button
-      @click="signIn"
-    >
-      ログイン
-    </button>
-    <small>
-      まだアカウントをお持ちでない方はこちら
-    </small>
-    <router-link
-      to="/sign_up"
+      さっそく使ってみる
+    </md-button>
+
+    <small>まだアカウントをお持ちでない方はこちら</small>
+    <md-button
+      @click="$router.push('/sign_up')"
     >
       無料ではじめる
-    </router-link>
+    </md-button>
+
   </div>
 </template>
 
 <script>
-import router from './../router'
 import firebase from './../firebase'
 
 export default {
   data: function () {
     return {
       'email': '',
-      'password': ''
+      'password': '',
+      // ui state
+      'errorMessage': ''
     }
   },
   methods: {
     signIn: function () {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-        .catch((error) => {
+        .catch(error => {
           console.error(error)
         })
     }
-  },
-  created: function () {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        router.push('/teams')
-      }
-    })
   }
 }
 </script>

@@ -1,24 +1,32 @@
 <template>
   <div>
-    <input
-      v-model="email"
-      placeholder="メールアドレス"
-    >
-    <input
-      v-model="password"
-      type="password"
-      placeholder="パスワード"
-    >
-    <button
-      @click="signUp"
+    <md-field>
+      <label>メールアドレス</label>
+      <md-input
+        v-model="email"
+      />
+    </md-field>
+
+    <md-field>
+      <label>パスワード</label>
+      <md-input
+        v-model="password"
+        type="password"
+      />
+    </md-field>
+
+    <md-button
+      @click="submit"
     >
       さっそく使ってみる
-    </button>
-    <router-link
-      to="/sign_in"
+    </md-button>
+
+    <md-button
+      @click="$router.push('/sign_in')"
     >
       すでにアカウントをお持ちの方はこちら
-    </router-link>
+    </md-button>
+
   </div>
 </template>
 
@@ -26,27 +34,47 @@
 import router from './../router'
 import firebase from './../firebase'
 
+const db = firebase.firestore()
+
 export default {
   data: function () {
     return {
       'email': '',
-      'password': ''
+      'password': '',
+      // ui state
+      'errorMessage': ''
     }
   },
   methods: {
-    signUp: function () {
+    submit: function () {
+      // FIXME: コールバック地獄
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
-        .catch((error) => {
-          console.error(error)
+        .then(userCredential => {
+          // 会員登録成功時、uidをfirestoreのUsersコレクションへ追加
+          const uid = userCredential.user.uid
+          db.collection('Users').doc(uid).set({
+            email: userCredential.user.email
+          })
+            // 会員登録完了時、チーム選択ページへ遷移
+            .then(() => {
+              router.push('/teams')
+            })
+        })
+        .catch(error => {
+          this.signupError = error
+          switch (error.code) {
+            case 'auth/email-already-in-use':
+              this.errorMessage = 'すでに使われているメールアドレスです。'
+              break
+            case 'auth/invalid-email':
+              this.errorMessage = 'メールアドレスの形式が無効です。'
+              break
+            case 'auth/weak-password':
+              this.errorMessage = '入力されたパスワードが推測されやすいようにみえます。'
+              break
+          }
         })
     }
-  },
-  created: function () {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        router.push('/teams')
-      }
-    })
   }
 }
 </script>

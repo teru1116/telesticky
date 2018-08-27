@@ -20,8 +20,6 @@ const state = {
   doneItemCount: 0
 }
 
-// getters
-
 const actions = {
   getTeam ({ commit }) {
     team.get(teamData => {
