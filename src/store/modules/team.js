@@ -1,8 +1,9 @@
 import team from '../../api/team'
 
 const state = {
+  id: '',
   // basic
-  teamName: '',
+  name: '',
   // scrum
   sprintDuration: 0,
   definitionsOfDone: [],
@@ -21,17 +22,20 @@ const state = {
 }
 
 const actions = {
-  getTeam ({ commit }) {
-    team.get(teamData => {
-      commit('setTeam', teamData)
+  getTeam ({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      team.get(payload.teamId, teamData => {
+        commit('setTeam', teamData)
+        resolve()
+      })
     })
   },
 
   updateTeamSettings ({ commit }, payload) {
     return new Promise((resolve, reject) => {
-      team.update(payload).then(() => {
+      team.update(payload.teamId, payload.teamSettings).then(() => {
         resolve()
-        commit('setTeam', payload)
+        commit('setTeam', payload.teamSettings)
       }, error => {
         reject(error)
       })
@@ -41,8 +45,9 @@ const actions = {
 
 const mutations = {
   setTeam (state, payload) {
+    state.id = payload.id || state.id
     // basic
-    state.teamName = payload.teamName || state.teamName
+    state.name = payload.name || state.name
     // scrum
     state.sprintDuration = payload.sprintDuration || state.sprintDuration
     state.definitionsOfDone = payload.definitionsOfDone || state.definitionsOfDone

@@ -130,7 +130,7 @@ export default {
   data: function () {
     return {
       // input item
-      teamName: this.team.teamName,
+      teamName: this.team.name,
       sprintDuration: this.team.sprintDuration,
       definitionsOfDone: this.team.definitionsOfDone,
       estimationUnit: this.team.estimationUnit,
@@ -148,16 +148,19 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      update: 'updateTeamSettings'
-    }),
+    ...mapActions([
+      'updateTeamSettings'
+    ]),
     submit: function () {
       this.isProcessing = true
       this.update({
-        'teamName': this.teamName,
-        'sprintDuration': this.sprintDuration,
-        'definitionsOfDone': this.definitionsOfDone,
-        'estimationUnit': this.estimationUnit
+        'teamId': this.team.id,
+        'teamSettings': {
+          'teamName': this.teamName,
+          'sprintDuration': this.sprintDuration,
+          'definitionsOfDone': this.definitionsOfDone,
+          'estimationUnit': this.estimationUnit
+        }
       })
         .then(() => {
           this.isProcessing = false
@@ -170,8 +173,8 @@ export default {
     }
   },
   watch: {
-    'team.teamName': function () {
-      this.teamName = this.team.teamName
+    'team.name': function () {
+      this.teamName = this.team.name
     },
     'team.sprintDuration': function () {
       this.sprintDuration = this.team.sprintDuration

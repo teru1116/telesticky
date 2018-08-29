@@ -6,24 +6,24 @@ const state = {
 }
 
 const actions = {
-  listenItems ({ commit }) {
-    api.listenItems(items => {
+  listenItems ({ commit }, payload) {
+    api.listenItems(payload.teamId, items => {
       commit('setItems', items)
 
       let itemIds = []
-      items.forEach(item => {
+      payload.items.forEach(item => {
         itemIds.push(item.id)
       })
 
-      api.listenTasks(itemIds, (tasks) => {
+      api.listenTasks(payload.teamId, itemIds, tasks => {
         commit('setTasks', tasks)
       })
     })
   },
 
-  addItem ({ commit }, newItem) {
+  addItem ({ commit }, payload) {
     return new Promise((resolve, reject) => {
-      api.addItem(newItem).then(() => {
+      api.addItem(payload.teamId, payload.newItem).then(() => {
         resolve()
       }, error => {
         reject(error)
@@ -34,6 +34,7 @@ const actions = {
   moveItem ({ commit }, payload) {
     return new Promise((resolve, reject) => {
       api.moveItem(
+        payload.teamId,
         payload.movedItem,
         payload.newIndex,
         payload.oldIndex,
@@ -51,7 +52,7 @@ const actions = {
 
   addTask ({ commit }, payload) {
     return new Promise((resolve, reject) => {
-      api.addTask(payload.itemId, payload.newTask).then(() => {
+      api.addTask(payload.teamId, payload.itemId, payload.newTask).then(() => {
         resolve()
       }, error => {
         reject(error)
@@ -62,6 +63,7 @@ const actions = {
   moveTask ({ commit }, payload) {
     return new Promise((resolve, reject) => {
       api.moveTask(
+        payload.teamId,
         payload.itemId,
         payload.taskId,
         payload.status

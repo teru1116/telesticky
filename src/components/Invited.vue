@@ -42,6 +42,7 @@ export default {
       if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
         firebase.auth().signInWithEmailLink(this.email, window.location.href)
           .then(result => {
+            // FIXME: db.batch()に書き換え
             db.collection('Users').doc(result.user.uid).set({
               'email': result.user.email
             })
@@ -53,6 +54,7 @@ export default {
               'nickname': this.nickname,
               'role': this.role
             })
+            // TODO: router.push('/teams/:teamId')
           })
           .catch(error => {
             console.error(error)
@@ -65,6 +67,7 @@ export default {
   },
   created: function () {
     this.teamId = this.$route.query['t']
+    // TODO: localStorage.setItem('tid', '...')
     this.nickname = this.$route.query['n']
     this.role = this.$route.query['r']
 

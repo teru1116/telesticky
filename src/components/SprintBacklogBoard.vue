@@ -144,7 +144,8 @@ export default {
       const relatedItems = isRaised ? this.items.slice(newIndex, oldIndex + 1) : this.items.slice(oldIndex, newIndex + 1)
       // order更新処理開始
       this.moveItem({
-        'sprintId': this.activeSprintId,
+        'teamId': this.team.id,
+        'sprintId': this.team.activeSprintId,
         'movedItem': movedItem,
         'newIndex': newIndex,
         'oldIndex': oldIndex,
@@ -152,9 +153,9 @@ export default {
         'relatedItems': relatedItems
       })
     },
-    ...mapActions({
-      moveItem: 'moveSprintBacklogItem'
-    })
+    ...mapActions([
+      'moveItem'
+    ])
   }
 }
 </script>

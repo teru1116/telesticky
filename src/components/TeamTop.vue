@@ -43,7 +43,7 @@
         <md-list>
           <md-list-item>
             <router-link
-              to="sprint_backlog"
+              :to="{ name: 'sprintBacklog' }"
             >
               <span>スプリントバックログ</span>
             </router-link>
@@ -51,7 +51,7 @@
 
           <md-list-item>
             <router-link
-              to="product_backlog"
+              :to="{ name: 'productBacklog' }"
             >
               <span>プロダクトバックログ</span>
             </router-link>
@@ -59,7 +59,7 @@
 
           <md-list-item>
             <router-link
-              to="/"
+              :to="{ name: 'teamTop' }"
             >
               <span>チームメンバー</span>
             </router-link>
@@ -67,7 +67,7 @@
 
           <md-list-item>
             <router-link
-              to="team_settings"
+              :to="{ name: 'teamSettings' }"
             >
               <span>設定</span>
             </router-link>
@@ -91,19 +91,18 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import router from './../router'
 
 export default {
+  props: {
+    account: Object,
+    team: Object
+  },
   computed: {
     ...mapState([
       'sprint',
-      'productBacklog',
-      'team'
+      'productBacklog'
     ]),
-    currentMenu () {
-      let path = this.$route.path.split('/')[3]
-      if (path === 'sprint_backlog') return `スプリント ${this.sprint.sprintNumber === 0 ? '' : this.sprint.sprintNumber}`
-      if (path === 'product_backlog') return 'プロダクトバックログ'
-    },
     sprintTasks () {
       let sprintTasks = {}
       let sprintItemIds = []
@@ -124,19 +123,31 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      listenItems: 'listenItems',
-      listenSprint: 'listenSprint',
-      getTeam: 'getTeam'
-    }),
+    ...mapActions([
+      'listenItems',
+      'listenSprint',
+      'getTeam'
+    ]),
     toggleMenu () {
       this.menuVisible = !this.menuVisible
     }
   },
   created: function () {
+    // teamIdをブラウザに保存し、次回直接開かれるようにする
+    if (this.team.id) {
+      localStorage.setItem('tid', this.team.id)
+    } else {
+      router.push({ name: 'teams' })
+    }
+    // スプリント中か否かでトップページを切り替える
+    if (this.team.activeSprintId) {
+      router.push({ name: 'sprintBacklog' })
+    } else {
+      router.push({ name: 'productBacklog' })
+    }
+    // ステート初期化
     this.listenItems()
     this.listenSprint()
-    this.getTeam()
   }
 }
 </script>

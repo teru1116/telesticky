@@ -6,31 +6,26 @@ const settings = {
 }
 db.settings(settings)
 
-const teamId = location.pathname.split('/')[2]
-const teamRef = teamId ? db.collection('ScrumTeams').doc(teamId) : null
-const pbRef = teamId ? teamRef.collection('ProductBacklog') : null
-
 export default {
-  getActiveSprintId () {
+  getActiveSprintId (teamId) {
     return new Promise((resolve, reject) => {
-      teamRef.get().then(doc => {
+      db.collection('scrumTeams').doc(teamId).get().then(doc => {
         resolve(doc.data().activeSprintId)
       })
     })
   },
 
   // NOTE: listenはPromiseではリアクティブ更新がされなかったため、callback方式に差し替え
-  listenSprint (sprintId, callback) {
-    const sprintRef = teamRef.collection('Sprints').doc(sprintId)
-
-    // listen Sprints/{activeSprint}
-    sprintRef.onSnapshot(doc => {
+  listenSprint (teamId, sprintId, callback) {
+    db.collection('scrumTeams').doc(teamId).collection('sprints').doc(sprintId).onSnapshot(doc => {
       callback(doc.data())
     })
   },
 
-  createAndStartSprint (payload) {
-    const newSprintRef = teamRef.collection('Sprints').doc()
+  createAndStartSprint (teamId, newSprint) {
+    const teamRef = db.collection('scrumTeams').doc(teamId)
+
+    const newSprintRef = teamRef.collection('sprints').doc()
     const newSprintId = newSprintRef.id
 
     // 一括書き込み開始
@@ -38,21 +33,23 @@ export default {
 
     // SprintsコレクションにDocを新規追加
     batch.set(newSprintRef, {
-      sprintNumber: payload.sprintNumber,
-      startDate: payload.startDate,
-      endDate: payload.endDate,
-      sprintGoal: payload.sprintGoal
+      sprintNumber: newSprint.sprintNumber,
+      startDate: newSprint.startDate,
+      endDate: newSprint.endDate,
+      sprintGoal: newSprint.sprintGoal
     })
 
     // 選択したProductBacklogItemのスプリントフラグを更新
-    payload.items.forEach(item => {
-      batch.update(pbRef.doc(item.id), { isSelectedForSprint: true })
+    newSprint.items.forEach(item => {
+      batch.update(db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(item.id), {
+        isSelectedForSprint: true
+      })
     })
 
     // teamドキュメントを更新
     batch.update(teamRef, {
       activeSprintId: newSprintId,
-      totalSprintCount: payload.sprintNumber
+      totalSprintCount: newSprint.sprintNumber
     })
 
     // commit

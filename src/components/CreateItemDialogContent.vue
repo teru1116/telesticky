@@ -153,13 +153,16 @@ export default {
     submit: function () {
       this.isProcessing = true
       this.addItem({
-        'title': this.title,
-        'estimate': this.estimate,
-        'description': this.description,
-        'value': this.value,
-        'isReady': this.isReady,
-        'definitionsOfItemDone': this.definitionsOfDone,
-        'status': this.initialItemStatus
+        'teamId': this.team.id,
+        'newItem': {
+          'title': this.title,
+          'estimate': this.estimate,
+          'description': this.description,
+          'value': this.value,
+          'isReady': this.isReady,
+          'definitionsOfItemDone': this.definitionsOfDone,
+          'status': this.initialItemStatus
+        }
       })
         .then(() => {
           this.isProcessing = false

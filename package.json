@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "firebase": "^5.3.1",
+    "reset-css": "^4.0.1",
     "vue": "^2.5.2",
     "vue-markdown": "^2.2.4",
     "vue-material": "^1.0.0-beta-10.2",

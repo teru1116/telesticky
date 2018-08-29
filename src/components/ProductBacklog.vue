@@ -181,6 +181,7 @@ export default {
       const relatedItems = isRaised ? this.productBacklog.items.slice(newIndex, oldIndex + 1) : this.productBacklog.items.slice(oldIndex, newIndex + 1)
       // order更新処理開始
       this.move({
+        'teamId': this.team.id,
         'movedItem': movedItem,
         'newIndex': newIndex,
         'oldIndex': oldIndex,

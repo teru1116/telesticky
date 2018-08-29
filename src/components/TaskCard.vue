@@ -94,15 +94,16 @@ export default {
       if (status === this.task.status) return
 
       // 更新処理実行
-      this.move({
+      this.moveTask({
+        'teamId': this.team.id,
         'itemId': this.itemId,
         'taskId': this.task.id,
         'status': status
       })
     },
-    ...mapActions({
-      move: 'moveTask'
-    })
+    ...mapActions([
+      'moveTask'
+    ])
   }
 }
 </script>

@@ -6,14 +6,9 @@ const settings = {
 }
 db.settings(settings)
 
-const teamId = location.pathname.split('/')[2]
-const teamRef = teamId ? db.collection('ScrumTeams').doc(teamId) : null
-const pbRef = teamId ? teamRef.collection('ProductBacklog') : null
-
 export default {
-  listenItems (callback) {
-    pbRef.orderBy('order')
-    // pbRef.where('isClosed', '==', false).orderBy('order')
+  listenItems (teamId, callback) {
+    db.collection('scrumTeams').doc(teamId).collection('productBacklog').orderBy('order')
       .onSnapshot(snapshot => {
         let results = []
         snapshot.forEach(doc => {
@@ -25,9 +20,11 @@ export default {
       })
   },
 
-  addItem (newItem) {
+  addItem (teamId, newItem) {
     return new Promise((resolve, reject) => {
       return db.runTransaction(transaction => {
+        const teamRef = db.collection('scrumTeams').doc(teamId)
+        const pbRef = teamRef.collection('productBacklog')
         return transaction.get(teamRef).then(doc => {
           const data = doc.data()
           const newCount = data.totalItemCount + 1
@@ -47,8 +44,9 @@ export default {
     })
   },
 
-  moveItem (movedItem, newIndex, oldIndex, isRaised, relatedItems) {
+  moveItem (teamId, movedItem, newIndex, oldIndex, isRaised, relatedItems) {
     const batch = db.batch()
+    const pbRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog')
 
     // 移動分
     let diff = 0
@@ -83,10 +81,11 @@ export default {
     })
   },
 
-  listenTasks (itemIds, callback) {
+  listenTasks (teamId, itemIds, callback) {
     let tasks = {}
+    const pbRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog')
     itemIds.forEach((itemId, index) => {
-      pbRef.doc(itemId).collection('Tasks').onSnapshot(snapshot => {
+      pbRef.doc(itemId).collection('tasks').onSnapshot(snapshot => {
         tasks[itemId] = []
         snapshot.forEach(doc => {
           let data = doc.data()
@@ -101,8 +100,8 @@ export default {
     })
   },
 
-  addTask (itemId, newTask) {
-    const tasksRef = pbRef.doc(itemId).collection('Tasks')
+  addTask (teamId, itemId, newTask) {
+    const tasksRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).collection('tasks')
 
     return new Promise((resolve, reject) => {
       tasksRef.add({
@@ -118,8 +117,8 @@ export default {
     })
   },
 
-  moveTask (itemId, taskId, status) {
-    const taskRef = pbRef.doc(itemId).collection('Tasks').doc(taskId)
+  moveTask (teamId, itemId, taskId, status) {
+    const taskRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).collection('tasks').doc(taskId)
 
     return new Promise((resolve, reject) => {
       taskRef.update({status: status})

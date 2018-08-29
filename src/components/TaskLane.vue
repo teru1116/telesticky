@@ -114,9 +114,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      create: 'addTask'
-    }),
+    ...mapActions([
+      'addTask'
+    ]),
     inputNewTask: function () {
       this.inputMode = true
     },
@@ -126,17 +126,18 @@ export default {
         this.isUpdating = true
 
         let payload = {}
+        payload['teamId'] = this.team.id
         payload['sprintId'] = this.activeSprintId
-        payload['itemId'] = this.item.id
         payload['newTask'] = this.newTask
 
-        this.create(payload).then(() => {
-          this.isUpdating = false
-          this.newTask = {
-            title: '',
-            status: 0
-          }
-        })
+        this.addTask(payload)
+          .then(() => {
+            this.isUpdating = false
+            this.newTask = {
+              title: '',
+              status: 0
+            }
+          })
       }
     }
   }

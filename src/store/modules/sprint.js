@@ -14,7 +14,7 @@ const state = {
 const actions = {
   createAndStartSprint ({ commit }, payload) {
     return new Promise((resolve, reject) => {
-      api.createAndStartSprint(payload).then(() => {
+      api.createAndStartSprint(payload.teamId, payload.newSprint).then(() => {
         resolve()
       }, error => {
         reject(error)
@@ -22,11 +22,11 @@ const actions = {
     })
   },
 
-  listenSprint ({ commit }) {
-    api.getActiveSprintId().then(activeSprintId => {
+  listenSprint ({ commit }, payload) {
+    api.getActiveSprintId(payload.teamId).then(activeSprintId => {
       commit('setActiveSprintId', activeSprintId)
 
-      api.listenSprint(activeSprintId, (sprintData) => {
+      api.listenSprint(payload.teamId, payload.activeSprintId, sprintData => {
         commit('setSprintData', sprintData)
       })
     })

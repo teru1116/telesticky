@@ -1,6 +1,6 @@
 // initial state
 const state = {
-  members: []
+  all: []
 }
 
 // getters

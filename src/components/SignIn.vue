@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <md-field>
       <label>メールアドレス</label>
       <md-input
@@ -15,10 +16,16 @@
       />
     </md-field>
 
-    <md-button
-      @click="submit"
+    <span
+      v-if="errorMessage"
     >
-      さっそく使ってみる
+      {{ errorMessage }}
+    </span>
+
+    <md-button
+      @click="signIn"
+    >
+      ログイン
     </md-button>
 
     <small>まだアカウントをお持ちでない方はこちら</small>
@@ -35,19 +42,34 @@
 import firebase from './../firebase'
 
 export default {
+  computed: {
+    errorMessage: function () {
+      switch (this.firebaseErrorCode) {
+        case 'auth/invalid-email':
+          return 'メールアドレスの形式が無効です。'
+        case 'auth/user-disabled':
+          return '入力されたメールアドレスのユーザーは無効です。'
+        case 'auth/user-not-found':
+          return '入力されたメールアドレスのユーザーが見つかりません。'
+        case 'auth/wrong-password':
+          return 'パスワードが違います。'
+        default:
+          return ''
+      }
+    }
+  },
   data: function () {
     return {
       'email': '',
       'password': '',
-      // ui state
-      'errorMessage': ''
+      'firebaseErrorCode': ''
     }
   },
   methods: {
     signIn: function () {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password)
         .catch(error => {
-          console.error(error)
+          this.firebaseErrorCode = error.code
         })
     }
   }

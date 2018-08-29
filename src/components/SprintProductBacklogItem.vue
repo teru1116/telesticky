@@ -30,8 +30,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-
 export default {
   props: {
     data: Object,
@@ -47,18 +45,6 @@ export default {
     return {
       status: this.data.status
     }
-  },
-  methods: {
-    onStatusChanged: function () {
-      this.changeStatus({
-        'sprintId': this.activeSprintId,
-        'itemId': this.data.id,
-        'status': this.status
-      })
-    },
-    ...mapActions({
-      changeStatus: 'changeStatusProductBacklogItem'
-    })
   }
 }
 </script>

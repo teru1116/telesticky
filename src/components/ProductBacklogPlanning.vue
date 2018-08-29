@@ -98,16 +98,19 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      startSprint: 'createAndStartSprint'
-    }),
+    ...mapActions([
+      'createAndStartSprint'
+    ]),
     onStartSprintButtonClick: function () {
-      this.startSprint({
-        'sprintNumber': this.team.totalSprintCount + 1,
-        'startDate': this.startDate,
-        'endDate': this.endDate,
-        'sprintGoal': this.sprintGoal,
-        'items': this.selectedItems
+      this.createAndStartSprint({
+        'teamId': this.team.id,
+        'newSprint': {
+          'sprintNumber': this.team.totalSprintCount + 1,
+          'startDate': this.startDate,
+          'endDate': this.endDate,
+          'sprintGoal': this.sprintGoal,
+          'items': this.selectedItems
+        }
       })
         .then(() => {
           this.$emit('onFinishPlanning')

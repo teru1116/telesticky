@@ -6,20 +6,17 @@ const settings = {
 }
 db.settings(settings)
 
-const teamId = location.pathname.split('/')[2]
-const teamRef = teamId ? db.collection('ScrumTeams').doc(teamId) : null
-
 export default {
-  get (callback) {
-    teamRef.get()
+  get (teamId, callback) {
+    db.collection('scrumTeams').doc(teamId).get()
       .then(doc => {
         callback(Object.assign(doc.data(), { id: doc.id }))
       })
   },
 
-  update (param) {
+  update (teamId, param) {
     return new Promise((resolve, reject) => {
-      teamRef.update(param)
+      db.collection('scrumTeams').doc(teamId).update(param)
         .then(() => {
           resolve()
         })

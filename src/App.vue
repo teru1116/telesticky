@@ -1,107 +1,88 @@
 <template>
   <div id="app">
-    <!-- FIXME -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <router-view/>
+    <router-view
+      :account="account"
+    />
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 import router from './router'
 import firebase from './firebase'
+import 'reset-css'
 
 export default {
-  name: 'App',
-  created: function () {
-    // firebase auth observer
+  created () {
+    // ログイン状態を見て適切なURLに遷移させる
     firebase.auth().onAuthStateChanged(user => {
-      user ? router.push('/teams') : router.push('/sign_in')
+      this.setAuthUser(user)
+      if (router.currentRoute.matched && router.currentRoute.matched[0].path === '/auth') return
+      if (user) {
+        // teams取得
+        this.getTeams(user.uid)
+        // 前回開いていたteamがあれば表示、なければチーム選択ページへ
+        const tid = localStorage.getItem('tid')
+        if (tid) {
+          router.push({name: 'teams', params: {teamId: tid}})
+        } else {
+          router.push('/teams')
+        }
+      } else {
+        router.push('/auth/sign_up')
+      }
     })
+  },
+  computed: {
+    ...mapState([
+      'account'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'setAuthUser',
+      'getTeams'
+    ])
   }
 }
 </script>
 
 <style lang="scss">
-html, body {
-  margin: 0;
-}
+// tool bar
+.toolbar-content {
+  background-color: rgba(255, 255, 255, 0.0);
+  display: flex;
+  height: 64px;
+  margin-top: -64px;
+  padding: 0 16px;
 
-#app {
-  .toolbar-content {
-    background-color: rgba(255, 255, 255, 0.0);
-    display: flex;
-    height: 64px;
-    margin-top: -64px;
-    padding: 0 16px;
-
-    > * {
-      z-index: 12;
-      margin: auto 0;
-    }
-
-    h2 {
-      text-align: left;
-      color: #fff;
-      font-size: 20px;
-      text-align: left;
-      color: #fff;
-    }
-
-    .pbl-header-right {
-      flex: 1;
-
-      .md-button {
-        color: #444;
-        background-color: #fff;
-        float: right;
-        margin-left: 8px;
-      }
-    }
+  > * {
+    z-index: 12;
+    margin: auto 0;
   }
-
-  .main-content-container {
-    height: calc(100vh - 64px);
-  }
-
-  font-family: "SF Pro Text","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
-  color: #222222;
 
   h2 {
-    font-size: 20px;
-    font-weight: 400;
+    text-align: left;
+    color: #fff;
+    text-align: left;
   }
 
-  h3 {
-    font-size: 16px;
-    font-weight: 400;
-    margin: 12px 0 4px;
-  }
+  .pbl-header-right {
+    flex: 1;
 
-  p {
-    font-size: 14px;
-    font-weight: 400;
+    .md-button {
+      color: #444;
+      background-color: #fff;
+      float: right;
+      margin-left: 8px;
+    }
   }
+}
 
-  small {
-    font-size: 12px;
-    font-weight: 400;
-    display: block;
-    margin: 4px 0 8px;
-  }
-
-  a {
-    text-decoration: none;
-  }
-
-  ul, ol {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  button {
-    cursor: pointer;
-  }
+// main content
+.main-content-container {
+  height: calc(100vh - 64px);
 }
 
 // force potisioning md-date-picker
