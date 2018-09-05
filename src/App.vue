@@ -7,6 +7,12 @@
 
 <script>
 import 'reset-css'
+
+export default {
+  data () {
+    return null
+  }
+}
 </script>
 
 <style lang="scss">

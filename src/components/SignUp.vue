@@ -201,9 +201,13 @@ div.form-box {
   }
 }
 div.actions {
-  margin: 64px 0 0;
+  width: 600px;
+  margin: 64px auto 0;
+  text-align: center;
   button.auth-submit {
     margin: 16px 0;
+    padding: 0 32px;
+    height: 64px;
   }
   a.link-signin {
     text-decoration: underline;
