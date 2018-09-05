@@ -5,6 +5,10 @@
   </div>
 </template>
 
+<script>
+import 'reset-css'
+</script>
+
 <style lang="scss">
 a, button {
   cursor: pointer;

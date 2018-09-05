@@ -79,11 +79,13 @@ export default {
           // authUserをstoreにセット
           this.setAuthUser(userCredential.user)
           // 遷移処理
+          // クエリパラメータにリダイレクトpathがあればそこへ遷移
           const redirectPath = router.currentRoute.query.redirect
-          if (!redirectPath) {
-            router.push(redirectPath)
+          if (redirectPath) {
+            router.push({ path: redirectPath })
           } else {
             const tid = localStorage.getItem('tid')
+            // LocalStorageにteamIdが保存されていればチームのページへ遷移
             if (tid) {
               router.push({ name: 'teams', params: { teamId: tid } })
             } else {
