@@ -9,105 +9,109 @@
     </div>
 
     <div
-      class="dialog-content"
+      class="dialog-body"
     >
-      <p>
-        メンバーを招待して、新しくチームを作成しましょう。
-      </p>
-
-      <ul
-        class="form-items"
+      <div
+        class="dialog-content"
       >
-        <!-- チーム名-->
-        <li>
-          <h3
-            class="form-item-label"
-          >
-            チーム名
-          </h3>
-          <input
-            v-model="teamName"
-            type=text
-            class="form-team-name"
-          />
-        </li>
+        <p>
+          メンバーを招待して、新しくチームを作成しましょう。
+        </p>
 
-        <!-- 招待するメンバー -->
-        <li
-          class="form-item-multi-input"
+        <ul
+          class="form-items"
         >
-          <h3
-            class="form-item-label"
-          >
-            招待するメンバー
-          </h3>
-          <ul>
-            <li
-              v-for="(member, index) in members"
-              :key="index"
+          <!-- チーム名-->
+          <li>
+            <h3
+              class="form-item-label"
             >
-              <!-- email -->
-              <input
-                v-model="member.email"
-                type=email
-                placeholder="メールアドレス"
-                class="form-email"
-              />
+              チーム名
+            </h3>
+            <input
+              v-model="teamName"
+              type=text
+              class="form-team-name"
+            />
+          </li>
 
-              <!-- displayName -->
-              <input
-                v-model="member.displayName"
-                type=text
-                placeholder="ニックネーム"
-              />
-
-              <!-- ×ボタン -->
-              <button
-                v-if="members.length !== 1"
-                class="remove-multi-form-item"
-                @click="members.splice(index, 1)"
+          <!-- 招待するメンバー -->
+          <li
+            class="form-item-multi-input"
+          >
+            <h3
+              class="form-item-label"
+            >
+              招待するメンバー
+            </h3>
+            <ul>
+              <li
+                v-for="(member, index) in members"
+                :key="index"
               >
-                <i class="material-icons">clear</i>
-              </button>
-            </li>
-          </ul>
-          <button
-            v-if="showsAddMemberButton"
-            class="add-multi-form-item"
-            @click="members.push({'email': '', 'displayName': ''})"
-          >
-            <i class="material-icons">add</i>
-          </button>
-        </li>
-        <li
-          class="form-item-sprint-duration"
-        >
-          <!-- スプリントの期間-->
-          <h3
-            class="form-item-label"
-          >
-            スプリントの期間
-          </h3>
-          <input
-            v-model.number="sprintDuration"
-            type=text
-          />
-          <span>日</span>
-        </li>
-      </ul>
-    </div>
+                <!-- email -->
+                <input
+                  v-model="member.email"
+                  type=email
+                  placeholder="メールアドレス"
+                  class="form-email"
+                />
 
-    <div
-      class="dialog-actions"
-    >
-      <md-button
-        class="md-primary"
-        @click="onCreateTeamButtonClick"
+                <!-- displayName -->
+                <input
+                  v-model="member.displayName"
+                  type=text
+                  placeholder="ニックネーム"
+                />
+
+                <!-- ×ボタン -->
+                <button
+                  v-if="members.length !== 1"
+                  class="remove-multi-form-item"
+                  @click="members.splice(index, 1)"
+                >
+                  <i class="material-icons">clear</i>
+                </button>
+              </li>
+            </ul>
+            <button
+              v-if="showsAddMemberButton"
+              class="add-multi-form-item"
+              @click="members.push({'email': '', 'displayName': ''})"
+            >
+              <i class="material-icons">add</i>
+            </button>
+          </li>
+          <li
+            class="form-item-sprint-duration"
+          >
+            <!-- スプリントの期間-->
+            <h3
+              class="form-item-label"
+            >
+              スプリントの期間
+            </h3>
+            <input
+              v-model.number="sprintDuration"
+              type=text
+            />
+            <span>日</span>
+          </li>
+        </ul>
+      </div>
+
+      <div
+        class="dialog-actions"
       >
-        スクラムチームを作成する
-      </md-button>
-    </div>
+        <md-button
+          class="md-primary"
+          @click="onCreateTeamButtonClick"
+        >
+          スクラムチームを作成する
+        </md-button>
+      </div>
 
+    </div>
   </div>
 </template>
 
