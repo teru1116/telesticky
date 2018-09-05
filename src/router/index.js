@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import firebase from './../firebase'
+// components
 import AuthPageContainer from '@/components/AuthContainer'
 import Container from '@/components/SignedInPageContainer'
 import SignUp from '@/components/SignUp'
@@ -14,7 +16,7 @@ import Settings from '@/components/TeamSettings'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     // auth
@@ -44,6 +46,7 @@ export default new Router({
       path: '/',
       name: 'container',
       component: Container,
+      meta: { requiresAuth: true },
       children: [
         {
           path: 'teams',
@@ -83,3 +86,22 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        next()
+      } else {
+        next({
+          name: 'signIn',
+          query: { redirect: to.fullPath }
+        })
+      }
+    })
+  } else {
+    next()
+  }
+})
+
+export default router
