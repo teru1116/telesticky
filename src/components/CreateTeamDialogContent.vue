@@ -152,7 +152,6 @@ export default {
         }
       })
         .then(() => {
-          console.log('then')
           this.$emit('onCreateTeamFinish')
         })
         .catch(error => {
