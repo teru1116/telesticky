@@ -143,11 +143,12 @@ export default {
       'createTeam'
     ]),
     onCreateTeamButtonClick () {
+      const members = this.members.filter(member => member.email.length > 0)
       this.createTeam({
         'uid': this.uid,
         'newTeam': {
           'teamName': this.teamName,
-          'members': this.members,
+          'members': members,
           'sprintDuration': this.sprintDuration
         }
       })
