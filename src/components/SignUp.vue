@@ -139,14 +139,15 @@ export default {
           switch (error.code) {
             case 'auth/email-already-in-use':
               this.emailError = 'すでに使われているメールアドレスです。'
-              return
+              break
             case 'auth/invalid-email':
-              this.emailError =  'メールアドレスの形式が無効です。'
-              return
+              this.emailError = 'メールアドレスの形式が無効です。'
+              break
             case 'auth/weak-password':
               this.passwordError = '入力されたパスワードが簡単すぎます。'
+              break
             default:
-              return
+              break
           }
         })
     }
