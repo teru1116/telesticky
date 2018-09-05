@@ -52,6 +52,7 @@
     <!-- create team dialog -->
     <md-dialog
       :md-active.sync="showsCreateTeamDialog"
+      :style="{ maxHeight: 'none' }"
     >
       <DialogContent
         :uid="authUser ? authUser.uid : ''"

@@ -9,10 +9,10 @@
     </div>
 
     <div
-      class="dialog-body"
+      class="dialog-content"
     >
       <div
-        class="dialog-content"
+        class="dialog-content-inner"
       >
         <p>
           メンバーを招待して、新しくチームを作成しましょう。
@@ -99,19 +99,19 @@
           </li>
         </ul>
       </div>
-
-      <div
-        class="dialog-actions"
-      >
-        <md-button
-          class="md-primary"
-          @click="onCreateTeamButtonClick"
-        >
-          スクラムチームを作成する
-        </md-button>
-      </div>
-
     </div>
+
+    <div
+      class="dialog-actions"
+    >
+      <md-button
+        class="md-primary"
+        @click="onCreateTeamButtonClick"
+      >
+        スクラムチームを作成する
+      </md-button>
+    </div>
+
   </div>
 </template>
 
@@ -178,60 +178,65 @@ export default {
   }
 }
 .dialog-content {
-  padding: 16px;
-  p {
-    margin-bottom: 24px;
-  }
-  .form-items {
-    > li {
+  max-height: calc(100% - 48px - 60px);
+  overflow: scroll;
+  .dialog-content-inner {
+    padding: 16px;
+    p {
       margin-bottom: 24px;
-      h3.form-item-label {
-        color: #666;
-        font-weight: 600;
-        font-size: 14px;
-        padding: 8px 0;
-      }
-      input.form-team-name {
-        width: 240px;
-      }
-      input.form-email {
-        width: 240px;
-      }
-      &.form-item-sprint-duration {
-        input {
-          width: 80px;
+    }
+    .form-items {
+      > li {
+        margin-bottom: 24px;
+        h3.form-item-label {
+          color: #666;
+          font-weight: 600;
+          font-size: 14px;
+          padding: 8px 0;
         }
-        span {
-          height: 34px;
-          line-height: 34px;
+        input.form-team-name {
+          width: 240px;
         }
-      }
-      &.form-item-multi-input {
-        ul {
-          width: 480px;
-          li {
-            display: inline-flex;
-            margin-bottom: 16px;
-            input {
-              margin-right: 8px;
-            }
-            button.remove-multi-form-item {
-              color: #999;
-            }
+        input.form-email {
+          width: 240px;
+        }
+        &.form-item-sprint-duration {
+          input {
+            width: 80px;
+          }
+          span {
+            height: 34px;
+            line-height: 34px;
           }
         }
-        button.add-multi-form-item {
-          color: #999;
+        &.form-item-multi-input {
+          ul {
+            width: 480px;
+            li {
+              display: inline-flex;
+              margin-bottom: 16px;
+              input {
+                margin-right: 8px;
+              }
+              button.remove-multi-form-item {
+                color: #999;
+              }
+            }
+          }
+          button.add-multi-form-item {
+            color: #999;
+          }
         }
       }
     }
   }
 }
 .dialog-actions {
-  float: right;
   height: 60px;
+  width: 100%;
   padding: 0 16px;
   .md-button {
+    float: right;
     margin: 12px 0;
   }
 }
