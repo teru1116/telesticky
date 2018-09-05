@@ -151,7 +151,13 @@ export default {
           'sprintDuration': this.sprintDuration
         }
       })
-      this.$emit('onCreateTeamFinish')
+        .then(() => {
+          console.log('then')
+          this.$emit('onCreateTeamFinish')
+        })
+        .catch(error => {
+          console.error(error)
+        })
     }
   },
   created () {

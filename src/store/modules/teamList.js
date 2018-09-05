@@ -1,24 +1,32 @@
 import api from './../../api/teamList'
 
-let state = []
+const state = []
 
 const actions = {
   getTeams ({ commit }, uid) {
-    api.getTeams(uid, teams => {
-      commit('setTeams', teams)
-    })
+    api.getTeams(uid)
+      .then(teams => commit('setTeamList', teams))
+      .catch(error => console.error(error))
   },
 
   createTeam ({ commit }, payload) {
-    api.createTeam(payload.uid, payload.newTeam, teams => {
-      commit('setTeams', teams)
+    return new Promise((resolve, reject) => {
+      api.createTeam(payload.uid, payload.newTeam)
+        .then(teams => {
+          commit('setTeamList', teams)
+          resolve()
+        })
+        .catch(error => reject(error))
     })
   }
 }
 
 const mutations = {
-  setTeams (state, payload) {
-    state = payload
+  setTeamList (state, payload) {
+    state.splice(0, state.length)
+    payload.forEach(team => {
+      state.push(team)
+    })
   }
 }
 

@@ -91,7 +91,8 @@ export default {
       'isCorrectlyCreated': false
     }
   },
-  created () {
+  // FIXME: authUserがpropsとして流れてきたタイミングでgetTeams()を実行するもっとスマートなやりかたがあるはず
+  updated () {
     if (this.authUser) {
       this.getTeams(this.authUser.uid)
     }
