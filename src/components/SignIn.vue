@@ -43,6 +43,7 @@
 <script>
 import { mapActions } from 'vuex'
 import firebase from './../firebase'
+import router from './../router'
 
 export default {
   computed: {
@@ -78,7 +79,17 @@ export default {
           // authUserをstoreにセット
           this.setAuthUser(userCredential.user)
           // 遷移処理
-          console.log(router)
+          const redirectPath = router.currentRoute.query.redirect
+          if (!redirectPath) {
+            router.push(redirectPath)
+          } else {
+            const tid = localStorage.getItem('tid')
+            if (tid) {
+              router.push({ name: 'teams', params: { teamId: tid } })
+            } else {
+              router.push('teams')
+            }
+          }
         })
         .catch(error => {
           this.firebaseErrorCode = error.code
