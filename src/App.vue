@@ -1,25 +1,9 @@
 <template>
   <div id="app">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <router-view
-      :authUser="authUser"
-    />
+    <router-view />
   </div>
 </template>
-
-<script>
-import router from './router'
-import firebase from './firebase'
-import 'reset-css'
-
-export default {
-  data () {
-    return {
-      authUser: null
-    }
-  }
-}
-</script>
 
 <style lang="scss">
 a, button {

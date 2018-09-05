@@ -25,25 +25,9 @@ export default {
   },
   computed: {
     ...mapState([
+      'account',
       'team'
     ])
-  },
-  watch: {
-    team (newTeam) {
-      if (newTeam.id) {
-        router.push({ name: 'teamPageContainer', params: { teamId: newTeam.id } })
-      } else {
-        router.push('/teams')
-      }
-    }
-  },
-  created () {
-    const tid = localStorage.getItem('tid')
-    if (tid) {
-      router.push({ name: 'teamPageContainer', params: { teamId: tid } })
-    } else {
-      router.push('/teams')
-    }
   },
   components: {
     GlobalNavHeader

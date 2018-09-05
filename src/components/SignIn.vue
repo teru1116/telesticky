@@ -1,20 +1,22 @@
 <template>
   <div>
 
-    <md-field>
-      <label>メールアドレス</label>
-      <md-input
-        v-model="email"
-      />
-    </md-field>
-
-    <md-field>
-      <label>パスワード</label>
-      <md-input
-        v-model="password"
-        type="password"
-      />
-    </md-field>
+    <ul
+      class="form-items"
+    >
+      <li>
+        <input
+          v-model="email"
+          type=email
+        />
+      </li>
+      <li>
+        <input
+          v-model="password"
+          type=password
+        />
+      </li>
+    </ul>
 
     <span
       v-if="errorMessage"
@@ -30,7 +32,7 @@
 
     <small>まだアカウントをお持ちでない方はこちら</small>
     <md-button
-      @click="$router.push('/sign_up')"
+      @click="$router.push('/auth/sign_up')"
     >
       無料ではじめる
     </md-button>
@@ -39,6 +41,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import firebase from './../firebase'
 
 export default {
@@ -66,8 +69,17 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'setAuthUser'
+    ]),
     signIn: function () {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+        .then(userCredential => {
+          // authUserをstoreにセット
+          this.setAuthUser(userCredential.user)
+          // 遷移処理
+          console.log(router)
+        })
         .catch(error => {
           this.firebaseErrorCode = error.code
         })
@@ -75,3 +87,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+input {
+  width: 240px;
+}
+</style>
