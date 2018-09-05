@@ -1,69 +1,89 @@
 <template>
   <div>
     <header>
-      <h1>
-        Scrum
-      </h1>
+      <div
+        class="inner"
+      >
+        <h1>
+          Scrum
+        </h1>
+      </div>
     </header>
 
     <h2>
       さっそくScrumをはじめよう！
+      <small>
+        スクラムは、経験的プロセス制御の理論（経験主義）を基本にしている。
+      </small>
     </h2>
-    <p>
-      スクラムは、経験的プロセス制御の理論（経験主義）を基本にしている。<br />
-      経験主義とは、実際の経験と既知に基づく判断によって知識が獲得できるというものである。<br />
-      スクラムでは、反復的かつ漸進的な手法を用いて、予測可能性の最適化とリスクの管理を行う。
-    </p>
 
-    <ul
-      class="form-items"
+    <div
+      class="form-box"
     >
-      <li>
-        <input
-          v-model="displayName"
-          type=text
-          placeholder="ユーザー名"
-        />
-        <span
-          class="error">
-        {{ displayNameError }}
-        </span>
-      </li>
-      <li>
-        <input
-          v-model="email"
-          type=email
-          placeholder="メールアドレス"
-        />
-        <span
-          class="error">
-        {{ emailError }}
-        </span>
-      </li>
-      <li>
-        <input
-          v-model="password"
-          type=password
-          placeholder="パスワード"
-        />
-        <span
-          class="error">
-        {{ passwordError }}
-        </span>
-      </li>
-    </ul>
+      <ul
+        class="signup-form-items"
+      >
+        <!-- ユーザー名 -->
+        <li>
+          <input
+            v-model="displayName"
+            type=text
+            placeholder="ユーザー名"
+          />
+          <span
+            class="error">
+          {{ displayNameError }}
+          </span>
+        </li>
 
-    <md-button
-      @click="signup"
-    >
-      さっそく使ってみる
-    </md-button>
+        <!-- メールアドレス -->
+        <li>
+          <input
+            v-model="email"
+            type=email
+            placeholder="メールアドレス"
+          />
+          <span
+            class="error">
+          {{ emailError }}
+          </span>
+        </li>
 
-    <md-button
-      @click="$router.push('/auth/sign_in')"
+        <!-- パスワード -->
+        <li>
+          <input
+            v-model="password"
+            type=password
+            placeholder="パスワード"
+          />
+          <span
+            class="error">
+          {{ passwordError }}
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div
+      class="actions"
     >
-      すでにアカウントをお持ちの方はこちら
-    </md-button>
+      <!-- submit -->
+      <md-button
+        @click="signup"
+        class="auth-submit"
+      >
+        さっそく使ってみる
+      </md-button>
+      <!-- ログインページへ -->
+      <div>
+        <router-link
+          :to="'/auth/sign_in'"
+          class="link-signin"
+        >
+          すでにアカウントをお持ちの方はこちら
+        </router-link>
+      </div>
+    </div>
 
   </div>
 </template>
@@ -95,7 +115,7 @@ export default {
       // ユーザー名バリデーション
       const regex = /^[a-zA-Z0-9_\-.]{3,15}/
       if (!regex.test(this.displayName)) {
-        this.displayNameError = 'ユーザー名は3文字から15文字で、半角英数字、ハイフン、ドット、アンダースコアが使用できます。'
+        this.displayNameError = '3文字から15文字で半角英数字が使用できます。'
         return
       } else {
         this.displayNameError = ''
@@ -133,3 +153,60 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+header {
+  height: 48px;
+  .inner {
+    width: 1000px;
+    margin: 0 auto;
+    h1 {
+      //
+    }
+  }
+}
+h2 {
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1.7;
+  text-align: center;
+  small {
+    font-size: 16px;
+    color: #666;
+    display: block;
+  }
+}
+div.form-box {
+  width: 600px;
+  margin: 0 auto;
+  ul.signup-form-items {
+    margin: 40px 0 32px;
+    li {
+      position: relative;
+      margin-bottom: 32px;
+      text-align: center;
+      input {
+        padding: 32px 24px;
+        font-size: 18px;
+        width: 400px;
+        border-radius: 4px;
+      }
+      span.error {
+        position: absolute;
+        left: 100px;
+        bottom: -24px;
+        color: #f58210;
+      }
+    }
+  }
+}
+div.actions {
+  margin: 64px 0 0;
+  button.auth-submit {
+    margin: 16px 0;
+  }
+  a.link-signin {
+    text-decoration: underline;
+  }
+}
+</style>
