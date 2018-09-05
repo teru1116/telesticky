@@ -87,7 +87,7 @@ export default {
             const tid = localStorage.getItem('tid')
             // LocalStorageにteamIdが保存されていればチームのページへ遷移
             if (tid) {
-              router.push({ name: 'teams', params: { teamId: tid } })
+              router.push({ name: 'teamPageContainer', params: { teamId: tid } })
             } else {
               router.push('teams')
             }

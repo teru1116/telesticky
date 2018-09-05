@@ -70,7 +70,7 @@ export default {
     if (this.team.id) {
       localStorage.setItem('tid', this.team.id)
     } else {
-      return router.push({ name: 'teams' })
+      return router.push('teams')
     }
     // スプリント中か否かでトップページを切り替える
     if (this.activeSprintId) {

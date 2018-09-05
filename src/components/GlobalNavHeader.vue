@@ -7,7 +7,7 @@
         class="nav-left-contents"
       >
         <router-link
-          :to="{ name: 'teams' }"
+          :to="{ name: 'teamList' }"
         >
           Scrum
         </router-link>
@@ -40,6 +40,7 @@
         class="nav-right-contents"
       >
         <button
+          v-if="authUser"
           :style="{ backgrountImage: authUser.photoURL }"
           class="account-thumbnail"
         />
