@@ -1,20 +1,22 @@
 <template>
   <div>
 
-    <md-field>
-      <label>メールアドレス</label>
-      <md-input
-        v-model="email"
-      />
-    </md-field>
-
-    <md-field>
-      <label>パスワード</label>
-      <md-input
-        v-model="password"
-        type="password"
-      />
-    </md-field>
+    <ul
+      class="form-items"
+    >
+      <li>
+        <input
+          v-model="email"
+          type=email
+        />
+      </li>
+      <li>
+        <input
+          v-model="password"
+          type=password
+        />
+      </li>
+    </ul>
 
     <span
       v-if="errorMessage"
@@ -29,7 +31,7 @@
     </md-button>
 
     <md-button
-      @click="$router.push('/sign_in')"
+      @click="$router.push('/auth/sign_in')"
     >
       すでにアカウントをお持ちの方はこちら
     </md-button>
@@ -38,9 +40,9 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import router from './../router'
 import firebase from './../firebase'
-
 const db = firebase.firestore()
 
 export default {
@@ -66,16 +68,22 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'setAuthUser'
+    ]),
     signup: function () {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then(userCredential => {
-          // 会員登録が成功したらUsersコレクションへ追加
+          // authUserをstoreにセット
+          this.setAuthUser(userCredential.user)
+          // FirestoreのUsersコレクションへ追加
           const uid = userCredential.user.uid
           return db.collection('users').doc(uid).set({
             email: userCredential.user.email
           })
         })
         .then(() => {
+          // チーム一覧画面へ遷移
           router.push('/teams')
         })
         .catch(error => {
