@@ -5,11 +5,14 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-import VueMaterial from 'vue-material'
+import { MdCard, MdDialog, MdButton, MdSnackbar } from 'vue-material/dist/components'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 
-Vue.use(VueMaterial)
+Vue.use(MdCard)
+Vue.use(MdDialog)
+Vue.use(MdButton)
+Vue.use(MdSnackbar)
 
 Vue.config.productionTip = false
 

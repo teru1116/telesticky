@@ -1,15 +1,8 @@
-import api from './../../api/account'
+import api from './../../api/teamList'
 
-const state = {
-  'authUser': null,
-  'teams': []
-}
+let state = []
 
 const actions = {
-  setAuthUser ({ commit }, user) {
-    commit('setAuthUser', user)
-  },
-
   getTeams ({ commit }, uid) {
     api.getTeams(uid, teams => {
       commit('setTeams', teams)
@@ -24,12 +17,8 @@ const actions = {
 }
 
 const mutations = {
-  setAuthUser (state, payload) {
-    state.authUser = payload
-  },
-
   setTeams (state, payload) {
-    state.teams = payload
+    state = payload
   }
 }
 

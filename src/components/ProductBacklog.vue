@@ -1,9 +1,20 @@
 <template>
   <div>
-    <!-- toolbar content -->
-    <div class="toolbar-content">
-      <h2 :style="menuVisible ? { marginLeft: '0' } : { marginLeft: '48px' }">プロダクトバックログ</h2>
-      <div class="pbl-header-right">
+
+    <!-- header -->
+    <div
+      class="content-header"
+    >
+      <h2>プロダクトバックログ</h2>
+      <div
+        class="header-items"
+      >
+        <md-button
+          @click="showsCreateItemDialog=true"
+          class="md-primary"
+        >
+          新しいアイテム
+        </md-button>
         <md-button
           @click="onNewSprintButtonClick"
           :disabled="mode === 'planning'"
@@ -29,8 +40,8 @@
       @md-confirm="startCreatingNewSprint"
     />
 
-    <!-- コンテンツ部 -->
-    <div class="main-content-container">
+    <!-- body -->
+    <div class="content-body">
 
       <!-- show items -->
       <md-content class="pb-items-column md-elevation-1">
@@ -50,12 +61,6 @@
               v-on:onItemCheck="onItemCheck"
             />
           </draggable>
-          <md-button
-            @click="showsCreateItemDialog=true"
-            class="md-fab md-primary add-button"
-          >
-            <md-icon>add</md-icon>
-          </md-button>
         </div>
       </md-content>
 
@@ -107,8 +112,6 @@
 
 <script>
 import { mapActions } from 'vuex'
-// util
-// import util from '@/utils'
 // components
 import draggable from 'vuedraggable'
 import ProductBacklogItem from './ProductBacklogItem'
@@ -215,36 +218,35 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.main-content-container {
-  display: flex;              // items-columnとplanning-columnを横並びに
-  height: calc(100vh - 64px); // viewportからtool-barを引いた高さ
+<style lang="scss" scoped>
+.content-header {
+  display: flex;
+  h2 {
+    width: 240px;
+  }
+  .header-items {
+    flex: 1;
+    * {
+      float: right;
+      margin-left: 16px;
+    }
+  }
+}
 
+.content-body {
+  display: flex;              // items-columnとplanning-columnを横並びに
+  height: calc(100vh - 48px); // viewportからtool-barを引いた高さ
   .pb-items-column {
     flex: 1;                  // 右側のplanning-columnに対して幅可変
     position: relative;       // add button の位置基準
-
     .pb-items-column-scroll-view {
       overflow: scroll;       // 子要素のカード群をコンテンツとするScrollView
-
       ol {
         height: calc(100vh - 64px);   // viewportからtool-barを引いた高さ
         display: inline-flex;         // 幅が子要素の幅で決まるようinlineのflexを設定, したもののflex-wrapで折り返した分の幅は反映されなかった...
         flex-direction: column;       // 縦方向に並べる
         flex-wrap: wrap;              // 折り返す
         padding: 16px!important;      // 幅が子要素に関係ない値になっているので右側のpaddingだけ実質あたっていない. 追々スタイリング方法を考える TODO
-      }
-
-      .md-button.add-button {
-        position: absolute;
-        bottom: 24px;
-        right: 24px;
-        z-index: 999;
-        background-color: var(--md-theme-demo-light-accent,#ff5252)!important;
-
-        .md-icon {
-          color: #fff;
-        }
       }
     }
   }

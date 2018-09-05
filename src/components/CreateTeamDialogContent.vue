@@ -1,99 +1,112 @@
 <template>
   <div>
-    <md-toolbar>
-      <h2>新規チーム作成</h2>
-    </md-toolbar>
+    <div
+      class="dialog-header"
+    >
+      <h2>
+        チームを追加する
+      </h2>
+    </div>
 
-    <md-dialog-content>
-      <div
-        class="dialog-content-inner"
+    <div
+      class="dialog-content"
+    >
+      <p>
+        メンバーを招待して、新しくチームを作成しましょう。
+      </p>
+
+      <ul
+        class="form-items"
       >
-
         <!-- チーム名-->
-        <md-field>
-          <label>チーム名</label>
-          <md-input
+        <li>
+          <h3
+            class="form-item-label"
+          >
+            チーム名
+          </h3>
+          <input
             v-model="teamName"
+            type=text
+            class="form-team-name"
           />
-        </md-field>
+        </li>
 
         <!-- 招待するメンバー -->
-        <div
-          class="form-item-members"
+        <li
+          class="form-item-multi-input"
         >
-          <label>
+          <h3
+            class="form-item-label"
+          >
             招待するメンバー
-          </label>
+          </h3>
           <ul>
             <li
               v-for="(member, index) in members"
               :key="index"
             >
-              <!-- メールアドレス -->
-              <md-field>
-                <label>メールアドレス</label>
-                <md-input
-                  v-model="member.email"
-                  type="email"
-                />
-              </md-field>
+              <!-- email -->
+              <input
+                v-model="member.email"
+                type=email
+                placeholder="メールアドレス"
+                class="form-email"
+              />
 
-              <!-- 名前 -->
-              <md-field>
-                <label>名前</label>
-                <md-input
-                  v-model="member.userName"
-                />
-              </md-field>
-
-              <!-- 役割 -->
-              <md-field>
-                <label>役割</label>
-                <md-input
-                  v-model="member.role"
-                />
-              </md-field>
+              <!-- displayName -->
+              <input
+                v-model="member.displayName"
+                type=text
+                placeholder="ニックネーム"
+              />
 
               <!-- ×ボタン -->
-              <md-button
+              <button
                 v-if="members.length !== 1"
-                class="remove-field-button"
+                class="remove-multi-form-item"
                 @click="members.splice(index, 1)"
               >
-                <md-icon>clear</md-icon>
-              </md-button>
+                <i class="material-icons">clear</i>
+              </button>
             </li>
           </ul>
-          <md-button
+          <button
             v-if="showsAddMemberButton"
-            class="add-field-button"
-            @click="members.push({'email': '', 'displayName': '', 'role': ''})"
+            class="add-multi-form-item"
+            @click="members.push({'email': '', 'displayName': ''})"
           >
-            <md-icon>add</md-icon>
-          </md-button>
-        </div>
-
-        <!-- スプリント期間 -->
-        <md-field
-          class="form-item-duration"
+            <i class="material-icons">add</i>
+          </button>
+        </li>
+        <li
+          class="form-item-sprint-duration"
         >
-          <label>スプリントの期間</label>
-          <md-input
+          <!-- スプリントの期間-->
+          <h3
+            class="form-item-label"
+          >
+            スプリントの期間
+          </h3>
+          <input
             v-model.number="sprintDuration"
+            type=text
           />
-          <span class="md-suffix">
-            日
-          </span>
-        </md-field>
+          <span>日</span>
+        </li>
+      </ul>
+    </div>
 
-        <md-button
-          @click="onCreateTeamButtonClick"
-        >
-          スクラムチームを作成する
-        </md-button>
-
-      </div>
-    </md-dialog-content>
+    <div
+      class="dialog-actions"
+    >
+      <md-button
+        class="md-primary"
+        @click="onCreateTeamButtonClick"
+      >
+        スクラムチームを作成する
+      </md-button>
+    </div>
 
   </div>
 </template>
@@ -143,7 +156,6 @@ export default {
       this.members.push({
         'email': '',
         'displayName': '',
-        'role': ''
       })
     }
   }
@@ -151,31 +163,72 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form-item-members {
-  ul {
-    li {
-      display: inline-flex;
-
-      .md-field {
-        margin-right: 16px;
-        &:last-child {
-          margin-right: 0;
+.dialog-header {
+  background-color: #7b68ee;
+  height: 48px;
+  padding: 0 16px;
+  h2 {
+    color: #fff;
+    line-height: 48px;
+    font-size: 20px;
+  }
+}
+.dialog-content {
+  padding: 16px;
+  p {
+    margin-bottom: 24px;
+  }
+  .form-items {
+    > li {
+      margin-bottom: 24px;
+      h3.form-item-label {
+        color: #666;
+        font-weight: 600;
+        font-size: 14px;
+        padding: 8px 0;
+      }
+      input.form-team-name {
+        width: 240px;
+      }
+      input.form-email {
+        width: 240px;
+      }
+      &.form-item-sprint-duration {
+        input {
+          width: 80px;
+        }
+        span {
+          height: 34px;
+          line-height: 34px;
         }
       }
-
-      .remove-field-button {
-        min-width: 48px;
-        margin: 16px 0 0;
+      &.form-item-multi-input {
+        ul {
+          width: 480px;
+          li {
+            display: inline-flex;
+            margin-bottom: 16px;
+            input {
+              margin-right: 8px;
+            }
+            button.remove-multi-form-item {
+              color: #999;
+            }
+          }
+        }
+        button.add-multi-form-item {
+          color: #999;
+        }
       }
     }
   }
-
-  .add-field-button {
-    margin: 0 0 24px;
-  }
 }
-
-.form-item-duration {
-  width: 160px;
+.dialog-actions {
+  float: right;
+  height: 60px;
+  padding: 0 16px;
+  .md-button {
+    margin: 12px 0;
+  }
 }
 </style>

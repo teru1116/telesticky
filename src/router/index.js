@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import AuthContainer from '@/components/AuthContainer'
-import SignedInContainer from '@/components/SignedInContainer'
+import AuthPageContainer from '@/components/AuthContainer'
+import Container from '@/components/SignedInPageContainer'
 import SignUp from '@/components/SignUp'
 import SignIn from '@/components/SignIn'
 import Invited from '@/components/Invited'
-import Teams from '@/components/Teams'
+import TeamList from '@/components/TeamList'
 import TeamCreate from '@/components/TeamCreate'
-import TeamTop from '@/components/TeamTop'
+import teamPageContainer from '@/components/TeamTop'
 import ProductBacklog from '@/components/ProductBacklog'
 import SprintBacklog from '@/components/SprintBacklog'
 import Settings from '@/components/TeamSettings'
@@ -20,7 +20,7 @@ export default new Router({
     // auth
     {
       path: '/auth',
-      component: AuthContainer,
+      component: AuthPageContainer,
       children: [
         {
           path: 'sign_up',
@@ -42,12 +42,13 @@ export default new Router({
     // signed in
     {
       path: '/',
-      component: SignedInContainer,
+      name: 'container',
+      component: Container,
       children: [
         {
           path: 'teams',
-          name: 'teams',
-          component: Teams,
+          name: 'teamList',
+          component: TeamList,
           children: [
             {
               path: 'create',
@@ -58,8 +59,8 @@ export default new Router({
         },
         {
           path: 'teams/:teamId',
-          name: 'teamTop',
-          component: TeamTop,
+          name: 'teamPageContainer',
+          component: teamPageContainer,
           children: [
             {
               path: 'product_backlog',

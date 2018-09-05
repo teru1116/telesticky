@@ -1,9 +1,10 @@
-import firebase from '../firebase'
+import firebase from './../firebase'
 
 const db = firebase.firestore()
 
 export default {
   getTeams (uid, callback) {
+    console.log(uid)
     let results = []
     db.collection('users').doc(uid).collection('teams').get()
       .then(snapshot => {
