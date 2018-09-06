@@ -113,6 +113,7 @@ export default {
       })
         .then(() => {
           router.push({name: 'teamTop', params: {'teamId': teamId}})
+          localStorage.setItem('tid', teamId)
         })
     }
   },
