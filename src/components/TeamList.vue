@@ -91,10 +91,11 @@ export default {
       'isCorrectlyCreated': false
     }
   },
-  // FIXME: authUserがpropsとして流れてきたタイミングでgetTeams()を実行するもっとスマートなやりかたがあるはず
-  updated () {
-    if (this.authUser) {
-      this.getTeams(this.authUser.uid)
+  watch: {
+    authUser (newAuthUser) {
+      if (newAuthUser) {
+        this.getTeams(newAuthUser.uid)
+      }
     }
   },
   methods: {
