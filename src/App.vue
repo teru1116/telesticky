@@ -42,4 +42,19 @@ input {
   padding: 0 12px;
   font: 400 11px system-ui;
 }
+
+.content-header {
+  display: flex;
+  h2 {
+    font-size: 24px;
+    width: 400px;
+  }
+  .header-items {
+    flex: 1;
+    * {
+      float: right;
+      margin-left: 16px;
+    }
+  }
+}
 </style>

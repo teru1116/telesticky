@@ -44,7 +44,7 @@
     <div class="content-body">
 
       <!-- show items -->
-      <md-content class="pb-items-column md-elevation-1">
+      <div class="pb-items-column">
         <div class="pb-items-column-scroll-view">
           <draggable
             element="ol"
@@ -62,11 +62,11 @@
             />
           </draggable>
         </div>
-      </md-content>
+      </div>
 
       <!-- planning mode -->
-      <md-content
-        class="pb-planning-column md-elevation-10"
+      <div
+        class="pb-planning-column"
         :class="mode === 'planning' ? 'show' : ''"
       >
         <ProductBacklogPlanning
@@ -76,7 +76,7 @@
           v-on:cancelPlanning="mode = 'default'"
           v-on:finishPlanning="onFinishPlanning"
         />
-      </md-content>
+      </div>
       <md-snackbar
         :md-position="'center'"
         :md-duration="4000"
@@ -219,20 +219,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.content-header {
-  display: flex;
-  h2 {
-    width: 240px;
-  }
-  .header-items {
-    flex: 1;
-    * {
-      float: right;
-      margin-left: 16px;
-    }
-  }
-}
-
 .content-body {
   display: flex;              // items-columnとplanning-columnを横並びに
   height: calc(100vh - 48px); // viewportからtool-barを引いた高さ
