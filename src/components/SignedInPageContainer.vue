@@ -19,12 +19,10 @@ import { mapState } from 'vuex'
 import GlobalNavHeader from './GlobalNavHeader'
 
 export default {
-  computed: {
-    ...mapState([
-      'account',
-      'team'
-    ])
-  },
+  computed: mapState([
+    'account',
+    'team'
+  ]),
   components: {
     GlobalNavHeader
   }
