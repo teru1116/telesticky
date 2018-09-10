@@ -1,4 +1,5 @@
 <template>
+  <md-toolbar class="md-dense">
   <nav>
     <div
       class="inner"
@@ -47,6 +48,7 @@
       </div>
     </div>
   </nav>
+  </md-toolbar>
 </template>
 
 <script>
@@ -59,32 +61,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-nav {
-  background-color: #7b68ee;
-  height: 48px;
-  .inner {
-    width: 1000px;
-    margin: 0 auto;
-    display: flex;
-    height: 100%;
-    .nav-left-contents {
-      flex: 1;
+.md-toolbar {
+  padding: 0;
+  nav {
+    background-color: #7b68ee;
+    width: 100%;
+    height: 48px;
+    .inner {
+      width: 1000px;
+      margin: 0 auto;
       display: flex;
-      a {
-        color: #fff;
-        line-height: 48px;
-        margin-right: 40px;
+      height: 100%;
+      .nav-left-contents {
+        flex: 1;
+        display: flex;
+        a {
+          color: #fff;
+          line-height: 48px;
+          margin-right: 40px;
+        }
       }
-    }
-    .nav-right-contents {
-      > * {
-        float: right;
-      }
-      button.account-thumbnail {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        margin: 8px 0;
+      .nav-right-contents {
+        > * {
+          float: right;
+        }
+        button.account-thumbnail {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          margin: 8px 0;
+        }
       }
     }
   }

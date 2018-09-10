@@ -137,6 +137,7 @@ export default {
       margin: 0 50px 32px 0;
       .md-card {
         height: 100%;
+        background-color: #fff;
         &.add-team {
           a {
             align-items: center;

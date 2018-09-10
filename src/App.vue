@@ -57,4 +57,8 @@ input {
     }
   }
 }
+
+.md-dialog-container {
+  background-color: #fff;
+}
 </style>

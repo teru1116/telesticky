@@ -8,9 +8,7 @@
       </h2>
     </div>
 
-    <div
-      class="dialog-content"
-    >
+    <md-dialog-content>
       <div
         class="dialog-content-inner"
       >
@@ -99,7 +97,7 @@
           </li>
         </ul>
       </div>
-    </div>
+    </md-dialog-content>
 
     <div
       class="dialog-actions"
@@ -183,9 +181,7 @@ export default {
     font-size: 20px;
   }
 }
-.dialog-content {
-  max-height: calc(100% - 48px - 60px);
-  overflow: scroll;
+.md-dialog-content {
   .dialog-content-inner {
     padding: 16px;
     p {
