@@ -3,8 +3,10 @@ const state = {
 }
 
 const actions = {
-  setAuthUser ({ commit }, payload) {
-    commit('setAuthUser', payload)
+  setAuthUser ({ state, commit }, payload) {
+    if (!state.authUser) {
+      commit('setAuthUser', payload)
+    }
   }
 }
 

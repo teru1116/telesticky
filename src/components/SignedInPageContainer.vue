@@ -31,13 +31,13 @@ export default {
       'setAuthUser'
     ])
   },
-  created () {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.setAuthUser(user)
-      }
-    })
-  },
+  // created () {
+  //   firebase.auth().onAuthStateChanged(user => {
+  //     if (user) {
+  //       this.setAuthUser(user)
+  //     }
+  //   })
+  // },
   components: {
     GlobalNavHeader
   }

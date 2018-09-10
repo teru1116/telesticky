@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import firebase from '@/firebase'
+import store from '@/store'
 // components
 import AuthPageContainer from '@/components/AuthContainer'
 import Container from '@/components/SignedInPageContainer'
@@ -93,6 +94,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
+        store.dispatch('setAuthUser', user)
         next()
       } else {
         next({
