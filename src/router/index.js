@@ -94,6 +94,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
+        // ストアにauthUserをセット
         store.dispatch('setAuthUser', user)
         next()
       } else {
