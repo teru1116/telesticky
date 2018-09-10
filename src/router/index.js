@@ -87,7 +87,9 @@ const router = new Router({
   ]
 })
 
+// 遷移前に必ず呼ばれるコールバックを登録
 router.beforeEach((to, from, next) => {
+  // 遷移前に毎回、onAuthStateChangedをコールしてcurrentUserをチェック
   if (to.matched.some(record => record.meta.requiresAuth)) {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
