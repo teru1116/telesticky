@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <router-view />
   </div>

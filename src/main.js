@@ -13,6 +13,7 @@ Vue.use(MdDialog)
 Vue.use(MdButton)
 Vue.use(MdSnackbar)
 
+// Vue グローバル設定
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
