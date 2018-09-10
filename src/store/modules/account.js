@@ -7,6 +7,10 @@ const actions = {
     if (!state.authUser) {
       commit('setAuthUser', payload)
     }
+  },
+
+  removeAuthUser ({ commit }) {
+    commit('setAuthUser', null)
   }
 }
 

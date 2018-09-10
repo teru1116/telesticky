@@ -96,8 +96,12 @@ router.beforeEach((to, from, next) => {
       if (user) {
         // ストアにauthUserをセット
         store.dispatch('setAuthUser', user)
+        // そのまま遷移
         next()
       } else {
+        // ストアのauthUserをremove
+        store.dispatch('removeAuthUser')
+        // ログイン画面にリダイレクト
         next({
           name: 'signIn',
           query: { redirect: to.fullPath }
