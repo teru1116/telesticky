@@ -14,8 +14,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
-import firebase from '@/firebase'
+import { mapState } from 'vuex'
 // components
 import GlobalNavHeader from './GlobalNavHeader'
 
@@ -26,18 +25,6 @@ export default {
       'team'
     ])
   },
-  methods: {
-    ...mapActions([
-      'setAuthUser'
-    ])
-  },
-  // created () {
-  //   firebase.auth().onAuthStateChanged(user => {
-  //     if (user) {
-  //       this.setAuthUser(user)
-  //     }
-  //   })
-  // },
   components: {
     GlobalNavHeader
   }
