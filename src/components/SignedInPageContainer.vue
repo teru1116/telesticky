@@ -15,7 +15,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import firebase from './../firebase'
+import firebase from '@/firebase'
 // components
 import GlobalNavHeader from './GlobalNavHeader'
 

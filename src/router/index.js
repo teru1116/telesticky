@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import firebase from './../firebase'
+import firebase from '@/firebase'
 // components
 import AuthPageContainer from '@/components/AuthContainer'
 import Container from '@/components/SignedInPageContainer'

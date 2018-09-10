@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import firebase from './../firebase'
+import firebase from '@/firebase'
 
 const db = firebase.firestore()
 const settings = {
