@@ -11,9 +11,10 @@
       >
         <md-button
           @click="showsCreateItemDialog=true"
-          class="md-raised md-primary"
+          class="md-raised md-primary primary-button"
         >
-          新しいアイテム
+          <md-icon>add</md-icon>
+          アイテムを追加
         </md-button>
         <md-button
           @click="onNewSprintButtonClick"
@@ -26,7 +27,7 @@
           @click="onEditSprintButtonClick"
           class="md-raised"
         >
-          今スプリントのアイテムを変更
+          スプリントのアイテムを変更
         </md-button>
       </div>
     </div>

@@ -23,9 +23,11 @@ button {
   border: 0;
   outline: 0;
   &.md-button {
-    background-color: #7b68ee;
-    color: #fff!important;
     margin: 0;
+    &.primary-button {
+      background-color: #7b68ee;
+      color: #fff;
+    }
   }
 }
 input {
@@ -44,14 +46,21 @@ input {
 }
 
 .content-header {
-  display: flex;
+  position: relative;
+  height: 40px;
+  margin: 8px 0 0;
+  border-bottom: 1px solid #d5d5d5;
+  > * {
+    position: absolute;
+    bottom: 8px;
+  }
   h2 {
-    font-size: 24px;
-    width: 400px;
+    font-size: 28px;
+    line-height: 28px;
   }
   .header-items {
-    flex: 1;
-    * {
+    right: 0;
+    > * {
       float: right;
       margin-left: 16px;
     }
