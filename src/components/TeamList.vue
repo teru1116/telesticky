@@ -91,12 +91,8 @@ export default {
       'isCorrectlyCreated': false
     }
   },
-  watch: {
-    authUser (newAuthUser) {
-      if (newAuthUser) {
-        this.getTeamList(newAuthUser.uid)
-      }
-    }
+  created () {
+    this.getTeamList(this.authUser.uid)
   },
   methods: {
     ...mapActions([
