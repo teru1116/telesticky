@@ -3,7 +3,7 @@ import firebase from '@/firebase'
 const db = firebase.firestore()
 
 export default {
-  getTeams (uid) {
+  getTeamList (uid) {
     return new Promise((resolve, reject) => {
       let results = []
       db.collection('users').doc(uid).collection('teams').get()

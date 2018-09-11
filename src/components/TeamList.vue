@@ -94,13 +94,13 @@ export default {
   watch: {
     authUser (newAuthUser) {
       if (newAuthUser) {
-        this.getTeams(newAuthUser.uid)
+        this.getTeamList(newAuthUser.uid)
       }
     }
   },
   methods: {
     ...mapActions([
-      'getTeams',
+      'getTeamList',
       'getTeam'
     ]),
     onCreateTeamFinish () {

@@ -3,8 +3,8 @@ import api from './../../api/teamList'
 const state = []
 
 const actions = {
-  getTeams ({ commit }, uid) {
-    api.getTeams(uid)
+  getTeamList ({ commit }, uid) {
+    api.getTeamList(uid)
       .then(teams => commit('setTeamList', teams))
       .catch(error => console.error(error))
   },
