@@ -11,18 +11,20 @@
       >
         <md-button
           @click="showsCreateItemDialog=true"
-          class="md-primary"
+          class="md-raised md-primary"
         >
           新しいアイテム
         </md-button>
         <md-button
           @click="onNewSprintButtonClick"
+          class="md-raised"
           :disabled="mode === 'planning'"
         >
           新しいスプリント
         </md-button>
         <md-button
           @click="onEditSprintButtonClick"
+          class="md-raised"
         >
           今スプリントのアイテムを変更
         </md-button>
