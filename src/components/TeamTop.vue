@@ -69,8 +69,6 @@ export default {
     // teamIdをブラウザに保存し、次回直接開かれるようにする
     if (this.team.id) {
       localStorage.setItem('tid', this.team.id)
-    } else {
-      return router.push('teams')
     }
     // スプリント中か否かでトップページを切り替える
     if (this.activeSprintId) {
