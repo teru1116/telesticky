@@ -110,6 +110,9 @@ ul.form-items {
       max-width: 100%;
       min-width: 100%;
     }
+    span.input-estimation-unit {
+      color: #666;
+    }
     .md-icon {
       &.add-icon {
         color: #666;
@@ -136,18 +139,6 @@ ul.form-items {
       }
       .md-button {
         min-width: 0;
-      }
-    }
-    &.form-item-multi-input {
-      ul {
-        width: 480px;
-        li {
-          display: inline-flex;
-          margin-bottom: 16px;
-          input {
-            margin-right: 8px;
-          }
-        }
       }
     }
   }
