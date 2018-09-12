@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import SprintBacklogBoard from './../components/SprintBacklogBoard'
+import SprintBacklogBoard from './SprintBacklogBoard'
 
 export default {
   props: {
