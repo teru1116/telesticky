@@ -65,7 +65,10 @@ export default {
       })
     }
   },
-  created: function () {
+  created () {
+    // storeにチーム情報をセットする
+    const teamId = this.$route.params.teamId
+    this.getTeam({ teamId: teamId })
     // teamIdをブラウザに保存し、次回直接開かれるようにする
     if (this.team.id) {
       localStorage.setItem('tid', this.team.id)
