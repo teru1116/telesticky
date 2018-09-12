@@ -156,6 +156,7 @@ import { mapActions } from 'vuex'
 
 export default {
   props: {
+    teamId: String,
     estimationUnit: String,
     initialItemStatus: Number,
     definitionsOfDone: Array
@@ -186,7 +187,7 @@ export default {
     submit: function () {
       this.isProcessing = true
       this.addItem({
-        'teamId': this.team.id,
+        'teamId': this.teamId,
         'newItem': {
           'title': this.title,
           'estimate': this.estimate,

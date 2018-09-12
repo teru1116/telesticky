@@ -94,6 +94,7 @@
         :md-active.sync="showsCreateItemDialog"
       >
         <CreateItemDialogContent
+          :teamId="team.id"
           :estimationUnit="team.estimationUnit"
           :initialItemStatus="team.initialItemStatus"
           :definitionsOfDone="team.definitionsOfDone"
