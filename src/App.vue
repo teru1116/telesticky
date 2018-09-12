@@ -147,8 +147,26 @@ ul.form-items {
 .md-checkbox {
   &.md-checked {
     .md-checkbox-container {
-      background-color: #F58310!important;
-      border-color: #F58310!important;
+      background-color: #f58310!important;
+      border-color: #f58310!important;
+    }
+  }
+}
+
+.md-stepper {
+  .md-stepper-header {
+    &.md-active {
+      .md-stepper-number {
+        background-color: #f58310!important;
+      }
+    }
+    &.md-done {
+      .md-stepper-number {
+        background-color: #f58310!important;
+      }
+    }
+    .md-stepper-text {
+      font-size: 16px;
     }
   }
 }

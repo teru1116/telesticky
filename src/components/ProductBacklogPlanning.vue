@@ -23,7 +23,8 @@
       >
         <p>
           今スプリントで開発するアイテムを選択しましょう。<br />
-          開発チームの予想キャパシティと実績をもとに、スプリントで何ができるかを予想します。
+          開発チームの予想キャパシティや実績をもとに、<br />
+          スプリントで何ができるかを予想します。
         </p>
         <dl>
           <dt>選択中のアイテム数</dt>
@@ -124,6 +125,7 @@ export default {
 <style scoped lang="scss">
 .planning-modal-header {
   height: 48px;
+  margin: 8px 0 0;
   padding: 0 24px;
   h2 {
     float: left;
@@ -137,17 +139,19 @@ export default {
     height: 44px;
   }
 }
-
 dl {
+  margin: 8px 0 0;
   dt {
     float: left;
     clear: both;
     width: 224px;
+    color: #666;
     font-weight: 600;
+    font-size: 14px;
   }
 
   dt, dd {
-    padding: 8px 0;
+    padding: 4px 0;
   }
 }
 
