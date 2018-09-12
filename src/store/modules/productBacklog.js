@@ -13,7 +13,7 @@ const actions = {
       if (!items.length) return
 
       let itemIds = []
-      payload.items.forEach(item => {
+      items.forEach(item => {
         itemIds.push(item.id)
       })
 
