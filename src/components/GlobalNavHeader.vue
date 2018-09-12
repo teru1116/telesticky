@@ -62,6 +62,7 @@ export default {
 
 <style lang="scss" scoped>
 .md-toolbar {
+  z-index: 20;
   padding: 0;
   nav {
     background-color: #7b68ee;

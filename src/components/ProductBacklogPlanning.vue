@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <md-card>
     <div
       class="actions"
     >
@@ -69,7 +69,7 @@
         </md-button>
       </md-step>
     </md-steppers>
-  </div>
+  </md-card>
 </template>
 
 <script>

@@ -31,6 +31,7 @@
         </md-button>
       </div>
     </div>
+    <!-- header -->
 
     <!-- alert -->
     <md-dialog-confirm
@@ -67,28 +68,6 @@
         </div>
       </div>
 
-      <!-- planning mode -->
-      <div
-        class="pb-planning-column"
-        :class="mode === 'planning' ? 'show' : ''"
-      >
-        <ProductBacklogPlanning
-          v-if="mode === 'planning'"
-          :team="team"
-          :selectedItems="selectedItems"
-          v-on:cancelPlanning="mode = 'default'"
-          v-on:finishPlanning="onFinishPlanning"
-        />
-      </div>
-      <md-snackbar
-        :md-position="'center'"
-        :md-duration="4000"
-        :md-active.sync="isCorrectlyCreatedSprint"
-        md-persistent
-      >
-        <span>新しいスプリントが開始されました</span>
-      </md-snackbar>
-
       <!-- add item dialog -->
       <md-dialog
         :md-active.sync="showsCreateItemDialog"
@@ -111,6 +90,25 @@
         <span>プロダクトバックログにアイテムが追加されました</span>
       </md-snackbar>
     </div>
+    <!-- body -->
+
+    <!-- planning mode -->
+    <ProductBacklogPlanning
+      :team="team"
+      :selectedItems="selectedItems"
+      v-on:cancelPlanning="mode = 'default'"
+      v-on:finishPlanning="onFinishPlanning"
+      class="planning-modal"
+      :class="mode === 'planning' ? 'show' : ''"
+    />
+    <md-snackbar
+      :md-position="'center'"
+      :md-duration="4000"
+      :md-active.sync="isCorrectlyCreatedSprint"
+      md-persistent
+    >
+      <span>新しいスプリントが開始されました</span>
+    </md-snackbar>
   </div>
 </template>
 
@@ -240,16 +238,18 @@ export default {
       }
     }
   }
+}
 
-  .pb-planning-column {
-    width: 0;
-    padding: 0;
-    z-index: 10;
-
-    &.show {
-      width: 380px;
-      padding: 16px;
-    }
+.planning-modal {
+  z-index: 10;
+  position: absolute;
+  top: 48px;
+  right: -520px;
+  width: 520px;
+  min-height: calc(100vh - 48px);
+  transition: right 0.3s ease;
+  &.show {
+    right: 0;
   }
 }
 </style>
