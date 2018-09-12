@@ -81,7 +81,7 @@ export default {
     }
     // プロダクトバックログ リッスン開始
     this.listenItems({
-      'teamId': this.team.id
+      'teamId': teamId
     })
   }
 }
