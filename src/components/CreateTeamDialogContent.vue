@@ -21,9 +21,7 @@
         >
           <!-- チーム名-->
           <li>
-            <h3
-              class="form-item-label"
-            >
+            <h3>
               チーム名
             </h3>
             <input
@@ -37,9 +35,7 @@
           <li
             class="form-item-multi-input"
           >
-            <h3
-              class="form-item-label"
-            >
+            <h3>
               招待するメンバー
             </h3>
             <ul>
@@ -50,7 +46,7 @@
                 <!-- email -->
                 <input
                   v-model="member.email"
-                  type=email
+                  type=text
                   placeholder="メールアドレス"
                   class="form-email"
                 />
@@ -84,9 +80,7 @@
             class="form-item-sprint-duration"
           >
             <!-- スプリントの期間-->
-            <h3
-              class="form-item-label"
-            >
+            <h3>
               スプリントの期間
             </h3>
             <input
@@ -103,7 +97,7 @@
       class="dialog-actions"
     >
       <md-button
-        class="md-primary"
+        class="md-raised md-primary primary-button"
         @click="onCreateTeamButtonClick"
       >
         スクラムチームを作成する
@@ -171,16 +165,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dialog-header {
-  background-color: #7b68ee;
-  height: 48px;
-  padding: 0 16px;
-  h2 {
-    color: #fff;
-    line-height: 48px;
-    font-size: 20px;
-  }
-}
 .md-dialog-content {
   .dialog-content-inner {
     padding: 16px;
@@ -196,14 +180,14 @@ export default {
           font-size: 14px;
           padding: 8px 0;
         }
-        input.form-team-name {
+        input[type="text"].form-team-name {
           width: 240px;
         }
-        input.form-email {
+        input[type="text"].form-email {
           width: 240px;
         }
         &.form-item-sprint-duration {
-          input {
+          input[type="text"] {
             width: 80px;
           }
           span {
@@ -217,7 +201,7 @@ export default {
             li {
               display: inline-flex;
               margin-bottom: 16px;
-              input {
+              input[type="text"] {
                 margin-right: 8px;
               }
               button.remove-multi-form-item {
