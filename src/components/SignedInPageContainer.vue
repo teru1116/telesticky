@@ -5,10 +5,12 @@
       :team="team"
     />
     <main>
-      <router-view
-        :authUser="account.authUser"
-        :team="team"
-      />
+      <div class="main-inner">
+        <router-view
+          :authUser="account.authUser"
+          :team="team"
+        />
+      </div>
     </main>
   </div>
 </template>
@@ -32,7 +34,9 @@ export default {
 <style lang="scss" scoped>
 main {
   background-color: #f5f5f5;
-  min-height: calc(100vh - 48px);
-  padding: 16px;
+  height: calc(100vh - 48px);
+  .main-inner {
+    padding: 16px;
+  }
 }
 </style>

@@ -223,14 +223,13 @@ export default {
 <style lang="scss" scoped>
 .content-body {
   display: flex;              // items-columnとplanning-columnを横並びに
-  height: calc(100vh - 48px); // viewportからtool-barを引いた高さ
   .pb-items-column {
     flex: 1;                  // 右側のplanning-columnに対して幅可変
     position: relative;       // add button の位置基準
     .pb-items-column-scroll-view {
       overflow: scroll;       // 子要素のカード群をコンテンツとするScrollView
       ol {
-        height: calc(100vh - 64px);   // viewportからtool-barを引いた高さ
+        height: calc(100vh - 128px);  // 折り返すためにolに高さの定義が必要
         display: inline-flex;         // 幅が子要素の幅で決まるようinlineのflexを設定, したもののflex-wrapで折り返した分の幅は反映されなかった...
         flex-direction: column;       // 縦方向に並べる
         flex-wrap: wrap;              // 折り返す
