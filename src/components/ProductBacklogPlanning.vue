@@ -1,13 +1,14 @@
 <template>
   <md-card>
-    <div
-      class="actions"
-    >
+    <div class="planning-modal-header">
+      <h2>
+        スプリントプランニング
+      </h2>
       <md-button
-        class="md-primary cancel-button"
+        class="close-planning-modal"
         @click="$emit('cancelPlanning')"
       >
-        キャンセル
+        <md-icon>clear</md-icon>
       </md-button>
     </div>
 
@@ -121,11 +122,19 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.actions {
-  overflow: hidden;
-
-  .cancel-button {
+.planning-modal-header {
+  height: 48px;
+  padding: 0 24px;
+  h2 {
+    float: left;
+    line-height: 48px;
+    font-size: 20px;
+  }
+  button.close-planning-modal {
     float: right;
+    color: #666;
+    min-width: 44px;
+    height: 44px;
   }
 }
 
