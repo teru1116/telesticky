@@ -43,13 +43,12 @@
           スプリントゴールとは、プロダクトバックログを実装することで実現するスプリントの目的であり、
           開発チームがインクリメントを開発する指針となるものです。
         </p>
-        <md-field>
-          <label>スプリントゴール</label>
-          <md-textarea
+        <div class="textarea-wrapper">
+          <textarea
             v-model="sprintGoal"
-            md-autogrow
+            rows="2"
           />
-        </md-field>
+        </div>
       </md-step>
 
       <!-- step 3 -->
@@ -64,7 +63,7 @@
           v-model="endDate"
         />
         <md-button
-          class="md-raised md-primary button-start-sprint"
+          class="md-raised md-primary start-sprint"
           @click="onStartSprintButtonClick"
         >
           新しいスプリントを開始する
@@ -139,23 +138,35 @@ export default {
     height: 44px;
   }
 }
-dl {
-  margin: 8px 0 0;
-  dt {
-    float: left;
-    clear: both;
-    width: 224px;
-    color: #666;
-    font-weight: 600;
-    font-size: 14px;
+.md-stepper {
+  dl {
+    margin: 8px 0 0;
+    dt {
+      float: left;
+      clear: both;
+      width: 224px;
+      color: #666;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    dt, dd {
+      padding: 4px 0;
+    }
   }
-
-  dt, dd {
-    padding: 4px 0;
+  .textarea-wrapper {
+    margin: 16px 0 0;
+    textarea {
+      width: 100%;
+      max-width: 100%;
+      min-width: 100%;
+    }
   }
 }
 
-.button-start-sprint {
-  margin: 40px 0 0;
+.md-button {
+  &.start-sprint {
+    background-color: #7b68ee!important;
+    margin: 40px 0 0;
+  }
 }
 </style>
