@@ -1,17 +1,26 @@
 <template>
   <div>
-    <div class="toolbar-content">
-      <h2 :style="menuVisible ? { marginLeft: '0' } : { marginLeft: '48px' }">
-        {{ 'スプリント' + sprint.sprintNumber }}
+
+    <!-- header -->
+    <div
+      class="content-header"
+    >
+      <h2>
+        {{ sprint.sprintNumber ? 'スプリント' + sprint.sprintNumber : 'スプリントバックログ' }}
       </h2>
-      <div class="pbl-header-right">
+      <div
+        class="header-items"
+      >
         <md-button
           @onclick="onFinishSprintButtonClick"
+          class="md-raised"
         >
           スプリントを終了する
         </md-button>
       </div>
     </div>
+
+    <!-- body -->
     <div class="main-content-container">
       <SprintBacklogBoard
         :activeSprintId="sprint.id"
