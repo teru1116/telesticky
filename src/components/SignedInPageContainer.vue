@@ -35,6 +35,8 @@ export default {
 main {
   background-color: #f5f5f5;
   height: calc(100vh - 48px);
+  position: relative;
+  overflow: hidden;
   .main-inner {
     padding: 16px;
   }

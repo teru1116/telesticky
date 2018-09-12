@@ -242,7 +242,7 @@ export default {
 .planning-modal {
   z-index: 10;
   position: absolute;
-  top: 48px;
+  top: 0;
   right: -520px;
   width: 520px;
   min-height: calc(100vh - 48px);
