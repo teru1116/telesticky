@@ -10,10 +10,10 @@
           {{ data.estimate !== null ? data.estimate + ' ' + estimationUnit : '見積り未入力' }}
         </span>
         <span
-          v-if="mode === 'default' && (data.isSelectedForSprint || !data.isReady)"
+          v-if="mode === 'default' && data.isSelectedForSprint"
           class="item-status-label"
         >
-          {{ data.isSelectedForSprint ? 'This Sprint' : !data.isReady ? 'Not ready' : '' }}
+          {{ data.isSelectedForSprint ? 'This Sprint' : '' }}
         </span>
         <md-checkbox
           v-if="mode === 'planning'"
@@ -54,7 +54,7 @@ li {
   }
 
   h3 {
-    height: 88px;
+    height: 106px;
     text-align: left;
     margin: 0;
     padding: 0 12px;

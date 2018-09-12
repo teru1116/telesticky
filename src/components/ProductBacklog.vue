@@ -236,7 +236,7 @@ export default {
         display: inline-flex;         // 幅が子要素の幅で決まるようinlineのflexを設定, したもののflex-wrapで折り返した分の幅は反映されなかった...
         flex-direction: column;       // 縦方向に並べる
         flex-wrap: wrap;              // 折り返す
-        padding: 16px!important;      // 幅が子要素に関係ない値になっているので右側のpaddingだけ実質あたっていない. 追々スタイリング方法を考える TODO
+        padding: 16px 2px !important; // 幅が子要素に関係ない値になっているので右側のpaddingだけ実質あたっていない. 追々スタイリング方法を考える TODO
       }
     }
   }
