@@ -136,7 +136,7 @@
       <md-dialog-actions>
         <md-button
           @click="submit"
-          class="md-raised md-primary primary-button"
+          class="md-raised primary-button"
           :disabled="!title"
         >
           プロダクトバックログに追加

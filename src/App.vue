@@ -26,8 +26,8 @@ button {
     background-color: #fff;
     margin: 0;
     &.primary-button {
-      background-color: #7b68ee;
-      color: #fff;
+      background-color: #7b68ee!important;
+      color: #fff!important;
     }
   }
 }
@@ -140,6 +140,15 @@ ul.form-items {
       .md-button {
         min-width: 0;
       }
+    }
+  }
+}
+
+.md-checkbox {
+  &.md-checked {
+    .md-checkbox-container {
+      background-color: #F58310!important;
+      border-color: #F58310!important;
     }
   }
 }
