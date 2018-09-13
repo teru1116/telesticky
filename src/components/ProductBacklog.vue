@@ -74,6 +74,9 @@
       >
         <router-view
           :item="activeItem"
+          :teamId="team.id"
+          :estimationUnit="team.estimationUnit"
+          :definitionsOfDone="team.definitionsOfDone"
         />
       </md-dialog>
 

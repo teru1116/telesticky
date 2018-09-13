@@ -172,6 +172,14 @@ ul.form-items {
   }
 }
 
+.editable {
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+  &:hover {
+    background-color: #f5f5f5;
+  }
+}
+
 .md-dialog-container {
   background-color: #fff;
 }
