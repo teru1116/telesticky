@@ -37,7 +37,7 @@
           >
             <md-button
               v-if="!inputMode"
-              @click="inputNewTask"
+              @click="inputMode = true"
               :class="isUpdating ? '' : 'enabled'"
             >
               <md-icon>add</md-icon>
@@ -60,6 +60,7 @@ import TaskCard from './TaskCard'
 
 export default {
   props: {
+    teamId: String,
     activeSprintId: String,
     item: Object,
     itemIndex: Number,
@@ -117,17 +118,14 @@ export default {
     ...mapActions([
       'addTask'
     ]),
-    inputNewTask: function () {
-      this.inputMode = true
-    },
     onFinishInputTask: function (e) {
       this.inputMode = false
       if (this.newTask.title) {
         this.isUpdating = true
 
         let payload = {}
-        payload['teamId'] = this.team.id
-        payload['sprintId'] = this.activeSprintId
+        payload['teamId'] = this.teamId
+        payload['itemId'] = this.item.id
         payload['newTask'] = this.newTask
 
         this.addTask(payload)

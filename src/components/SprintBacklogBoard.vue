@@ -52,6 +52,7 @@
           <ol>
             <TaskLane
               v-for="(item, index) in sprintItems"
+              :teamId="team.id"
               :activeSprintId="activeSprintId"
               :item="item"
               :itemIndex="index"
