@@ -1,10 +1,17 @@
 <template>
-  <div>
-    <md-button
-      @click="$router.push({ name: 'productBacklog' })"
+  <div
+    class="dialog-content"
+  >
+    <div
+      class="dialog-header"
     >
-      <md-icon>clear</md-icon>
-    </md-button>
+      <md-button
+        @click="$router.push({ name: 'productBacklog' })"
+        class="close-modal"
+      >
+        <md-icon>clear</md-icon>
+      </md-button>
+    </div>
 
     <md-dialog-content>
       <div
@@ -145,7 +152,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.markdown-preview {
-  min-height: 24px;
+.dialog-content {
+  width: 860px;
+  .dialog-header {
+    background-color: #fff;
+    padding: 4px 8px;
+    .md-button {
+      &.close-modal {
+        float: right;
+        min-width: 44px;
+      }
+    }
+  }
+  .md-dialog-content {
+    h3 {
+      margin: 0 0 8px;
+      padding: 0 4px;
+    }
+    .editable {
+      padding: 8px 4px;
+    }
+  }
+  .markdown-preview {
+    min-height: 24px;
+  }
 }
 </style>
