@@ -31,7 +31,7 @@
             class="task-card"
           />
           <li
-            v-if="statusIndex === 0"
+            v-if="statusIndex === 0 && item"
             class="task-card-add"
             :style="{ left: addButtonX + 'px', top: addButtonY + 'px', width: taskCardWidth + 'px', height: taskCardHeight + 'px' }"
           >
