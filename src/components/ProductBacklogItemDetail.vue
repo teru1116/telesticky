@@ -1,3 +1,7 @@
 <template>
-  <div>Hello!</div>
+  <md-button
+    @click="$router.push({ name: 'productBacklog' })"
+  >
+    <md-icon>clear</md-icon>
+  </md-button>
 </template>
