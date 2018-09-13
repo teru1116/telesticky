@@ -213,7 +213,6 @@ export default {
           ol.board-sub-header {
             display: flex;
             height: 32px;
-            padding: 0 16px;
 
             li {
               width: 252px;
