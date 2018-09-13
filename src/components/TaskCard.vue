@@ -17,6 +17,7 @@ export default {
     task: Object,
     index: Number,
     baseXs: Array,
+    teamId: String,
     sprintId: String,
     itemId: String,
     itemIndex: Number,
@@ -95,7 +96,7 @@ export default {
 
       // 更新処理実行
       this.moveTask({
-        'teamId': this.team.id,
+        'teamId': this.teamId,
         'itemId': this.itemId,
         'taskId': this.task.id,
         'status': status

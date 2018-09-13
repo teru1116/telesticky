@@ -16,6 +16,7 @@
             :task="task"
             :index="index"
             :baseXs="baseXs"
+            :teamId="teamId"
             :sprintId="activeSprintId"
             :itemId="item.id"
             :itemIndex="itemIndex"
