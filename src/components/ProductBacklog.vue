@@ -72,7 +72,9 @@
       <md-dialog
         :md-active.sync="$route.name === 'productBacklogItemDetail'"
       >
-        <router-view/>
+        <router-view
+          :item="activeItem"
+        />
       </md-dialog>
 
       <!-- add item dialog -->
@@ -152,6 +154,14 @@ export default {
     CreateItemDialogContent
   },
   computed: {
+    activeItem () {
+      const itemId = this.$route.params.itemId
+      const items = this.productBacklog.items
+      for (let i = 0; i < items.length; i++) {
+        let item = items[i]
+        if (item.id === itemId) return item
+      }
+    },
     columnNumber: function () {
       return 0
     }
