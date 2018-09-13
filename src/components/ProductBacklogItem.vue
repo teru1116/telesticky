@@ -13,7 +13,7 @@
           v-if="mode === 'default' && data.isSelectedForSprint"
           class="item-status-label"
         >
-          {{ data.isSelectedForSprint ? 'This Sprint' : '' }}
+          {{ data.isSelectedForSprint ? 'Current Sprint' : '' }}
         </span>
         <md-checkbox
           v-if="mode === 'planning'"
@@ -69,7 +69,7 @@ li {
       flex: 1;
 
       &.item-status-label {
-        background-color: #448aff;
+        background-color: #1ba6dd;
         padding: 2px 8px;
         color: #fff;
         flex: none;
