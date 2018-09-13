@@ -52,6 +52,19 @@ const actions = {
     })
   },
 
+  updateItem ({ commit}, payload) {
+    const teamId = payload.teamId
+    const itemId = payload.itemId
+    const field = payload.field
+    const value = payload.value
+
+    return new Promise((resolve, reject) => {
+      api.updateItem(teamId, itemId, field, value)
+        .then(() => resolve())
+        .catch(error => reject(error))
+    })
+  },
+
   addTask ({ commit }, payload) {
     return new Promise((resolve, reject) => {
       api.addTask(payload.teamId, payload.itemId, payload.newTask).then(() => {

@@ -27,7 +27,7 @@
             <textarea
               v-if="editingForm === 'title'"
               v-model="title"
-              @blur="updateItem('title', title)"
+              @blur="onEditingFinish('title', title)"
             />
           </li>
 
@@ -44,7 +44,7 @@
             <input
               v-if="editingForm === 'estimate'"
               v-model.number="estimate"
-              @blur="updateItem('estimate', estimate)"
+              @blur="onEditingFinish('estimate', estimate)"
               type=text
               class="form-item-estimate"
             />
@@ -68,7 +68,7 @@
             <textarea
               v-if="editingForm === 'description'"
               v-model="description"
-              @blur="updateItem('description', description)"
+              @blur="onEditingFinish('description', description)"
             />
           </li>
 
@@ -84,7 +84,7 @@
             <textarea
               v-if="editingForm === 'value'"
               v-model="value"
-              @blur="updateItem('value', value)"
+              @blur="onEditingFinish('value', value)"
             />
           </li>
 
@@ -101,6 +101,7 @@
 
 <script>
 import VueMarkdown from 'vue-markdown'
+import { mapActions } from 'vuex'
 
 export default {
   props: {
@@ -118,9 +119,23 @@ export default {
     }
   },
   methods: {
-    updateItem (field, value) {
+    ...mapActions([
+      'updateItem'
+    ]),
+    onEditingFinish (field, value) {
       this.editingForm = ''
-      console.log(field, value)
+      this.updateItem({
+        teamId: this.teamId,
+        itemId: this.item.id,
+        field: field,
+        value: value
+      })
+        .then(() => {
+          //
+        })
+        .catch(error => {
+          console.error(error)
+        })
     }
   },
   components: {
