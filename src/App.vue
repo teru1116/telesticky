@@ -172,6 +172,15 @@ ul.form-items {
   }
 }
 
+.md-steppers-wrapper {
+  overflow: visible!important;
+  .md-stepper-content {
+    &.md-active {
+      overflow: visible!important;
+    }
+  }
+}
+
 .editable {
   cursor: pointer;
   transition: background-color 0.5s ease;

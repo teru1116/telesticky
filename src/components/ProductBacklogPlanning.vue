@@ -56,14 +56,28 @@
         id="third"
         md-label="スプリントの開始"
       >
-        <Datepicker
-          :value="startDate"
-          format="M月dd日"
-        />
-        <Datepicker
-          :value="endDate"
-          format="M月dd日"
-        />
+        <ul
+          class="date-pickers"
+        >
+          <li>
+            <label>
+              スプリント開始日
+            </label>
+            <Datepicker
+              :value="startDate"
+              format="M月dd日"
+            />
+          </li>
+          <li>
+            <label>
+              スプリント終了日
+            </label>
+            <Datepicker
+              :value="endDate"
+              format="M月dd日"
+            />
+          </li>
+        </ul>
         <md-button
           class="md-raised md-primary start-sprint"
           @click="onStartSprintButtonClick"
@@ -167,8 +181,22 @@ export default {
       min-width: 100%;
     }
   }
+  ul.date-pickers {
+    li {
+      display: flex;
+      label {
+        color: #666;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 32px;
+        margin-right: 16px;
+      }
+      .vdp-datepicker {
+        margin-bottom: 8px;
+      }
+    }
+  }
 }
-
 .md-button {
   &.start-sprint {
     background-color: #7b68ee!important;
