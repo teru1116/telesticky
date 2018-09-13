@@ -68,6 +68,22 @@
               :menuVisible="menuVisible"
               :key="item.id"
             />
+            <!-- アイテムが3つ以下の場合に出す空のTaskLane -->
+            <TaskLane
+              v-for="index in (3 - sprintItems.length)"
+              :item="null"
+              :itemIndex="index"
+              :itemTasks="[]"
+              :taskStatusList="team.taskStatusList"
+              :columnWidths="taskColumnWidths"
+              :itemCardWidth="itemCardWidth"
+              :itemCardHeight="itemCardHeight"
+              :taskCardWidth="taskCardWidth"
+              :taskCardMargin="taskCardMargin"
+              :laneSidePadding="laneSidePadding"
+              :verticalPadding="verticalPadding"
+              :key="index"
+            />
           </ol>
         </div>
       </md-card>
@@ -167,7 +183,7 @@ export default {
 
   .board-scroll-content-view {
     display: inline-block;    // 幅が子要素の幅で決まるようinlineを設定
-    padding: 16px;            // 上記により右側にもpaddingがあたるようにできた
+    padding: 16px 2px;
 
     .md-card.board-container {
       display: inline-flex;   // 幅が子要素の幅で決まるようinlineを設定
