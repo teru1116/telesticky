@@ -56,11 +56,13 @@
         id="third"
         md-label="スプリントの開始"
       >
-        <md-datepicker
-          v-model="startDate"
+        <Datepicker
+          :value="startDate"
+          format="M月dd日"
         />
-        <md-datepicker
-          v-model="endDate"
+        <Datepicker
+          :value="endDate"
+          format="M月dd日"
         />
         <md-button
           class="md-raised md-primary start-sprint"
@@ -75,6 +77,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import Datepicker from 'vuejs-datepicker'
 
 export default {
   props: {
@@ -117,6 +120,9 @@ export default {
           this.$emit('onFinishPlanning')
         })
     }
+  },
+  components: {
+    Datepicker
   }
 }
 </script>
