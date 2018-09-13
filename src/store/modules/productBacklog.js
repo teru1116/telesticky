@@ -52,7 +52,7 @@ const actions = {
     })
   },
 
-  updateItem ({ commit}, payload) {
+  updateItem ({ commit }, payload) {
     const teamId = payload.teamId
     const itemId = payload.itemId
     const field = payload.field
