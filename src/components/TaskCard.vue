@@ -67,11 +67,11 @@ export default {
       this.parentRefs.sprintBoard.addEventListener('mouseup', this.onTouchUp, false)
 
       // マウス座標からカードのX座標を算出
-      const leftMargin = this.itemCardWidth + this.laneSidePadding * 2 + 16
+      const leftMargin = this.itemCardWidth + this.laneSidePadding * 2 + this.taskCardWidth / 2
       this.draggingX = e.pageX - leftMargin
 
       // マウス座標からカードのX座標を算出
-      this.draggingY = e.pageY - (180 + this.itemIndex * 132 + this.itemIndex * 8)
+      this.draggingY = e.pageY - (180 + this.itemIndex * 132 + this.itemIndex * 8 + this.taskCardHeight / 2)
 
       // FIXME: スクロールが考慮されていないため、ある程度スクロールした状態でmousemoveするとdraggingX/Yが期待と違う値になる
     },
