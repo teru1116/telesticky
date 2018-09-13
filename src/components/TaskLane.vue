@@ -28,7 +28,6 @@
             :taskCardMargin="taskCardMargin"
             :laneSidePadding="laneSidePadding"
             :verticalPadding="verticalPadding"
-            :menuVisible="menuVisible"
             class="task-card"
           />
           <li
@@ -74,8 +73,7 @@ export default {
     taskCardWidth: Number,
     taskCardMargin: Number,
     laneSidePadding: Number,
-    verticalPadding: Number,
-    menuVisible: Boolean
+    verticalPadding: Number
   },
   data: function () {
     return {

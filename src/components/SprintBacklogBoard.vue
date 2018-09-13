@@ -66,7 +66,6 @@
               :taskCardMargin="taskCardMargin"
               :laneSidePadding="laneSidePadding"
               :verticalPadding="verticalPadding"
-              :menuVisible="menuVisible"
               :key="item.id"
             />
             <!-- アイテムが3つ以下の場合に出す空のTaskLane -->
@@ -105,8 +104,7 @@ export default {
     activeSprintId: String,
     sprintItems: Array,
     sprintTasks: Object,
-    team: Object,
-    menuVisible: Boolean
+    team: Object
   },
   components: {
     'SprintProductBacklogItem': SprintProductBacklogItem,

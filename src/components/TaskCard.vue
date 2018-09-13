@@ -27,8 +27,7 @@ export default {
     taskCardHeight: Number,
     taskCardMargin: Number,
     laneSidePadding: Number,
-    verticalPadding: Number,
-    menuVisible: Boolean
+    verticalPadding: Number
   },
   data: function () {
     return {
@@ -68,8 +67,7 @@ export default {
       this.parentRefs.sprintBoard.addEventListener('mouseup', this.onTouchUp, false)
 
       // マウス座標からカードのX座標を算出
-      const menuWidth = this.menuVisible ? 280 : 0
-      const leftMargin = menuWidth + this.itemCardWidth + this.laneSidePadding * 2 + 16
+      const leftMargin = this.itemCardWidth + this.laneSidePadding * 2 + 16
       this.draggingX = e.pageX - leftMargin
 
       // マウス座標からカードのX座標を算出
@@ -115,6 +113,7 @@ li {
   font-size: 11px;
   font-weight: 300;
   background-color: #fff;
+  cursor: pointer;
 
   .md-card {
     width: 100%;

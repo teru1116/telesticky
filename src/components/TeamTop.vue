@@ -5,7 +5,6 @@
     :sprintItems="productBacklog.items.filter(item => {return item.isSelectedForSprint})"
     :sprintTasks="sprintTasks"
     :team="team"
-    :menuVisible="menuVisible"
   />
 </template>
 
@@ -41,9 +40,7 @@ export default {
     }
   },
   data: function () {
-    return {
-      menuVisible: false
-    }
+    return {}
   },
   methods: {
     ...mapActions([

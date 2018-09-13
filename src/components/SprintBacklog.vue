@@ -27,7 +27,6 @@
         :sprintItems="sprintItems"
         :sprintTasks="sprintTasks"
         :team="team"
-        :menuVisible="menuVisible"
       />
     </div>
   </div>
@@ -41,8 +40,7 @@ export default {
     sprint: Object,
     sprintItems: Array,
     sprintTasks: Object,
-    team: Object,
-    menuVisible: Boolean
+    team: Object
   },
   components: {
     'SprintBacklogBoard': SprintBacklogBoard
