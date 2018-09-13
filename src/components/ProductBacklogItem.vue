@@ -1,5 +1,7 @@
 <template>
-  <li>
+  <li
+    v-on:click="$router.push({ name: 'productBacklogItemDetail', params: { itemId: data.id } })"
+  >
     <md-card>
       <h3>{{ data.title }}</h3>
       <md-divider/>

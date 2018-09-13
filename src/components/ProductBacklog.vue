@@ -68,6 +68,13 @@
         </div>
       </div>
 
+      <!-- show item detail -->
+      <md-dialog
+        :md-active.sync="$route.name === 'productBacklogItemDetail'"
+      >
+        <router-view/>
+      </md-dialog>
+
       <!-- add item dialog -->
       <md-dialog
         :md-active.sync="showsCreateItemDialog"

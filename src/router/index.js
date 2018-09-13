@@ -12,6 +12,7 @@ import TeamList from '@/components/TeamList'
 import TeamCreate from '@/components/TeamCreate'
 import teamPageContainer from '@/components/TeamTop'
 import ProductBacklog from '@/components/ProductBacklog'
+import ProductBacklogItemDetail from '@/components/ProductBacklogItemDetail'
 import SprintBacklog from '@/components/SprintBacklog'
 import Settings from '@/components/TeamSettings'
 
@@ -69,7 +70,14 @@ const router = new Router({
             {
               path: 'product_backlog',
               name: 'productBacklog',
-              component: ProductBacklog
+              component: ProductBacklog,
+              children: [
+                {
+                  path: ':itemId',
+                  name: 'productBacklogItemDetail',
+                  component: ProductBacklogItemDetail
+                }
+              ]
             },
             {
               path: 'sprint_backlog',
