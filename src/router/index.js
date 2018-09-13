@@ -15,6 +15,7 @@ import ProductBacklog from '@/components/ProductBacklog'
 import ProductBacklogItemDetail from '@/components/ProductBacklogItemDetail'
 import SprintBacklog from '@/components/SprintBacklog'
 import Settings from '@/components/TeamSettings'
+import Members from '@/components/TeamMembers'
 
 Vue.use(Router)
 
@@ -88,6 +89,11 @@ const router = new Router({
               path: 'team_settings',
               name: 'teamSettings',
               component: Settings
+            },
+            {
+              path: 'members',
+              name: 'members',
+              component: Members
             }
           ]
         }
