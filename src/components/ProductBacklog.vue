@@ -247,7 +247,7 @@ export default {
 }
 
 .planning-modal {
-  z-index: 10;
+  z-index: 3;
   position: absolute;
   top: 0;
   right: -520px;

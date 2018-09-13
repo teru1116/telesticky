@@ -69,6 +69,7 @@ textarea {
     right: 0;
     > * {
       float: right;
+      z-index: 3;
       margin-left: 16px;
     }
   }
