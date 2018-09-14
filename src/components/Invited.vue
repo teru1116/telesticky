@@ -18,17 +18,12 @@
 </template>
 
 <script>
-import router from './../router'
+import router from '@/router'
 import firebase from '@/firebase'
-
 const db = firebase.firestore()
-const settings = {
-  timestampsInSnapshots: true
-}
-db.settings(settings)
 
 export default {
-  data: function () {
+  data () {
     return {
       'teamId': '',
       'nickname': '',
@@ -37,24 +32,27 @@ export default {
       'message': ''
     }
   },
+
   methods: {
-    completeSignUp: function () {
+    completeSignUp () {
       if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
         firebase.auth().signInWithEmailLink(this.email, window.location.href)
           .then(result => {
-            // FIXME: db.batch()に書き換え
-            db.collection('Users').doc(result.user.uid).set({
+            const batch = db.batch()
+            batch.set(db.collection('Users').doc(result.user.uid), {
               'email': result.user.email
             })
-            db.collection('Users').doc(result.user.uid).collection('teams').doc(this.teamId).set({
+            batch.set(db.collection('Users').doc(result.user.uid).collection('teams').doc(this.teamId), {
               'nickname': this.nickname,
               'role': this.role
             })
-            db.collection('ScrumTeams').doc(this.teamId).collection('members').doc(result.user.uid).set({
+            batch.set(db.collection('ScrumTeams').doc(this.teamId).collection('members').doc(result.user.uid), {
               'nickname': this.nickname,
               'role': this.role
             })
-            // TODO: router.push('/teams/:teamId')
+            batch.commit().then(() => {
+              router.push({ name: 'productBacklog', params: { teamId: this.teamId } })
+            })
           })
           .catch(error => {
             console.error(error)
@@ -65,9 +63,10 @@ export default {
       }
     }
   },
-  created: function () {
+
+  created () {
     this.teamId = this.$route.query['t']
-    // TODO: localStorage.setItem('tid', '...')
+    localStorage.setItem('tid', this.teamId)
     this.nickname = this.$route.query['n']
     this.role = this.$route.query['r']
 
