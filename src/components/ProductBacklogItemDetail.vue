@@ -126,6 +126,39 @@
           <!-- 完成の定義 -->
           <li>
             <h3>完成の定義</h3>
+
+            <!-- 追加式入力欄 -->
+            <ul>
+              <li
+                v-for="(itemDod, index) in definitionsOfItemDone"
+                :key="index"
+              >
+                <textarea
+                  v-model="itemDod.title"
+                  rows="1"
+                />
+                <md-button
+                  v-if="definitionsOfItemDone.length !== 1"
+                  @click="definitionsOfItemDone.splice(index, 1)"
+                >
+                  <md-icon
+                    class="clear-icon"
+                  >
+                    clear
+                  </md-icon>
+                </md-button>
+              </li>
+            </ul>
+            <md-button
+              v-if="showsDodAddButton"
+              @click="definitionsOfItemDone.push({'title': ''})"
+            >
+              <md-icon
+                class="add-icon"
+              >
+                add
+              </md-icon>
+            </md-button>
           </li>
         </ul>
 
@@ -145,11 +178,22 @@ export default {
     estimationUnit: String,
     definitionsOfDone: Array
   },
+
+  computed: {
+    showsDodAddButton () {
+      for (let i = 0; i < this.definitionsOfItemDone.length; i++) {
+        if (!this.definitionsOfItemDone[i]['title']) return false
+      }
+      return true
+    }
+  },
+
   data () {
     return {
       title: this.item.title,
       estimate: this.item.estimate,
       description: this.item.description,
+      definitionsOfItemDone: this.item.definitionsOfItemDone,
       editingForm: ''
     }
   },
