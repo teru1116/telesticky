@@ -23,7 +23,14 @@
         >
           <!-- タイトル -->
           <li>
-            <h3>タイトル</h3>
+            <h3>
+              タイトル
+              <md-button
+                @click="editingForm = (editingForm !== 'title') ? 'title' : ''"
+              >
+                <md-icon>create</md-icon>
+              </md-button>
+            </h3>
             <p
               v-if="editingForm !== 'title'"
               @click="editingForm = 'title'"
@@ -40,7 +47,14 @@
 
           <!-- 見積り -->
           <li>
-            <h3>見積り</h3>
+            <h3>
+              見積り
+              <md-button
+                @click="editingForm = (editingForm !== 'estimate') ? 'estimate' : ''"
+              >
+                <md-icon>create</md-icon>
+              </md-button>
+            </h3>
             <span
               v-if="editingForm !== 'estimate'"
               @click="editingForm = 'estimate'"
@@ -62,7 +76,14 @@
 
           <!-- 詳細 -->
           <li>
-            <h3>詳細</h3>
+            <h3>
+              詳細
+              <md-button
+                @click="editingForm = (editingForm !== 'description') ? 'description' : ''"
+              >
+                <md-icon>create</md-icon>
+              </md-button>
+            </h3>
             <div
               v-if="editingForm !== 'description'"
               @click="editingForm = 'description'"
@@ -81,7 +102,14 @@
 
           <!-- 価値 -->
           <li>
-            <h3>価値</h3>
+            <h3>
+              価値
+              <md-button
+                @click="editingForm = (editingForm !== 'value') ? 'value' : ''"
+              >
+                <md-icon>create</md-icon>
+              </md-button>
+            </h3>
             <p
               v-if="editingForm !== 'value'"
               @click="editingForm = 'value'"
