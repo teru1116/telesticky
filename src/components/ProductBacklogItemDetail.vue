@@ -38,7 +38,7 @@
             >
               {{ item.title }}
             </p>
-            <textarea
+            <AutogrowTextarea
               v-if="editingForm === 'title'"
               v-model="title"
               @blur="onEditingFinish('title', title)"
@@ -170,6 +170,8 @@
 <script>
 import VueMarkdown from 'vue-markdown'
 import { mapActions } from 'vuex'
+// components
+import AutogrowTextarea from '@/components/AutogrowTextarea'
 
 export default {
   props: {
@@ -218,7 +220,8 @@ export default {
     }
   },
   components: {
-    VueMarkdown
+    VueMarkdown,
+    AutogrowTextarea
   }
 }
 </script>
