@@ -8,6 +8,12 @@
       <h2>
         新規プロダクトバックログアイテム作成
       </h2>
+      <md-button
+        @click="$router.push({ name: 'productBacklog' })"
+        class="close-modal"
+      >
+        <md-icon>clear</md-icon>
+      </md-button>
     </div>
     <md-dialog-content>
       <div
@@ -181,45 +187,39 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.md-toolbar {
-  background-color: #03a9f4!important;
-  padding: 0 24px;
-
-  h2 {
-    font-size: 20px;
-    font-weight: 400;
-    color: #fff;
-  }
-}
-
 .dialog-content {
   width: 960px;
-}
-
-.md-dialog-container {
-  .md-toolbar {
-    height: 48px;
+  .dialog-header {
+    padding: 4px 8px;
+    h2 {
+      display: inline-block;
+    }
+    .md-button {
+      &.close-modal {
+        float: right;
+        min-width: 44px;
+        background-color: rgba(0, 0, 0, 0);
+        .md-icon {
+          color: #fff;
+        }
+      }
+    }
   }
-
   .md-dialog-content {
     max-height: calc(80vh - 48px);
     overflow-y: auto;
     padding: 0;
-
     .dialog-content-inner {
       padding: 16px 24px 72px;
-
       .markdown-preview {
         width: 100%;
         min-height: 40px;
       }
-
       .md-button.markdown-preview-button {
         margin: -16px 0 0;
         float: right;
       }
     }
-
     .md-dialog-actions {
       position: fixed;
       bottom: 0;

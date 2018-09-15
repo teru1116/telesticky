@@ -10,7 +10,7 @@
         class="header-items"
       >
         <md-button
-          @click="showsCreateItemDialog=true"
+          @click="$router.push({ name: 'productBacklogItemCreate' })"
           class="md-raised md-primary primary-button"
         >
           <md-icon>add</md-icon>
@@ -84,10 +84,10 @@
 
       <!-- add item dialog -->
       <md-dialog
-        :md-active.sync="showsCreateItemDialog"
+        :md-active="$route.name === 'productBacklogItemCreate'"
         class="large-dialog"
       >
-        <CreateItemDialogContent
+        <router-view
           :teamId="team.id"
           :estimationUnit="team.estimationUnit"
           :initialItemStatus="team.initialItemStatus"
@@ -133,7 +133,6 @@ import { mapActions } from 'vuex'
 import draggable from 'vuedraggable'
 import ProductBacklogItem from './ProductBacklogItem'
 import ProductBacklogPlanning from './ProductBacklogPlanning'
-import CreateItemDialogContent from './CreateItemDialogContent'
 
 export default {
   props: {
@@ -147,7 +146,6 @@ export default {
       mode: 'default', // default/planning/sprint_update
       isUpdating: false,
       showsAlertNewSprint: false,
-      showsCreateItemDialog: false,
       isCorrectlyAdded: false,
       selectedItems: [],
       isCorrectlyCreatedSprint: false
@@ -156,8 +154,7 @@ export default {
   components: {
     draggable,
     ProductBacklogItem,
-    ProductBacklogPlanning,
-    CreateItemDialogContent
+    ProductBacklogPlanning
   },
   computed: {
     activeItem () {
