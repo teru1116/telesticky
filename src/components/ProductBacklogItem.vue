@@ -3,25 +3,34 @@
     v-on:click="$router.push({ name: 'productBacklogItemDetail', params: { itemId: data.id } })"
   >
     <md-card>
-      <h3>{{ data.title }}</h3>
+      <div
+        class="card-body"
+      >
+        <p>{{ data.title }}</p>
+      </div>
       <md-divider/>
       <div class="card-footer">
         <span
           :style="data.estimate === null ? { color: '#999' } : {}"
+          class="footer-left-items"
         >
           {{ data.estimate !== null ? data.estimate + ' ' + estimationUnit : '見積り未入力' }}
         </span>
         <span
-          v-if="mode === 'default' && data.isSelectedForSprint"
-          class="item-status-label"
+          class="footer-right-items"
         >
-          {{ data.isSelectedForSprint ? 'Current Sprint' : '' }}
+          <md-checkbox
+            v-if="mode === 'planning'"
+            v-model="isChecked"
+            @change="$emit('onItemCheck', { 'item': data, 'isChecked': isChecked })"
+          />
+          <span
+            v-if="data.isSelectedForSprint"
+            class="item-status-label"
+          >
+            Current Sprint
+          </span>
         </span>
-        <md-checkbox
-          v-if="mode === 'planning'"
-          v-model="isChecked"
-          @change="$emit('onItemCheck', { 'item': data, 'isChecked': isChecked })"
-        />
       </div>
     </md-card>
   </li>
@@ -45,46 +54,43 @@ export default {
 <style scoped lang="scss">
 li {
   margin: 0 16px 16px 0;
-
   .md-card {
     width: 272px;
     height: 152px;
     background-color: #fff;
-    margin: 0;
-    padding: 8px 0;
     cursor: pointer;
-  }
-
-  h3 {
-    height: 106px;
-    text-align: left;
-    margin: 0;
-    padding: 0 12px;
-  }
-
-  .card-footer {
-    padding: 0 12px;
-    display: flex;
-
-    span {
-      padding: 8px 0;
-      flex: 1;
-
-      &.item-status-label {
-        background-color: #1ba6dd;
-        padding: 2px 8px;
-        color: #fff;
-        flex: none;
-        height: 25px;
-        margin: auto;
-        border-radius: 4px;
+    .card-body {
+      height: 112px;
+      padding: 0 12px;
+      p {
+        padding: 8px 0;
       }
     }
-
-    .md-checkbox {
-      width: 24px;
-      margin: 8px 0;
+    .card-footer {
+      height: 32px;
+      padding: 0 12px;
+      span.footer-left-items {
+        float: left;
+        line-height: 36px;
+      }
+      span.footer-right-items {
+        float: right;
+        span.item-status-label {
+          float: right;
+          background-color: #1ba6dd;
+          padding: 4px 8px;
+          color: #fff;
+          height: 28px;
+          margin: 4px auto;
+          border-radius: 4px;
+        }
+        .md-checkbox {
+          float: right;
+          width: 24px;
+          margin: 8px 0 0 8px;
+        }
+      }
     }
-  }
+  } 
 }
 </style>
