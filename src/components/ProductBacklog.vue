@@ -159,8 +159,15 @@ export default {
       isUpdating: false,
       showsAlertNewSprint: false,
       isCorrectlyAdded: false,
-      selectedItems: [],
+      selectedItems: this.productBacklog.items.filter(item => item.isSelectedForSprint),
       isCorrectlyCreatedSprint: false
+    }
+  },
+  watch: {
+    mode (newMode) {
+      if (newMode === 'default') {
+        this.selectedItems = this.productBacklog.items.filter(item => item.isSelectedForSprint)
+      }
     }
   },
   components: {
