@@ -4,6 +4,7 @@
     v-on:input="$emit('input', $event.target.value)"
     :style="textareaStyles"
     @input="applyStyles"
+    @blur="$emit('onBlur')"
   />
 </template>
 
@@ -56,7 +57,7 @@ export default {
     },
     setTextAreaSize (height) {
       let newHeight = height
-      
+
       if (!height) {
         const size = this.getTextAreaLineSize()
         newHeight = calculateContentHeight(this.$el, size)
@@ -74,3 +75,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+textarea {
+  resize: none;
+  height: 32px;
+  font-size: 14px;
+}
+</style>
