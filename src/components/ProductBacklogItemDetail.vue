@@ -139,7 +139,7 @@
 
       <md-dialog-actions>
         <md-button
-          @click="onDeleteButtonClick"
+          @click="showDeletionConfirm = true"
           class="md-raised"
         >
           アイテムを削除
@@ -153,6 +153,17 @@
       </md-dialog-actions>
 
     </md-dialog-content>
+
+    <!-- deletion confirm dialog -->
+    <md-dialog-confirm
+      :md-active.sync="showDeletionConfirm"
+      md-title="このアイテムを削除します"
+      md-content="このアイテムを削除します。<br />よろしいですか？"
+      md-confirm-text="削除する"
+      md-cancel-text="キャンセル"
+      @md-cancel="showDeletionConfirm = false"
+      @md-confirm="onDeleteButtonClick"
+    />
 
     <!-- indicator -->
     <md-progress-spinner
@@ -199,6 +210,7 @@ export default {
       updating: false,
       showSavedSnackbar: false,
       updateSucceeded: false,
+      showDeletionConfirm: false,
       showDeletionSnackbar: false
     }
   },
@@ -233,6 +245,7 @@ export default {
         })
     },
     onDeleteButtonClick () {
+      this.showDeletionConfirm = false
       this.updating = true
       this.deleteItem({
         teamId: this.teamId,
