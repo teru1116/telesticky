@@ -5,6 +5,9 @@
     <div
       class="dialog-header"
     >
+      <h2>
+        プロダクトバックログアイテム
+      </h2>
       <md-button
         @click="$router.push({ name: 'productBacklog' })"
         class="close-modal"
@@ -134,6 +137,20 @@
         </ul>
 
       </div>
+
+      <md-dialog-actions>
+        <md-button
+          class="md-raised"
+        >
+          アイテムを削除
+        </md-button>
+        <md-button
+          class="md-raised primary-button"
+        >
+          変更を保存
+        </md-button>
+      </md-dialog-actions>
+
     </md-dialog-content>
 
     <!-- indicator -->
@@ -239,27 +256,49 @@ export default {
 .dialog-content {
   width: 960px;
   .dialog-header {
-    background-color: #fff;
     padding: 4px 8px;
+    h2 {
+      display: inline-block;
+    }
     .md-button {
       &.close-modal {
         float: right;
         min-width: 44px;
+        background-color: rgba(0, 0, 0, 0);
+        .md-icon {
+          color: #fff;
+        }
       }
     }
   }
   .md-dialog-content {
-    h3 {
-      margin: 0 0 8px;
-      padding: 0 4px;
-      line-height: 32px;
-    }
-    .editable {
-      padding: 8px 4px;
+    max-height: calc(80vh - 48px);
+    overflow-y: auto;
+    padding: 0;
+    .dialog-content-inner {
+      padding: 16px 24px 72px;
+      h3 {
+        margin: 0 0 8px;
+        padding: 0 4px;
+        line-height: 32px;
+      }
+      .editable {
+        padding: 8px 4px;
+      }
+      .markdown-preview {
+        min-height: 24px;
+      }
     }
   }
-  .markdown-preview {
-    min-height: 24px;
+  .md-dialog-actions {
+    position: fixed;
+    bottom: 0;
+    height: 48px;
+    width: 100%;
+    padding: 0 24px;
+    border-top: 1px solid rgba(0,0,0,0.12);
+    background-color: #fff;
+    z-index: 15;
   }
 }
 </style>
