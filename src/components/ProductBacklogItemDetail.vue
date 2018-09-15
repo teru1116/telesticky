@@ -126,39 +126,10 @@
           <!-- 完成の定義 -->
           <li>
             <h3>完成の定義</h3>
-
-            <!-- 追加式入力欄 -->
-            <ul>
-              <li
-                v-for="(itemDod, index) in definitionsOfItemDone"
-                :key="index"
-              >
-                <textarea
-                  v-model="itemDod.title"
-                  rows="1"
-                />
-                <md-button
-                  v-if="definitionsOfItemDone.length !== 1"
-                  @click="definitionsOfItemDone.splice(index, 1)"
-                >
-                  <md-icon
-                    class="clear-icon"
-                  >
-                    clear
-                  </md-icon>
-                </md-button>
-              </li>
-            </ul>
-            <md-button
-              v-if="showsDodAddButton"
-              @click="definitionsOfItemDone.push({'title': ''})"
-            >
-              <md-icon
-                class="add-icon"
-              >
-                add
-              </md-icon>
-            </md-button>
+            <ListedTextarea
+              v-bind:source="definitionsOfItemDone"
+              v-on:update="updatedSource => definitionsOfItemDone = updatedSource"
+            />
           </li>
         </ul>
 
@@ -172,6 +143,7 @@ import VueMarkdown from 'vue-markdown'
 import { mapActions } from 'vuex'
 // components
 import AutogrowTextarea from '@/components/AutogrowTextarea'
+import ListedTextarea from '@/components/ListedTextarea'
 
 export default {
   props: {
@@ -221,7 +193,8 @@ export default {
   },
   components: {
     VueMarkdown,
-    AutogrowTextarea
+    AutogrowTextarea,
+    ListedTextarea
   }
 }
 </script>
