@@ -89,6 +89,14 @@ export default {
     })
   },
 
+  deleteItem (teamId, itemId) {
+    return new Promise((resolve, reject) => {
+      db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).delete()
+        .then(() => resolve())
+        .catch(error => reject(error))
+    })
+  },
+
   listenTasks (teamId, itemIds, callback) {
     let tasks = {}
     const pbRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog')

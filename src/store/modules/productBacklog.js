@@ -64,6 +64,17 @@ const actions = {
     })
   },
 
+  deleteItem ({ commit }, payload) {
+    const teamId = payload.teamId
+    const itemId = payload.itemId
+
+    return new Promise((resolve, reject) => {
+      api.deleteItem(teamId, itemId)
+        .then(() => resolve())
+        .catch(error => reject(error))
+    })
+  },
+
   addTask ({ commit }, payload) {
     return new Promise((resolve, reject) => {
       api.addTask(payload.teamId, payload.itemId, payload.newTask).then(() => {

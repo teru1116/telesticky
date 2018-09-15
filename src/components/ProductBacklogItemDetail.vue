@@ -139,12 +139,13 @@
 
       <md-dialog-actions>
         <md-button
+          @click="onDeleteButtonClick"
           class="md-raised"
         >
           アイテムを削除
         </md-button>
         <md-button
-          @click="save"
+          @click="onSaveButtonClick"
           class="md-raised primary-button"
         >
           変更を保存
@@ -161,7 +162,7 @@
 
     <!-- snack bar -->
     <md-snackbar
-      :md-active.sync="showSnackbar"
+      :md-active.sync="showSavedSnackbar"
       :md-duration="4000"
       :md-position="'center'"
       md-persistent
@@ -196,15 +197,17 @@ export default {
       definitionsOfItemDone: this.item.definitionsOfItemDone,
       editingForm: '',
       updating: false,
-      showSnackbar: false,
-      updateSucceeded: false
+      showSavedSnackbar: false,
+      updateSucceeded: false,
+      showDeletionSnackbar: false
     }
   },
   methods: {
     ...mapActions([
-      'updateItem'
+      'updateItem',
+      'deleteItem'
     ]),
-    save () {
+    onSaveButtonClick () {
       this.updating = true
       this.updateItem({
         teamId: this.teamId,
@@ -219,14 +222,29 @@ export default {
       })
         .then(() => {
           this.updating = false
-          this.showSnackbar = true
+          this.showSavedSnackbar = true
           this.updateSucceeded = true
         })
         .catch(error => {
           this.updating = false
           this.showSnackbar = true
           this.updateSucceeded = false
-          console.log(error)
+          console.error(error)
+        })
+    },
+    onDeleteButtonClick () {
+      this.updating = true
+      this.deleteItem({
+        teamId: this.teamId,
+        itemId: this.item.id
+      })
+        .then(() => {
+          this.$router.push({ name: 'productBacklog' })
+        })
+        .catch(error => {
+          this.updating = false
+          this.showDeletionSnackbar = true
+          console.error(error)
         })
     }
   },
