@@ -12,6 +12,7 @@
         <md-button
           v-if="textList.length !== 1"
           @click="textList.splice(index, 1)"
+          class="textitem-remove"
         >
           <md-icon
             class="clear-icon"
@@ -63,3 +64,17 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+li {
+  display: flex;
+  textarea {
+    flex: 1;
+    min-width: auto!important;
+  }
+  .md-button.textitem-remove {
+    height: 32px;
+  }
+  margin-bottom: 8px;
+}
+</style>

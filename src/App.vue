@@ -145,6 +145,10 @@ ul.form-items {
   }
 }
 
+.md-button {
+  min-width: 44px;
+}
+
 .md-checkbox {
   &.md-checked {
     .md-checkbox-container {

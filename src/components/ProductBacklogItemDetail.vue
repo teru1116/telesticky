@@ -216,6 +216,7 @@ export default {
     h3 {
       margin: 0 0 8px;
       padding: 0 4px;
+      line-height: 32px;
     }
     .editable {
       padding: 8px 4px;
