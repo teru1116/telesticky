@@ -5,7 +5,7 @@
         v-for="(text, index) in textList"
         :key="index"
       >
-        <textarea
+        <AutogrowTextarea
           v-model="textList[index]"
           @blur="updateSource"
         />
@@ -36,6 +36,8 @@
 </template>
 
 <script>
+import AutogrowTextarea from '@/components/AutogrowTextarea'
+
 export default {
   props: {
     source: Array
@@ -61,6 +63,9 @@ export default {
       this.textList.push('')
       this.$emit('update', this.textList)
     }
+  },
+  components: {
+    AutogrowTextarea
   }
 }
 </script>

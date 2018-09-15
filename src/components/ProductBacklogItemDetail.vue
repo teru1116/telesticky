@@ -93,7 +93,7 @@
                 :source="description"
               />
             </div>
-            <textarea
+            <AutogrowTextarea
               v-if="editingForm === 'description'"
               v-model="description"
               @blur="onEditingFinish('description', description)"
@@ -116,7 +116,7 @@
             >
               {{ item.value }}
             </p>
-            <textarea
+            <AutogrowTextarea
               v-if="editingForm === 'value'"
               v-model="value"
               @blur="onEditingFinish('value', value)"
