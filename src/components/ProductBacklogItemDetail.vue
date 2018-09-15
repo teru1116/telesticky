@@ -130,8 +130,7 @@
           <li>
             <h3>完成の定義</h3>
             <ListedTextarea
-              v-bind:source="definitionsOfItemDone"
-              v-on:update="updatedSource => definitionsOfItemDone = updatedSource"
+              :source.sync="definitionsOfItemDone"
             />
           </li>
         </ul>
