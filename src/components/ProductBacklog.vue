@@ -12,6 +12,7 @@
         <md-button
           @click="$router.push({ name: 'productBacklogItemCreate' })"
           class="md-raised md-primary primary-button"
+          :disabled="mode !== 'default'"
         >
           <md-icon>add</md-icon>
           アイテムを追加
@@ -19,13 +20,14 @@
         <md-button
           @click="onNewSprintButtonClick"
           class="md-raised"
-          :disabled="mode === 'planning'"
+          :disabled="mode !== 'default'"
         >
           新しいスプリント
         </md-button>
         <md-button
-          @click="onEditSprintButtonClick"
+          @click="mode = 'change_sprint_item'"
           class="md-raised"
+          :disabled="mode !== 'default'"
         >
           スプリントのアイテムを変更
         </md-button>
@@ -111,9 +113,9 @@
     <ProductBacklogPlanning
       :team="team"
       :selectedItems="selectedItems"
-      v-on:cancelPlanning="mode = 'default'"
+      v-on:closeModal="mode = 'default'"
       v-on:finishPlanning="onFinishPlanning"
-      class="planning-modal"
+      class="modal"
       :class="mode === 'planning' ? 'show' : ''"
     />
     <md-snackbar
@@ -124,6 +126,15 @@
     >
       <span>新しいスプリントが開始されました</span>
     </md-snackbar>
+
+    <!-- change sprint item mode -->
+    <ProductBacklogChangeSprintItem
+      :team="team"
+      :selectedItems="selectedItems"
+      v-on:closeModal="mode = 'default'"
+      class="modal"
+      :class="mode === 'change_sprint_item' ? 'show' : ''"
+    />
   </div>
 </template>
 
@@ -133,6 +144,7 @@ import { mapActions } from 'vuex'
 import draggable from 'vuedraggable'
 import ProductBacklogItem from './ProductBacklogItem'
 import ProductBacklogPlanning from './ProductBacklogPlanning'
+import ProductBacklogChangeSprintItem from './ProductBacklogChangeSprintItem'
 
 export default {
   props: {
@@ -143,7 +155,7 @@ export default {
   },
   data: function () {
     return {
-      mode: 'default', // default/planning/sprint_update
+      mode: 'default', // default/planning/change_sprint_item
       isUpdating: false,
       showsAlertNewSprint: false,
       isCorrectlyAdded: false,
@@ -154,7 +166,8 @@ export default {
   components: {
     draggable,
     ProductBacklogItem,
-    ProductBacklogPlanning
+    ProductBacklogPlanning,
+    ProductBacklogChangeSprintItem
   },
   computed: {
     activeItem () {
@@ -259,7 +272,7 @@ export default {
   }
 }
 
-.planning-modal {
+.modal {
   z-index: 3;
   position: absolute;
   top: 0;

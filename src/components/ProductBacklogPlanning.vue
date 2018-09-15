@@ -1,12 +1,12 @@
 <template>
   <md-card>
-    <div class="planning-modal-header">
+    <div class="modal-header">
       <h2>
         スプリントプランニング
       </h2>
       <md-button
-        class="close-planning-modal"
-        @click="$emit('cancelPlanning')"
+        class="close-modal"
+        @click="$emit('closeModal')"
       >
         <md-icon>clear</md-icon>
       </md-button>
@@ -144,7 +144,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.planning-modal-header {
+.modal-header {
   height: 48px;
   margin: 8px 0 0;
   padding: 0 24px;
@@ -153,7 +153,7 @@ export default {
     line-height: 48px;
     font-size: 20px;
   }
-  button.close-planning-modal {
+  button.close-modal {
     float: right;
     color: #666;
     min-width: 44px;

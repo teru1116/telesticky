@@ -20,7 +20,7 @@
           class="footer-right-items"
         >
           <md-checkbox
-            v-if="mode === 'planning'"
+            v-if="mode === 'planning' || mode === 'change_sprint_item'"
             v-model="isChecked"
             @change="$emit('onItemCheck', { 'item': data, 'isChecked': isChecked })"
           />
@@ -45,7 +45,7 @@ export default {
   },
   data: function () {
     return {
-      isChecked: false
+      isChecked: this.data.isSelectedForSprint
     }
   }
 }
@@ -92,6 +92,6 @@ li {
         }
       }
     }
-  } 
+  }
 }
 </style>
