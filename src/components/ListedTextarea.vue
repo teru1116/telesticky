@@ -52,7 +52,7 @@ export default {
   },
   data () {
     return {
-      textList: this.source
+      textList: this.source || ['']
     }
   },
   methods: {
