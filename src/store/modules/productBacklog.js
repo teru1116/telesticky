@@ -64,6 +64,17 @@ const actions = {
     })
   },
 
+  changeSprintItem ({ commit }, payload) {
+    const teamId = payload.teamId
+    const items = payload.items
+    
+    return new Promise((resolve, reject) => {
+      api.changeSprintItem(teamId, items)
+        .then(() => resolve())
+        .catch(error => reject(error))
+    })
+  },
+
   deleteItem ({ commit }, payload) {
     const teamId = payload.teamId
     const itemId = payload.itemId

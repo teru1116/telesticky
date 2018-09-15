@@ -89,6 +89,20 @@ export default {
     })
   },
 
+  changeSprintItem (teamId, items) {
+    const batch = db.batch
+    items.forEach(item => {
+      batch.update(db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(item.id), {
+        isSelectedForSprint: true
+      })
+    })
+    return new Promise((resolve, reject) => {
+      batch.commit().then(() => {
+        resolve()
+      })
+    })  
+  },
+
   deleteItem (teamId, itemId) {
     return new Promise((resolve, reject) => {
       db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).delete()

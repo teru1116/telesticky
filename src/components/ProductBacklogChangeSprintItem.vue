@@ -36,6 +36,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   props: {
     team: Object,
@@ -51,8 +53,20 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'changeSprintItem'
+    ]),
     submit () {
-      //
+      this.changeSprintItem({
+        teamId: this.team.id,
+        items: this.selectedItems
+      })
+        .then(() => {
+          this.updating = false
+        })
+        .catch(error => {
+          this.updating = false
+        })
     }
   }
 }
