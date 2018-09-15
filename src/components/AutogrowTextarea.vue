@@ -4,7 +4,7 @@
     v-on:input="$emit('input', $event.target.value)"
     :style="textareaStyles"
     @input="applyStyles"
-    @blur="$emit('onBlur')"
+    @blur="$emit('blur')"
   />
 </template>
 
