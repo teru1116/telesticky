@@ -55,11 +55,10 @@ const actions = {
   updateItem ({ commit }, payload) {
     const teamId = payload.teamId
     const itemId = payload.itemId
-    const field = payload.field
-    const value = payload.value
+    const item = payload.item
 
     return new Promise((resolve, reject) => {
-      api.updateItem(teamId, itemId, field, value)
+      api.updateItem(teamId, itemId, item)
         .then(() => resolve())
         .catch(error => reject(error))
     })

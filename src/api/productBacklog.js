@@ -81,9 +81,9 @@ export default {
     })
   },
 
-  updateItem (teamId, itemId, field, value) {
+  updateItem (teamId, itemId, item) {
     return new Promise((resolve, reject) => {
-      db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).update(field, value)
+      db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).update(item)
         .then(() => resolve())
         .catch(error => reject(error))
     })

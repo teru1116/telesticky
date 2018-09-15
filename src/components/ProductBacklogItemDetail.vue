@@ -44,7 +44,7 @@
             <AutogrowTextarea
               v-if="editingForm === 'title'"
               v-model="title"
-              @blur="onEditingFinish('title', title)"
+              @blur="editingForm = ''"
             />
           </li>
 
@@ -68,7 +68,7 @@
             <input
               v-if="editingForm === 'estimate'"
               v-model.number="estimate"
-              @blur="onEditingFinish('estimate', estimate)"
+              @blur="editingForm = ''"
               type=text
               class="form-item-estimate"
             />
@@ -99,7 +99,7 @@
             <AutogrowTextarea
               v-if="editingForm === 'description'"
               v-model="description"
-              @blur="onEditingFinish('description', description)"
+              @blur="editingForm = ''"
             />
           </li>
 
@@ -122,7 +122,7 @@
             <AutogrowTextarea
               v-if="editingForm === 'value'"
               v-model="value"
-              @blur="onEditingFinish('value', value)"
+              @blur="editingForm = ''"
             />
           </li>
 
@@ -144,6 +144,7 @@
           アイテムを削除
         </md-button>
         <md-button
+          @click="save"
           class="md-raised primary-button"
         >
           変更を保存
@@ -160,18 +161,13 @@
 
     <!-- snack bar -->
     <md-snackbar
-      :md-active.sync="updateResult.finished"
+      :md-active.sync="showSnackbar"
       :md-duration="4000"
       :md-position="'center'"
       md-persistent
     >
       <span>
-        {{ updateResult.isSuccess ? `${getFormDisplayName(updateResult.field)}を更新しました。` : `${getFormDisplayName(updateResult.field)}の更新に失敗しました。時間を置いて再度お試しください。` }}
-        <small
-          v-if="!updateResult.isSuccess && updateResult.error"
-        >
-          {{ updateResult.error.code }}
-        </small>
+        {{ updateSucceeded ? `アイテムを更新しました。` : `アイテムの更新に失敗しました。時間を置いて再度お試しください。` }}
       </span>
     </md-snackbar>
   </div>
@@ -196,51 +192,42 @@ export default {
       title: this.item.title,
       estimate: this.item.estimate,
       description: this.item.description,
+      value: this.item.value,
       definitionsOfItemDone: this.item.definitionsOfItemDone,
       editingForm: '',
       updating: false,
-      updateResult: {
-        finished: false,
-        isSuccess: false,
-        field: ''
-      }
+      showSnackbar: false,
+      updateSucceeded: false
     }
   },
   methods: {
     ...mapActions([
       'updateItem'
     ]),
-    onEditingFinish (field, value) {
+    save () {
       this.updating = true
-      this.updateResult.field = field
-      this.editingForm = ''
-
       this.updateItem({
         teamId: this.teamId,
         itemId: this.item.id,
-        field: field,
-        value: value
+        item: {
+          title: this.title,
+          estimate: this.estimate,
+          description: this.description,
+          value: this.value,
+          definitionsOfItemDone: this.definitionsOfItemDone
+        }
       })
         .then(() => {
           this.updating = false
-          this.updateResult.finished = true
-          this.updateResult.isSuccess = true
+          this.showSnackbar = true
+          this.updateSucceeded = true
         })
         .catch(error => {
           this.updating = false
-          this.updateResult.finished = true
-          this.updateResult.isSuccess = false
-          this.updateResult.error = error
+          this.showSnackbar = true
+          this.updateSucceeded = false
+          console.log(error)
         })
-    },
-    getFormDisplayName (field) {
-      switch (field) {
-        case 'title': return 'タイトル'
-        case 'estimate': return '見積り'
-        case 'description': return '詳細'
-        case 'value': return '価値'
-        case 'definitionsOfItemDone': return '完成の定義'
-      }
     }
   },
   components: {
