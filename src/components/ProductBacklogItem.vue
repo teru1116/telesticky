@@ -28,7 +28,7 @@
             v-if="data.isSelectedForSprint"
             class="item-status-label"
           >
-            Current Sprint
+            現在のスプリント
           </span>
         </span>
       </div>
@@ -78,10 +78,11 @@ li {
         span.item-status-label {
           float: right;
           background-color: #1ba6dd;
-          padding: 4px 8px;
+          padding: 2px 8px;
           color: #fff;
-          height: 28px;
-          margin: 4px auto;
+          height: 24px;
+          margin: 6px auto;
+          font-size: 12px;
           border-radius: 4px;
         }
         .md-checkbox {
