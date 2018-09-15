@@ -111,6 +111,8 @@
         </md-button>
       </md-dialog-actions>
     </md-dialog-content>
+
+    <!-- indicator -->
     <md-progress-spinner
       v-if="isProcessing"
       md-mode="indeterminate"
@@ -141,14 +143,6 @@ export default {
       'value': '',
       'definitionsOfItemDone': this.definitionsOfDone,
       'isProcessing': false
-    }
-  },
-  computed: {
-    showsDodAddButton: function () {
-      for (let i = 0; i < this.definitionsOfItemDone.length; i++) {
-        if (!this.definitionsOfItemDone[i]['title']) return false
-      }
-      return true
     }
   },
   methods: {
@@ -237,11 +231,5 @@ export default {
       z-index: 15;
     }
   }
-}
-
-.md-progress-spinner {
-  position: absolute;
-  top: calc(50% - 40px);
-  left: calc(50% - 30px);
 }
 </style>

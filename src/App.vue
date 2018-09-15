@@ -201,4 +201,10 @@ ul.form-items {
     background-color: #fff;
   }
 }
+
+.md-progress-spinner {
+  position: absolute;
+  top: calc(50% - 40px);
+  left: calc(50% - 30px);
+}
 </style>

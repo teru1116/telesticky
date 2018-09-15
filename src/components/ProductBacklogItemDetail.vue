@@ -135,6 +135,24 @@
 
       </div>
     </md-dialog-content>
+
+    <!-- indicator -->
+    <md-progress-spinner
+      v-if="updating"
+      md-mode="indeterminate"
+    />
+
+    <!-- snack bar -->
+    <md-snackbar
+      :md-active.sync="updateResult.finished"
+      :md-duration="4000"
+      :md-position="'center'"
+      md-persistent
+    >
+      <span>
+        {{ updateResult.isSuccess ? `${getFormDisplayName(updateResult.field)}を更新しました。` : `${getFormDisplayName(updateResult.field)}の更新に失敗しました。時間を置いて再度お試しください。` }}
+      </span>
+    </md-snackbar>
   </div>
 </template>
 
@@ -158,7 +176,13 @@ export default {
       estimate: this.item.estimate,
       description: this.item.description,
       definitionsOfItemDone: this.item.definitionsOfItemDone,
-      editingForm: ''
+      editingForm: '',
+      updating: false,
+      updateResult: {
+        finished: false,
+        isSuccess: false,
+        field: ''
+      }
     }
   },
   methods: {
@@ -166,7 +190,10 @@ export default {
       'updateItem'
     ]),
     onEditingFinish (field, value) {
+      this.updating = true
+      this.updateResult.field = field
       this.editingForm = ''
+
       this.updateItem({
         teamId: this.teamId,
         itemId: this.item.id,
@@ -174,11 +201,24 @@ export default {
         value: value
       })
         .then(() => {
-          //
+          this.updating = false
+          this.updateResult.finished = true
+          this.updateResult.isSuccess = true
         })
         .catch(error => {
-          console.error(error)
+          this.updating = false
+          this.updateResult.finished = true
+          this.updateResult.isSuccess = false
         })
+    },
+    getFormDisplayName (field) {
+      switch (field) {
+        case 'title': return 'タイトル'
+        case 'estimate': return '見積り'
+        case 'description': return '詳細'
+        case 'value': return '価値'
+        case 'definitionsOfItemDone': return '完成の定義'
+      }
     }
   },
   components: {
