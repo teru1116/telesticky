@@ -151,6 +151,11 @@
     >
       <span>
         {{ updateResult.isSuccess ? `${getFormDisplayName(updateResult.field)}を更新しました。` : `${getFormDisplayName(updateResult.field)}の更新に失敗しました。時間を置いて再度お試しください。` }}
+        <small
+          v-if="!updateResult.isSuccess && updateResult.error"
+        >
+          {{ updateResult.error.code }}
+        </small>
       </span>
     </md-snackbar>
   </div>
@@ -209,6 +214,7 @@ export default {
           this.updating = false
           this.updateResult.finished = true
           this.updateResult.isSuccess = false
+          this.updateResult.error = error
         })
     },
     getFormDisplayName (field) {

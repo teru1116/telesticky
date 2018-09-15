@@ -70,7 +70,8 @@
 
       <!-- show item detail -->
       <md-dialog
-        :md-active.sync="$route.name === 'productBacklogItemDetail'"
+        :md-active="$route.name === 'productBacklogItemDetail'"
+        :md-click-outside-to-close="false"
         class="large-dialog"
       >
         <router-view
