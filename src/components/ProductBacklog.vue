@@ -71,6 +71,7 @@
       <!-- show item detail -->
       <md-dialog
         :md-active.sync="$route.name === 'productBacklogItemDetail'"
+        class="large-dialog"
       >
         <router-view
           :item="activeItem"
@@ -83,6 +84,7 @@
       <!-- add item dialog -->
       <md-dialog
         :md-active.sync="showsCreateItemDialog"
+        class="large-dialog"
       >
         <CreateItemDialogContent
           :teamId="team.id"

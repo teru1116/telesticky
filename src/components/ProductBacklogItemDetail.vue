@@ -152,16 +152,6 @@ export default {
     estimationUnit: String,
     definitionsOfDone: Array
   },
-
-  computed: {
-    showsDodAddButton () {
-      for (let i = 0; i < this.definitionsOfItemDone.length; i++) {
-        if (!this.definitionsOfItemDone[i]['title']) return false
-      }
-      return true
-    }
-  },
-
   data () {
     return {
       title: this.item.title,
@@ -201,7 +191,7 @@ export default {
 
 <style lang="scss" scoped>
 .dialog-content {
-  width: 860px;
+  width: 960px;
   .dialog-header {
     background-color: #fff;
     padding: 4px 8px;

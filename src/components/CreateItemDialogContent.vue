@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div
+    class="dialog-content"
+  >
     <div
       class="dialog-header"
     >
@@ -20,11 +22,8 @@
             <h3>
               タイトル
             </h3>
-            <textarea
+            <AutogrowTextarea
               v-model="title"
-              rows="1"
-              type=text
-              class="form-item-title"
             />
           </li>
 
@@ -53,10 +52,9 @@
             <small>
               Markdown形式で入力できます
             </small>
-            <textarea
+            <AutogrowTextarea
               v-if="!showsDescriptionPreview"
               v-model="description"
-              rows="8"
             />
             <div
               v-if="showsDescriptionPreview"
@@ -80,9 +78,8 @@
             <h3>
               価値
             </h3>
-            <textarea
+            <AutogrowTextarea
               v-model="value"
-              rows="4"
             />
           </li>
 
@@ -94,39 +91,10 @@
               <h3>
                 完成の定義
               </h3>
-
-              <!-- 追加式入力欄 -->
-              <ul>
-                <li
-                  v-for="(itemDod, index) in definitionsOfItemDone"
-                  :key="index"
-                >
-                  <textarea
-                    v-model="itemDod.title"
-                    rows="1"
-                  />
-                  <md-button
-                    v-if="definitionsOfItemDone.length !== 1"
-                    @click="definitionsOfItemDone.splice(index, 1)"
-                  >
-                    <md-icon
-                      class="clear-icon"
-                    >
-                      clear
-                    </md-icon>
-                  </md-button>
-                </li>
-              </ul>
-              <md-button
-                v-if="showsDodAddButton"
-                @click="definitionsOfItemDone.push({'title': ''})"
-              >
-                <md-icon
-                  class="add-icon"
-                >
-                  add
-                </md-icon>
-              </md-button>
+              <ListedTextarea
+                v-bind:source="definitionsOfItemDone"
+                v-on:update="updatedSource => definitionsOfItemDone = updatedSource"
+              />
             </div>
           </li>
 
@@ -153,6 +121,9 @@
 <script>
 import VueMarkdown from 'vue-markdown'
 import { mapActions } from 'vuex'
+// components
+import AutogrowTextarea from '@/components/AutogrowTextarea'
+import ListedTextarea from '@/components/ListedTextarea'
 
 export default {
   props: {
@@ -208,7 +179,9 @@ export default {
     }
   },
   components: {
-    VueMarkdown
+    VueMarkdown,
+    AutogrowTextarea,
+    ListedTextarea
   }
 }
 </script>
@@ -225,6 +198,10 @@ export default {
   }
 }
 
+.dialog-content {
+  width: 960px;
+}
+
 .md-dialog-container {
   .md-toolbar {
     height: 48px;
@@ -233,7 +210,6 @@ export default {
   .md-dialog-content {
     max-height: calc(80vh - 48px);
     overflow-y: auto;
-    width: 680px;
     padding: 0;
 
     .dialog-content-inner {

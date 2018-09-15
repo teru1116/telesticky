@@ -193,7 +193,12 @@ ul.form-items {
   }
 }
 
-.md-dialog-container {
-  background-color: #fff;
+.md-dialog {
+  &.large-dialog {
+    height: 86%;
+  }
+  .md-dialog-container {
+    background-color: #fff;
+  }
 }
 </style>

@@ -44,9 +44,8 @@
           開発チームがインクリメントを開発する指針となるものです。
         </p>
         <div class="textarea-wrapper">
-          <textarea
+          <AutogrowTextarea
             v-model="sprintGoal"
-            rows="2"
           />
         </div>
       </md-step>
@@ -92,6 +91,8 @@
 <script>
 import { mapActions } from 'vuex'
 import Datepicker from 'vuejs-datepicker'
+// components
+import AutogrowTextarea from '@/components/AutogrowTextarea'
 
 export default {
   props: {
@@ -136,7 +137,8 @@ export default {
     }
   },
   components: {
-    Datepicker
+    Datepicker,
+    AutogrowTextarea
   }
 }
 </script>
