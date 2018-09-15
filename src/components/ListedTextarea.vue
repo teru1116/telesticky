@@ -73,6 +73,7 @@ export default {
 <style lang="scss" scoped>
 li {
   display: flex;
+  margin-bottom: 8px;
   textarea {
     flex: 1;
     min-width: auto!important;
@@ -80,6 +81,5 @@ li {
   .md-button.textitem-remove {
     height: 32px;
   }
-  margin-bottom: 8px;
 }
 </style>
