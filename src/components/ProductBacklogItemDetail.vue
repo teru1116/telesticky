@@ -39,7 +39,7 @@
               @click="editingForm = 'title'"
               class="editable"
             >
-              {{ item.title }}
+              {{ title }}
             </p>
             <AutogrowTextarea
               v-if="editingForm === 'title'"
@@ -63,7 +63,7 @@
               @click="editingForm = 'estimate'"
               class="editable"
             >
-              {{ item.estimate }}
+              {{ estimate }}
             </span>
             <input
               v-if="editingForm === 'estimate'"
@@ -117,7 +117,7 @@
               v-if="editingForm !== 'value'"
               @click="editingForm = 'value'"
             >
-              {{ item.value }}
+              {{ value }}
             </p>
             <AutogrowTextarea
               v-if="editingForm === 'value'"
