@@ -23,7 +23,7 @@ button {
   border: 0;
   outline: 0;
   &.md-button {
-    background-color: #fff;
+    background-color: rgba(0, 0, 0, 0);
     margin: 0;
     &.primary-button {
       background-color: #7b68ee!important;
@@ -50,6 +50,11 @@ input[type="text"] {
 textarea {
   padding-top: 8px;
   padding-bottom: 8px;
+}
+
+.inner {
+  width: 1000px;
+  margin: 0 auto;
 }
 
 .content-header {

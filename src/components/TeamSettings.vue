@@ -1,98 +1,77 @@
 <template>
-  <div>
-    <!-- toolbar content -->
-    <div class="toolbar-content">
-      <h2
-        :style="menuVisible ? { marginLeft: '0' } : { marginLeft: '48px' }">
-      チーム設定
+  <div
+    class="inner"
+  >
+
+    <!-- header -->
+    <div
+      class="content-header"
+    >
+      <h2>
+        チーム設定
       </h2>
+      <div
+        class="header-items"
+      >
+      </div>
     </div>
 
-    <!-- コンテンツ -->
+    <!-- body -->
     <div class="main-content-container">
-
-      <div
-        class="form-short-width"
+      <ul
+        class="form-items"
       >
-        <h3>基本情報</h3>
 
-        <!-- チーム名-->
-        <md-field>
-          <label>チーム名</label>
-          <md-input
-            v-model="teamName"
+        <!-- チーム名 -->
+        <li>
+          <h3>
+            チーム名
+          </h3>
+          <input
+            v-model="title"
+            type="text"
+            class="large"
           />
-        </md-field>
-      </div>
-
-      <div
-        class="form-short-width"
-      >
-        <h3>スクラム</h3>
+        </li>
 
         <!-- スプリント期間 -->
-        <md-field>
-          <label>スプリントの期間</label>
-          <md-input
+        <li>
+          <h3>
+            スプリント期間
+          </h3>
+          <input
             v-model.number="sprintDuration"
+            type="text"
+            class="form-item-estimate"
           />
-          <span class="md-suffix">
-            日
-          </span>
-        </md-field>
+          <span>日</span>
+        </li>
 
         <!-- 完成の定義 -->
-        <div
-          class="multi-inputs-dod"
-        >
-          <label>
+        <li>
+          <h3>
             完成の定義
-          </label>
-          <ul>
-            <li
-              v-for="(definition, index) in definitionsOfDone"
-              :key="index"
-            >
-              <md-field>
-                <md-textarea
-                  v-model="definition.title"
-                  md-autogrow
-                >
-                </md-textarea>
-              </md-field>
-              <md-button
-                v-if="definitionsOfDone.length !== 1"
-                @click="definitionsOfDone.splice(index, 1)"
-              >
-                <md-icon>clear</md-icon>
-              </md-button>
-            </li>
-          </ul>
-          <md-button
-            v-if="showsDodAddButton"
-            @click="definitionsOfDone.push({'title': ''})"
-          >
-            <md-icon>add</md-icon>
-          </md-button>
-        </div>
-      </div>
-
-      <div
-        class="form-short-width"
-      >
-        <h3>プランニング</h3>
+          </h3>
+          <ListedTextarea
+            :source.sync="definitionsOfDone"
+          />
+        </li>
 
         <!-- 見積りの単位 -->
-        <md-field>
-          <label>見積りの単位</label>
-          <md-input
-            v-model="estimationUnit"
+        <li>
+          <h3>
+            見積りの単位
+          </h3>
+          <input
+            v-model.number="estimate"
+            type="text"
+            class="form-item-estimate"
           />
-        </md-field>
-      </div>
+        </li>
+      </ul>
 
       <md-button
-        class="md-raised md-primary"
+        class="md-raised md-primary primary-button"
         @click="submit"
       >
         設定を更新する
@@ -121,30 +100,21 @@
 
 <script>
 import { mapActions } from 'vuex'
+// components
+import ListedTextarea from '@/components/ListedTextarea'
 
 export default {
   props: {
-    team: Object,
-    menuVisible: Boolean
+    team: Object
   },
   data: function () {
     return {
-      // input item
       teamName: this.team.name,
       sprintDuration: this.team.sprintDuration,
       definitionsOfDone: this.team.definitionsOfDone,
       estimationUnit: this.team.estimationUnit,
-      // ui state
       isProcessing: false,
       isCorrectlyUpdated: false
-    }
-  },
-  computed: {
-    showsDodAddButton: function () {
-      for (let i = 0; i < this.definitionsOfDone.length; i++) {
-        if (!this.definitionsOfDone[i]['title']) return false
-      }
-      return true
     }
   },
   methods: {
@@ -185,48 +155,28 @@ export default {
     'team.estimationUnit': function () {
       this.estimationUnit = this.team.estimationUnit
     }
+  },
+  components: {
+    ListedTextarea
   }
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .main-content-container {
   padding: 16px;
-
-  .form-short-width {
-    width: 400px;
-  }
-
-  h3 {
-    margin: 40px 0 24px!important;
-  }
-
-  .multi-inputs-dod {
-    margin-bottom: 24px;
-    ul {
-      padding-left: 16px;
-      list-style: none;
-      li {
-        display: flex;
-        .md-button {
-          margin-top: 16px;
+  ul.form-items {
+    margin-bottom: 64px;
+    li {
+      input {
+        &.large {
+          width: 100%;
         }
       }
-    }
-    .md-button {
-      min-width: 0;
-      margin: 0 0 0 16px;
+      .md-button {
+        background-color: rgba(0, 0, 0, 0);
+      }
     }
   }
-
-  .md-button {
-    margin: 40px 0 64px;
-  }
-}
-
-.md-progress-spinner {
-  position: absolute;
-  top: calc(50% - 40px);
-  left: calc(50% - 30px);
 }
 </style>
