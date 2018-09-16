@@ -54,7 +54,7 @@
         <ul>
           <li>
             <router-link
-              to="/account"
+              :to="{ name: 'account' }"
             >
               アカウント設定
             </router-link>

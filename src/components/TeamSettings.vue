@@ -164,7 +164,7 @@ export default {
 
 <style lang="scss" scoped>
 .main-content-container {
-  padding: 16px;
+  padding: 16px 0;
   ul.form-items {
     margin-bottom: 64px;
     li {
