@@ -102,7 +102,7 @@ export default {
     signOut () {
       firebase.auth().signOut()
         .then(() => {
-          // ストアのauthUserやteamを削除
+          // TODO: ステート破棄
           // ログイン画面に遷移させる
           router.push('/sign_in')
         })
