@@ -42,7 +42,7 @@
       >
         <button
           v-if="authUser"
-          :style="{ backgrountImage: authUser.photoURL }"
+          :style="{'background-image': 'url(' + photoURL + ')'}"
           class="account-thumbnail"
           @click="showAccountMenu = !showAccountMenu"
         />
@@ -91,6 +91,11 @@ export default {
   props: {
     authUser: Object,
     team: Object
+  },
+  computed: {
+    photoURL () {
+      return this.authUser.photoURL || require('./../assets/placeholderImages/profile.png')
+    }
   },
   data () {
     return {
@@ -146,6 +151,7 @@ export default {
           height: 32px;
           border-radius: 50%;
           margin: 8px 0;
+          background-size: cover;
           cursor: pointer;
         }
       }
@@ -160,9 +166,6 @@ export default {
               color: rgba(0, 0, 0, 0.87);
               padding: 8px 12px;
               display: block;
-              &:hover {
-
-              }
             }
           }
         }
