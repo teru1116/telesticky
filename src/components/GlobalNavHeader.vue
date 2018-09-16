@@ -44,18 +44,72 @@
           v-if="authUser"
           :style="{ backgrountImage: authUser.photoURL }"
           class="account-thumbnail"
+          @click="showAccountMenu = !showAccountMenu"
         />
       </div>
+      <md-card
+        v-if="showAccountMenu"
+        class="account-menu"
+      >
+        <ul>
+          <li>
+            <router-link
+              to="/account"
+            >
+              アカウント設定
+            </router-link>
+          </li>
+          <li>
+            <a @click="showSignoutConfirm = true">
+              ログアウト
+            </a>
+          </li>
+        </ul>
+      </md-card>
     </div>
   </nav>
+
+  <!-- サインアウト確認ダイアログ -->
+  <md-dialog-confirm
+    :md-active.sync="showSignoutConfirm"
+    md-title="ログアウト確認"
+    md-content="ログアウトします。<br />よろしいですか？"
+    md-confirm-text="はい"
+    md-cancel-text="キャンセル"
+    @md-cancel="showSignoutConfirm = false"
+    @md-confirm="signOut"
+  />
+
   </md-toolbar>
 </template>
 
 <script>
+import firebase from '@/firebase'
+import router from '@/router'
+
 export default {
   props: {
     authUser: Object,
     team: Object
+  },
+  data () {
+    return {
+      showAccountMenu: false,
+      showSignoutConfirm: false
+    }
+  },
+  methods: {
+    signOut () {
+      firebase.auth().signOut()
+        .then(() => {
+          // ストアのauthUserやteamを削除
+          // ログイン画面に遷移させる
+          router.push('/sign_in')
+        })
+        .catch(error => {
+          console.error(error)
+        })
+    }
   }
 }
 </script>
@@ -73,6 +127,7 @@ export default {
       margin: 0 auto;
       display: flex;
       height: 100%;
+      position: relative; // Account Menuのポジショニング用
       .nav-left-contents {
         flex: 1;
         display: flex;
@@ -91,6 +146,25 @@ export default {
           height: 32px;
           border-radius: 50%;
           margin: 8px 0;
+          cursor: pointer;
+        }
+      }
+      .account-menu {
+        position: absolute;
+        right: 0;
+        top: 52px;
+        width: 160px;
+        ul {
+          li {
+            a {
+              color: rgba(0, 0, 0, 0.87);
+              padding: 8px 12px;
+              display: block;
+              &:hover {
+
+              }
+            }
+          }
         }
       }
     }
