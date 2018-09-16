@@ -6,7 +6,7 @@
       </h2>
       <md-button
         class="close-modal"
-        @click="$emit('closeModal')"
+        @click="$emit('close')"
       >
         <md-icon>clear</md-icon>
       </md-button>
@@ -66,11 +66,11 @@ export default {
       })
         .then(() => {
           this.updating = false
-          this.$emit('chengeSprintItemFinished')
+          this.$emit('finished', true)
         })
         .catch(error => {
           this.updating = false
-          console.error(error)
+          this.$emit('finished', false, error)
         })
     }
   }

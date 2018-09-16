@@ -133,11 +133,21 @@
       :selectedItems="selectedItems"
       :checkedItems="checkedItems"
       :uncheckedItems="uncheckedItems"
-      v-on:closeModal="mode = 'default'"
-      v-on:chengeSprintItemFinished="selectedItems = this.productBacklog.items.filter(item => item.isSelectedForSprint)"
+      v-on:close="mode = 'default'"
+      v-on:finished="onChangeSprintItemFinished"
       class="modal"
       :class="mode === 'change_sprint_item' ? 'show' : ''"
     />
+    <md-snackbar
+      :md-position="'center'"
+      :md-duration="4000"
+      :md-active.sync="showChangeSprintItemSnackBar"
+      md-persistent
+    >
+      <span>
+        {{ changeSprintItemSucceeded ? 'スプリントのアイテムを変更しました。' : 'スプリントのアイテムの変更に失敗しました。時間を置いて再度お試し下さい。' }}
+      </span>
+    </md-snackbar>
   </div>
 </template>
 
@@ -165,17 +175,8 @@ export default {
       isCorrectlyCreatedSprint: false,
       checkedItems: [],
       uncheckedItems: [],
-      selectedItems: []
-    }
-  },
-  watch: {
-    mode (newMode) {
-      if (newMode !== 'default') {
-        this.selectedItems = []
-        this.sprintItems.forEach(item => {
-          this.selectedItems.push(item)
-        })
-      }
+      showChangeSprintItemSnackBar: false,
+      changeSprintItemSucceeded: false
     }
   },
   components: {
@@ -187,6 +188,9 @@ export default {
   computed: {
     sprintItems () {
       return this.productBacklog.items.filter(item => item.isSelectedForSprint)
+    },
+    selectedItems () {
+      return this.sprintItems.concat(this.checkedItems).filter(item => this.uncheckedItems.indexOf(item) === -1)
     },
     activeItem () {
       const itemId = this.$route.params.itemId
@@ -255,18 +259,23 @@ export default {
 
       // FIXME: 線形探索多い
       if (isChecked) {
-        this.selectedItems.push(item)
         this.uncheckedItems.splice(this.uncheckedItems.indexOf(item), 1)
         if (this.sprintItems.indexOf(item) === -1) {
           this.checkedItems.push(item)
         }
       } else {
-        this.selectedItems.splice(this.selectedItems.indexOf(item), 1)
         this.checkedItems.splice(this.checkedItems.indexOf(item), 1)
         if (this.sprintItems.indexOf(item) !== -1) {
           this.uncheckedItems.push(item)
         }
       }
+    },
+    onChangeSprintItemFinished (succeeded, error) {
+      this.checkedItems = []
+      this.uncheckedItems = []
+      this.mode = 'default'
+      this.changeSprintItemSucceeded = succeeded
+      this.showChangeSprintItemSnackBar = true
     },
     onCreateSprintFinish: function () {
       this.showsCreateSprintDialog = false
