@@ -131,7 +131,10 @@
     <ProductBacklogChangeSprintItem
       :team="team"
       :selectedItems="selectedItems"
+      :checkedItems="checkedItems"
+      :uncheckedItems="uncheckedItems"
       v-on:closeModal="mode = 'default'"
+      v-on:chengeSprintItemFinished="selectedItems = this.productBacklog.items.filter(item => item.isSelectedForSprint)"
       class="modal"
       :class="mode === 'change_sprint_item' ? 'show' : ''"
     />
@@ -159,14 +162,19 @@ export default {
       isUpdating: false,
       showsAlertNewSprint: false,
       isCorrectlyAdded: false,
-      selectedItems: this.productBacklog.items.filter(item => item.isSelectedForSprint),
-      isCorrectlyCreatedSprint: false
+      isCorrectlyCreatedSprint: false,
+      checkedItems: [],
+      uncheckedItems: [],
+      selectedItems: []
     }
   },
   watch: {
     mode (newMode) {
-      if (newMode === 'default') {
-        this.selectedItems = this.productBacklog.items.filter(item => item.isSelectedForSprint)
+      if (newMode !== 'default') {
+        this.selectedItems = []
+        this.sprintItems.forEach(item => {
+          this.selectedItems.push(item)
+        })
       }
     }
   },
@@ -177,6 +185,9 @@ export default {
     ProductBacklogChangeSprintItem
   },
   computed: {
+    sprintItems () {
+      return this.productBacklog.items.filter(item => item.isSelectedForSprint)
+    },
     activeItem () {
       const itemId = this.$route.params.itemId
       const items = this.productBacklog.items
@@ -241,14 +252,19 @@ export default {
     onItemCheck: function (param) {
       const item = param.item
       const isChecked = param.isChecked
+
+      // FIXME: 線形探索多い
       if (isChecked) {
         this.selectedItems.push(item)
+        this.uncheckedItems.splice(this.uncheckedItems.indexOf(item), 1)
+        if (this.sprintItems.indexOf(item) === -1) {
+          this.checkedItems.push(item)
+        }
       } else {
-        for (let i = 0; i < this.selectedItems.length; i++) {
-          if (item === this.selectedItems[i]) {
-            this.selectedItems.splice(i, 1)
-            break
-          }
+        this.selectedItems.splice(this.selectedItems.indexOf(item), 1)
+        this.checkedItems.splice(this.checkedItems.indexOf(item), 1)
+        if (this.sprintItems.indexOf(item) !== -1) {
+          this.uncheckedItems.push(item)
         }
       }
     },

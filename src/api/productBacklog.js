@@ -89,18 +89,23 @@ export default {
     })
   },
 
-  changeSprintItem (teamId, items) {
-    const batch = db.batch
-    items.forEach(item => {
+  changeSprintItem (teamId, checkedItems, uncheckedItems) {
+    const batch = db.batch()
+    checkedItems.forEach(item => {
       batch.update(db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(item.id), {
         isSelectedForSprint: true
       })
     })
-    return new Promise((resolve, reject) => {
-      batch.commit().then(() => {
-        resolve()
+    uncheckedItems.forEach(item => {
+      batch.update(db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(item.id), {
+        isSelectedForSprint: false
       })
-    })  
+    })
+    return new Promise((resolve, reject) => {
+      batch.commit()
+        .then(() => resolve())
+        .catch(error => reject(error))
+    })
   },
 
   deleteItem (teamId, itemId) {

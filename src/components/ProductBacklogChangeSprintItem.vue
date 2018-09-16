@@ -41,7 +41,9 @@ import { mapActions } from 'vuex'
 export default {
   props: {
     team: Object,
-    selectedItems: Array
+    selectedItems: Array,
+    checkedItems: Array,
+    uncheckedItems: Array
   },
   computed: {
     selectedTotalEstimate: function () {
@@ -59,13 +61,16 @@ export default {
     submit () {
       this.changeSprintItem({
         teamId: this.team.id,
-        items: this.selectedItems
+        checkedItems: this.checkedItems,
+        uncheckedItems: this.uncheckedItems
       })
         .then(() => {
           this.updating = false
+          this.$emit('chengeSprintItemFinished')
         })
         .catch(error => {
           this.updating = false
+          console.error(error)
         })
     }
   }
