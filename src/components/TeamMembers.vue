@@ -27,6 +27,7 @@
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <md-table-cell
             class="table-cell-thumbnail"
+            :style="{ width: '40px' }"
           >
             <div
               :style="item.photoURL ? {'background-image': 'url(' + item.photoURL + ')'} : {'background-image': 'url(' + require('./../assets/placeholderImages/profile.png') + ')'}"
@@ -38,6 +39,12 @@
         </md-table-row>
       </md-table>
     </div>
+
+    <!-- indicator -->
+    <md-progress-spinner
+      v-if="loading"
+      md-mode="indeterminate"
+    />
   </div>
 </template>
 
@@ -47,6 +54,11 @@ import { mapState, mapActions } from 'vuex'
 export default {
   props: {
     team: Object
+  },
+  data () {
+    return {
+      loading: true
+    }
   },
   computed: {
     ...mapState([
@@ -59,7 +71,9 @@ export default {
     ])
   },
   created () {
+    this.loading = true
     this.getMembers({ teamId: this.team.id })
+      .then(() => this.loading = false)
   }
 }
 </script>
@@ -74,10 +88,12 @@ export default {
           padding: 0;
         }
         .member_thumbnail {
-          width: 24px;
-          height: 24px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
           background-size: cover;
+          display: inline-block;
+          vertical-align: middle;
         }
       }
     }

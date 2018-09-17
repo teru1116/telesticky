@@ -11,7 +11,10 @@ const actions = {
     const teamId = payload.teamId
     return new Promise((resolve, reject) => {
       api.getMembers(teamId)
-        .then(members => commit('setMembers', members))
+        .then(members => {
+          commit('setMembers', members)
+          resolve()
+        })
         .catch(error => reject(error))
     })
   }
