@@ -22,6 +22,10 @@
       >
         <li>
           <h3>プロフィール画像</h3>
+          <ProfileImageUploader
+            :width="200"
+            :height="200"
+          />
         </li>
         <li>
           <h3>ユーザー名</h3>
@@ -43,6 +47,8 @@
 </template>
 
 <script>
+import ProfileImageUploader from './ProfileImageUploader'
+
 export default {
   props: {
     authUser: Object
@@ -59,6 +65,9 @@ export default {
         displayName: this.displayName
       })
     }
+  },
+  components: {
+    ProfileImageUploader
   }
 }
 </script>
