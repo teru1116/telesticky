@@ -25,6 +25,15 @@
     >
       <md-table v-model="members" md-card>
         <md-table-row slot="md-table-row" slot-scope="{ item }">
+          <md-table-cell
+            class="table-cell-thumbnail"
+          >
+            <div
+              :style="item.photoURL ? {'background-image': 'url(' + item.photoURL + ')'} : {'background-image': 'url(' + require('./../assets/placeholderImages/profile.png') + ')'}"
+              class="member_thumbnail"
+            />
+          </md-table-cell>
+          <md-table-cell md-label="ユーザー名">{{ item.displayName }}</md-table-cell>
           <md-table-cell md-label="メールアドレス">{{ item.email }}</md-table-cell>
         </md-table-row>
       </md-table>
@@ -57,6 +66,21 @@ export default {
 
 <style lang="scss" scoped>
 .members-table {
-  margin: 16px 0 0
+  margin: 16px 0 0;
+  .md-table {
+    .md-table-row {
+      .md-table-cell {
+        &.table-cell-thumbnail {
+          padding: 0;
+        }
+        .member_thumbnail {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background-size: cover;
+        }
+      }
+    }
+  }
 }
 </style>

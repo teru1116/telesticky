@@ -49,12 +49,15 @@
 </template>
 
 <script>
-import ProfileImageUploader from './ProfileImageUploader'
+import { mapActions } from 'vuex'
 import firebase from '@/firebase'
+// components
+import ProfileImageUploader from './ProfileImageUploader'
 
 export default {
   props: {
-    authUser: Object
+    authUser: Object,
+    team: Object
   },
   data () {
     return {
@@ -64,11 +67,19 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'updateDisplayName'
+    ]),
     onPhotoChange (dataURL) {
       this.dataURL = dataURL
     },
     submit () {
       // ユーザー名更新
+      this.updateDisplayName({
+        teamId: this.team.id,
+        uid: this.authUser.uid,
+        displayName: this.displayName
+      }),
       firebase.auth().currentUser.updateProfile({
         displayName: this.displayName
       })
@@ -79,9 +90,13 @@ export default {
           return ref.getDownloadURL()
         })
         .then(url => {
+          // Authを更新
           firebase.auth().currentUser.updateProfile({
             photoURL: url
           })
+          // Databaseを更新
+          db.collection('scrumTeams').doc(teamId).collection('members').doc(uid).update()
+          db.collection('users').doc(uid).update()
         })
         .catch(error => {
           console.error(error)
