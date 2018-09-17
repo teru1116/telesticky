@@ -79,9 +79,6 @@ export default {
         teamId: this.team.id,
         uid: this.authUser.uid,
         displayName: this.displayName
-      }),
-      firebase.auth().currentUser.updateProfile({
-        displayName: this.displayName
       })
       // プロフィール画像アップロード
       const ref = firebase.storage().ref().child(`profile/${this.authUser.uid}/small/photo.jpg`)
@@ -95,8 +92,6 @@ export default {
             photoURL: url
           })
           // Databaseを更新
-          db.collection('scrumTeams').doc(teamId).collection('members').doc(uid).update()
-          db.collection('users').doc(uid).update()
         })
         .catch(error => {
           console.error(error)

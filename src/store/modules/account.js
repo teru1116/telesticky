@@ -15,7 +15,7 @@ const actions = {
     commit('setAuthUser', null)
   },
 
-  updateDisplayName({ state, commit }, payload) {
+  updateDisplayName ({ state, commit }, payload) {
     const teamId = payload.teamId
     const uid = payload.uid
     const displayName = payload.displayName
