@@ -25,6 +25,7 @@
           <ProfileImageUploader
             :width="200"
             :height="200"
+            v-on:change="onPhotoChange"
           />
         </li>
         <li>
@@ -48,6 +49,7 @@
 
 <script>
 import ProfileImageUploader from './ProfileImageUploader'
+import firebase from '@/firebase'
 
 export default {
   props: {
@@ -56,14 +58,33 @@ export default {
   data () {
     return {
       displayName: this.authUser.displayName,
-      photoURL: this.authUser.photoURL
+      photoURL: this.authUser.photoURL,
+      dataURL: ''
     }
   },
   methods: {
+    onPhotoChange (dataURL) {
+      this.dataURL = dataURL
+    },
     submit () {
-      this.authUser.updateProfile({
+      // ユーザー名更新
+      firebase.auth().currentUser.updateProfile({
         displayName: this.displayName
       })
+      // プロフィール画像アップロード
+      const ref = firebase.storage().ref().child(`profile/${this.authUser.uid}/small/photo.jpg`)
+      ref.putString(this.dataURL, 'data_url')
+        .then(snapshot => {
+          return ref.getDownloadURL()
+        })
+        .then(url => {
+          firebase.auth().currentUser.updateProfile({
+            photoURL: url
+          })
+        })
+        .catch(error => {
+          console.error(error)
+        })
     }
   },
   components: {

@@ -38,6 +38,7 @@ export default {
       reader.onload = () => {
         image.onload = () => {
           this.ctx.drawImage(image, 0, 0)
+          this.$emit('change', image.src)
         }
         image.src = reader.result
       }
