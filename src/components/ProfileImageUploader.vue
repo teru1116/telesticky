@@ -3,6 +3,10 @@
     class="piu"
     @click="$refs.piuInput.click()"
   >
+    <div
+      v-if="!defaultPhotoURL && !file"
+      class="profile-placeholder"
+    />
     <canvas
       :width="width"
       :height="width"
@@ -68,6 +72,12 @@ export default {
 .piu {
   display: inline-block;
   cursor: pointer;
-  background-color: aquamarine;
+  position: relative;
+  .profile-placeholder {
+    position: absolute;
+    background-color: #d5d5d5;
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>
