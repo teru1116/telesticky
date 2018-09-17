@@ -55,7 +55,7 @@
       :style="{ maxHeight: 'none' }"
     >
       <DialogContent
-        :uid="authUser ? authUser.uid : ''"
+        :uid="account ? account.uid : ''"
         v-on:onCreateTeamFinish="onCreateTeamFinish"
       />
     </md-dialog>
@@ -78,7 +78,7 @@ import DialogContent from './CreateTeamDialogContent'
 
 export default {
   props: {
-    authUser: Object
+    account: Object
   },
   computed: {
     ...mapState([
@@ -92,7 +92,7 @@ export default {
     }
   },
   created () {
-    this.getTeamList(this.authUser.uid)
+    this.getTeamList(this.account.uid)
   },
   methods: {
     ...mapActions([

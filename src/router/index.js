@@ -126,7 +126,7 @@ router.beforeEach((to, from, next) => {
         next()
       } else {
         // ストアのauthUserをremove
-        store.dispatch('removeAuthUser')
+        store.dispatch('signOut')
         // ログイン画面にリダイレクト
         next({
           name: 'signIn',

@@ -41,7 +41,7 @@
         class="nav-right-contents"
       >
         <button
-          v-if="authUser"
+          v-if="account"
           :style="{'background-image': 'url(' + photoURL + ')'}"
           class="account-thumbnail"
           @click="showAccountMenu = !showAccountMenu"
@@ -89,12 +89,12 @@ import router from '@/router'
 
 export default {
   props: {
-    authUser: Object,
+    account: Object,
     team: Object
   },
   computed: {
     photoURL () {
-      return this.authUser.photoURL || require('./../assets/placeholderImages/profile.png')
+      return this.account.photoURL || require('./../assets/placeholderImages/profile.png')
     }
   },
   data () {

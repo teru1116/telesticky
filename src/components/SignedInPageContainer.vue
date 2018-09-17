@@ -1,13 +1,13 @@
 <template>
   <div>
     <GlobalNavHeader
-      :authUser="account.authUser"
+      :account="account"
       :team="team"
     />
     <main>
       <div class="main-inner">
         <router-view
-          :authUser="account.authUser"
+          :account="account"
           :team="team"
         />
       </div>

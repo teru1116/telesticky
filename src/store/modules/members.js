@@ -8,7 +8,6 @@ let state = []
 // actions
 const actions = {
   getMembers ({ commit }, payload) {
-    console.log(payload)
     const teamId = payload.teamId
     return new Promise((resolve, reject) => {
       api.getMembers(teamId)
