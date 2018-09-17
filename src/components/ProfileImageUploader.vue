@@ -21,7 +21,8 @@
 export default {
   props: {
     width: Number,
-    height: Number
+    height: Number,
+    defaultPhotoURL: ''
   },
   data () {
     return {
@@ -47,6 +48,14 @@ export default {
   },
   mounted () {
     this.ctx = this.$refs.piuCanvas.getContext('2d')
+
+    if (this.defaultPhotoURL) {
+      const image = new Image()
+      image.onload = () => {
+        this.ctx.drawImage(image, 0, 0)
+      }
+      image.src = this.defaultPhotoURL
+    }
   }
 }
 </script>

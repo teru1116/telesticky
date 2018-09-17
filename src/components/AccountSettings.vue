@@ -25,6 +25,7 @@
           <ProfileImageUploader
             :width="200"
             :height="200"
+            :defaultPhotoURL="authUser.photoURL"
             v-on:change="onPhotoChange"
           />
         </li>
