@@ -171,6 +171,7 @@ export default {
         .then(() => {
           this.isProcessing = false
           this.$emit('onCreateItemFinish')
+          this.$router.push({ name: 'productBacklog' })
         })
         .catch(error => {
           this.isProcessing = false
