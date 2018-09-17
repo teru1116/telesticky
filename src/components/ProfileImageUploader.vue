@@ -38,7 +38,11 @@ export default {
       const reader = new FileReader()
       reader.onload = () => {
         image.onload = () => {
+          // canvas内のコンテンツを消去
+          this.ctx.clearRect(0, 0, this.width, this.height)
+          // imageを描画
           this.ctx.drawImage(image, 0, 0)
+          // 親コンポーネントにimageのdata_urlを渡す
           this.$emit('change', image.src)
         }
         image.src = reader.result
