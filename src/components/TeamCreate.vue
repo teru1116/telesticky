@@ -1,157 +1,200 @@
 <template>
-  <div>
-    <input
-      v-model="teamName"
-      placeholder="チーム名を入力"
-    >
-    <ul
-      v-for="(item, index) in invitingMembers"
-      :key="index"
-    >
-      <li>
-        <p>
-          {{ item.message }}
-        </p>
-        <input
-          v-model="item.email"
-          placeholder="メールアドレスを入力"
+  <div class="dialog-content">
+    <div class="dialog-header">
+      <h2>チームを追加する</h2>
+      <md-button
+        @click="$router.push('/teams')"
+        class="close-modal"
+      >
+        <md-icon>clear</md-icon>
+      </md-button>
+    </div>
+
+    <md-dialog-content>
+      <div class="dialog-content-inner">
+        <p>メンバーを招待して、新しくチームを作成しましょう。</p>
+
+        <ul
+          class="form-items"
         >
-        <input
-          v-model="item.nickname"
-          placeholder="ユーザー名を入力（あとから変更できます）"
+          <!-- チーム名-->
+          <li>
+            <h3>チーム名</h3>
+            <input
+              v-model="teamName"
+              type=text
+              class="form-team-name"
+            />
+          </li>
+
+          <!-- 招待するメンバー -->
+          <li
+            class="form-item-multi-input"
+          >
+            <h3>
+              招待するメンバー
+            </h3>
+            <ul>
+              <li
+                v-for="(member, index) in members"
+                :key="index"
+              >
+                <!-- email -->
+                <input
+                  v-model="member.email"
+                  type=text
+                  placeholder="メールアドレス"
+                  class="form-email"
+                />
+
+                <!-- displayName -->
+                <input
+                  v-model="member.displayName"
+                  type=text
+                  placeholder="ニックネーム"
+                />
+
+                <!-- ×ボタン -->
+                <md-button
+                  v-if="members.length !== 1"
+                  @click="members.splice(index, 1)"
+                >
+                  <md-icon>clear</md-icon>
+                </md-button>
+              </li>
+            </ul>
+            <md-button
+              v-if="showsAddMemberButton"
+              @click="members.push({'email': '', 'displayName': ''})"
+            >
+              <md-icon>add</md-icon>
+            </md-button>
+          </li>
+          <li
+            class="form-item-sprint-duration"
+          >
+            <!-- スプリントの期間-->
+            <h3>
+              スプリントの期間
+            </h3>
+            <input
+              v-model.number="sprintDuration"
+              type=text
+              class="form-item-estimate"
+            />
+            <span>日</span>
+          </li>
+        </ul>
+      </div>
+      <md-dialog-actions>
+        <md-button
+          class="md-raised md-primary primary-button"
+          @click="onCreateTeamButtonClick"
         >
-        <input
-          v-model="item.role"
-          placeholder="チームでの役割を入力"
-        >
-        <button
-          @click="removeInput(index)"
-        >
-          x
-        </button>
-      </li>
-    </ul>
-    <button
-      @click="addInput"
-    >
-      +
-    </button>
-    <button
-      @click="onCreateTeamClicked"
-    >
-      スクラムチーム作成
-    </button>
+          スクラムチームを作成する
+        </md-button>
+      </md-dialog-actions>
+    </md-dialog-content>
+
   </div>
 </template>
 
 <script>
-import firebase from '@/firebase'
-
-const db = firebase.firestore()
-const settings = {
-  timestampsInSnapshots: true
-}
-db.settings(settings)
+import { mapActions } from 'vuex'
 
 export default {
-  data: function () {
+  props: {
+    uid: String
+  },
+  computed: {
+    showsAddMemberButton () {
+      for (let i = 0; i < this.members.length; i++) {
+        if (!this.members[i]['email']) return false
+      }
+      return true
+    }
+  },
+  data () {
     return {
-      teamName: '',
-      invitingMembers: []
+      // form items
+      'teamName': '',
+      'members': [],
+      'sprintDuration': 7
     }
   },
   methods: {
-    addInput: function () {
-      this.invitingMembers.push(
-        {
-          'email': '',
-          'nickname': '',
-          'role': '',
-          'isSucceed': false,
-          'message': ''
-        }
-      )
-    },
-    removeInput: function (index) {
-      this.invitingMembers.splice(index, 1)
-    },
-    onCreateTeamClicked: function () {
-      // 新規ScrumTeam作成
-      db.collection('ScrumTeams').add({
-        'teamName': this.teamName,
-        'config': {
-          'estimationUnit': 'story-points',
-          'taskStatusList': ['To Do', 'Doing', 'Done'],
-          'itemStatusList': ['Not Ready', 'Ready', 'To Do', 'Doing', 'Done']
+    ...mapActions([
+      'createTeam'
+    ]),
+    onCreateTeamButtonClick () {
+      const members = this.members.filter(member => member.email.length > 0)
+      this.createTeam({
+        'uid': this.uid,
+        'newTeam': {
+          'teamName': this.teamName,
+          'members': members,
+          'sprintDuration': this.sprintDuration
         }
       })
-        .then(docRef => {
-          // 招待したメンバーそれぞれについて
-          this.invitingMembers.forEach((member, index) => {
-            if (!member.email) return
-
-            let url = 'https://us-central1-web-scrum-board.cloudfunctions.net/getUserByEmail'
-            url += `?email=${member.email}`
-            // emailを渡してuidを検索するCloud Function
-            fetch(url)
-              .then(res => res.json())
-              .then(response => {
-                if (response.uid) {
-                  this.addExistingUserToTeam(docRef.id, response.uid, member, index)
-                } else {
-                  this.inviteMember(docRef.id, member, index)
-                }
-              })
-              .catch(error => {
-                console.error(error)
-              })
-          })
-        })
-    },
-    addExistingUserToTeam: function (teamId, uid, member, index) {
-      // ScrumTeamのmembersに登録
-      db.collection('ScrumTeams').doc(teamId).collection('members').doc(uid).set({
-        'nickname': member.nickname,
-        'role': member.role
-      })
-
-      // UserのscrumTeamsに追加
-      db.collection('Users').doc(uid).collection('teams').doc(teamId).set({
-        'teamName': this.teamName,
-        'nickname': member.nickname,
-        'role': member.role
-      })
-
-      // TODO: ScrumTeamに追加されたことを知らせるメールを送信
-    },
-    inviteMember: function (teamId, member, index) {
-      const actionCodeSettings = {
-        url: `http://localhost:8080/invited?t=${teamId}&n=${member.nickname}&r=${member.role}`,
-        handleCodeInApp: true
-      }
-      firebase.auth().sendSignInLinkToEmail(member.email, actionCodeSettings)
         .then(() => {
-          // 完了UI
-          this.invitingMembers[index].isSucceed = true
-          this.invitingMembers[index].message = '招待メールが送信されました。参加をお待ちください。'
+          this.$emit('onCreateTeamFinish')
         })
         .catch(error => {
-          // エラーUI
-          this.invitingMembers[index].isSucceed = false
-          let errorMessage = ''
-          if (error.code === 'auth/invalid-email') {
-            errorMessage = 'メールアドレスの形式が正しくありません。'
-          } else {
-            errorMessage = error.message
-          }
-          this.invitingMembers[index].message = errorMessage
+          console.error(error)
         })
     }
   },
-  created: function () {
+  created () {
+    // 初期状態で3人分の入力欄を用意
     for (let i = 0; i < 3; i++) {
-      this.addInput()
+      this.members.push({
+        'email': '',
+        'displayName': ''
+      })
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.dialog-content {
+  width: 640px;
+  .dialog-header {
+    padding: 4px 8px;
+    h2 {
+      display: inline-block;
+    }
+    .md-button {
+      &.close-modal {
+        float: right;
+        min-width: 44px;
+        background-color: rgba(0, 0, 0, 0);
+        .md-icon {
+          color: #fff;
+        }
+      }
+    }
+  }
+  .md-dialog-content {
+    max-height: calc(80vh - 48px);
+    overflow-y: auto;
+    padding: 0;
+    .dialog-content-inner {
+      padding: 16px 24px 72px;
+      ul.form-items {
+        margin: 16px 0 0;
+      }
+    }
+    .md-dialog-actions {
+      position: fixed;
+      bottom: 0;
+      height: 48px;
+      width: 100%;
+      padding: 0 24px;
+      border-top: 1px solid rgba(0,0,0,0.12);
+      background-color: #fff;
+      z-index: 15;
+    }
+  }
+}
+</style>

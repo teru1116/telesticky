@@ -9,12 +9,12 @@
           <md-card
             class="add-team"
           >
-            <a
-              @click="showsCreateTeamDialog = true"
+            <router-link
+              to="/teams/create"
             >
               <i class="material-icons">add</i>
               <span>チームを追加</span>
-            </a>
+            </router-link>
           </md-card>
         </li>
         <li
@@ -51,10 +51,9 @@
 
     <!-- create team dialog -->
     <md-dialog
-      :md-active.sync="showsCreateTeamDialog"
-      :style="{ maxHeight: 'none' }"
+      :md-active="$route.name === 'teamCreate'"
     >
-      <DialogContent
+      <router-view
         :uid="account ? account.uid : ''"
         v-on:onCreateTeamFinish="onCreateTeamFinish"
       />
@@ -78,9 +77,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import router from './../router'
-// components
-import DialogContent from './CreateTeamDialogContent'
+import router from '@/router'
 
 export default {
   props: {
@@ -119,9 +116,6 @@ export default {
         router.push({name: 'productBacklog', params: {'teamId': teamId}})
       })
     }
-  },
-  components: {
-    DialogContent
   }
 }
 </script>
