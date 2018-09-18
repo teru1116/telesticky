@@ -31,9 +31,7 @@
           <li
             class="form-item-multi-input"
           >
-            <h3>
-              招待するメンバー
-            </h3>
+            <h3>招待するメンバー</h3>
             <ul>
               <li
                 v-for="(member, index) in members"
@@ -70,13 +68,12 @@
               <md-icon>add</md-icon>
             </md-button>
           </li>
+
+          <!-- スプリントの期間-->
           <li
             class="form-item-sprint-duration"
           >
-            <!-- スプリントの期間-->
-            <h3>
-              スプリントの期間
-            </h3>
+            <h3>スプリントの期間</h3>
             <input
               v-model.number="sprintDuration"
               type=text
@@ -116,10 +113,9 @@ export default {
   },
   data () {
     return {
-      // form items
-      'teamName': '',
-      'members': [],
-      'sprintDuration': 7
+      teamName: '',
+      members: [],
+      sprintDuration: 7
     }
   },
   methods: {
