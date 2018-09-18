@@ -4,9 +4,14 @@ const state = []
 
 const actions = {
   getTeamList ({ commit }, uid) {
-    api.getTeamList(uid)
-      .then(teams => commit('setTeamList', teams))
-      .catch(error => console.error(error))
+    return new Promise((resolve, reject) => {
+      api.getTeamList(uid)
+      .then(teams => {
+        commit('setTeamList', teams)
+        resolve()
+      })
+      .catch(error => reject(error))
+    })
   },
 
   createTeam ({ commit }, payload) {

@@ -67,6 +67,12 @@
     >
       <span>新しくチームが作成されました</span>
     </md-snackbar>
+
+    <!-- indicator -->
+    <md-progress-spinner
+      v-if="loading"
+      md-mode="indeterminate"
+    />
   </div>
 </template>
 
@@ -87,12 +93,15 @@ export default {
   },
   data () {
     return {
-      'showsCreateTeamDialog': false,
-      'isCorrectlyCreated': false
+      loading: true,
+      showsCreateTeamDialog: false,
+      isCorrectlyCreated: false
     }
   },
   created () {
-    this.getTeamList(this.account.uid)
+    this.getTeamList(this.account.uid).then(() => {
+      this.loading = false
+    })
   },
   methods: {
     ...mapActions([
@@ -104,7 +113,9 @@ export default {
       this.isCorrectlyCreated = true
     },
     onTeamSelected (teamId) {
+      this.loading = true
       this.getTeam({ teamId: teamId }).then(() => {
+        this.loading = false
         router.push({name: 'productBacklog', params: {'teamId': teamId}})
       })
     }
