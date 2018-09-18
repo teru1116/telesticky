@@ -39,9 +39,6 @@ export default {
       return sprintTasks
     }
   },
-  data: function () {
-    return {}
-  },
   methods: {
     ...mapActions([
       'listenItems',
@@ -57,8 +54,8 @@ export default {
     activeSprint () {
       if (!this.activeSprint) return
       this.listenSprint({
-        'teamId': this.team.id,
-        'activeSprintId': this.team.activeSprint
+        teamId: this.team.id,
+        activeSprintId: this.team.activeSprint
       })
     }
   },
@@ -66,20 +63,8 @@ export default {
     // storeにチーム情報をセットする
     const teamId = this.$route.params.teamId
     this.getTeam({ teamId: teamId })
-    // teamIdをブラウザに保存し、次回直接開かれるようにする
-    if (this.team.id) {
-      localStorage.setItem('tid', this.team.id)
-    }
-    // スプリント中か否かでトップページを切り替える
-    if (this.activeSprintId) {
-      router.push({ name: 'sprintBacklog' })
-    } else {
-      router.push({ name: 'productBacklog' })
-    }
     // プロダクトバックログ リッスン開始
-    this.listenItems({
-      'teamId': teamId
-    })
+    this.listenItems({ teamId: teamId })
   }
 }
 </script>

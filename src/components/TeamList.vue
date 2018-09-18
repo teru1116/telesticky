@@ -104,13 +104,9 @@ export default {
       this.isCorrectlyCreated = true
     },
     onTeamSelected (teamId) {
-      this.getTeam({
-        'teamId': teamId
+      this.getTeam({ teamId: teamId }).then(() => {
+        router.push({name: 'productBacklog', params: {'teamId': teamId}})
       })
-        .then(() => {
-          router.push({name: 'teamPageContainer', params: {'teamId': teamId}})
-          localStorage.setItem('tid', teamId)
-        })
     }
   },
   components: {
