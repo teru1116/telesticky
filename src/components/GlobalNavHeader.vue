@@ -13,25 +13,25 @@
           Scrum
         </router-link>
         <router-link
-          v-if="team.id"
+          v-if="$route.params.teamId"
           :to="{ name: 'sprintBacklog', params: { teamId: team.id } }"
         >
           スプリントバックログ
         </router-link>
         <router-link
-          v-if="team.id"
+          v-if="$route.params.teamId"
           :to="{ name: 'productBacklog', params: { teamId: team.id } }"
         >
           プロダクトバックログ
         </router-link>
         <router-link
-          v-if="team.id"
+          v-if="$route.params.teamId"
           :to="{ name: 'teamSettings', params: { teamId: team.id } }"
         >
           チーム設定
         </router-link>
         <router-link
-          v-if="team.id"
+          v-if="$route.params.teamId"
           :to="{ name: 'members', params: { teamId: team.id } }"
         >
           メンバー
