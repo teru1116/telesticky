@@ -28,7 +28,7 @@
             チーム名
           </h3>
           <input
-            v-model="title"
+            v-model="teamName"
             type="text"
             class="large"
           />
@@ -63,7 +63,7 @@
             見積りの単位
           </h3>
           <input
-            v-model.number="estimate"
+            v-model.number="estimationUnit"
             type="text"
             class="form-item-estimate"
           />
@@ -75,6 +75,13 @@
         @click="submit"
       >
         設定を更新する
+      </md-button>
+
+      <md-button
+        class="md-raised sensitive-button"
+        @click="confirmDeleteProject = true"
+      >
+        プロジェクトを削除する
       </md-button>
 
     </div>
@@ -95,6 +102,45 @@
       <span>設定を更新しました</span>
     </md-snackbar>
 
+    <!-- confirm delete project -->
+    <md-dialog
+      :md-active.sync="confirmDeleteProject"
+    >
+      <md-dialog-title>プロジェクトを削除する</md-dialog-title>
+      <md-dialog-content>
+        <p>
+          プロジェクトを削除するには、このプロジェクトのID
+          <code>{{ team.id }}</code>
+          を入力してください。
+        </p>
+        <input
+          v-model="projectIdForDelete"
+          type="text"
+        >
+      </md-dialog-content>
+      <md-dialog-actions>
+        <md-button
+          class="md-primary"
+          @click="confirmDeleteProject = false"
+        >
+          キャンセル
+        </md-button>
+        <md-button
+          class="md-primary"
+          @click="deleteProject"
+          :disabled="projectIdForDelete !== team.id"
+        >
+          プロジェクトを削除する
+        </md-button>
+      </md-dialog-actions>
+    </md-dialog>
+
+    <!-- indicator -->
+    <md-progress-spinner
+      v-if="loading"
+      md-mode="indeterminate"
+    />
+
   </div>
 </template>
 
@@ -114,12 +160,17 @@ export default {
       definitionsOfDone: this.team.definitionsOfDone,
       estimationUnit: this.team.estimationUnit,
       isProcessing: false,
-      isCorrectlyUpdated: false
+      isCorrectlyUpdated: false,
+      confirmDeleteProject: false,
+      projectIdForDelete: '',
+      enableDeleteProject: false,
+      loading: false
     }
   },
   methods: {
     ...mapActions([
-      'updateTeamSettings'
+      'updateTeamSettings',
+      'deleteTeam'
     ]),
     submit: function () {
       this.isProcessing = true
@@ -140,6 +191,13 @@ export default {
           this.isProcessing = false
           console.error(error)
         })
+    },
+    deleteProject () {
+      this.loading = true
+      this.deleteTeam({ teamId: this.team.id}).then(() => {
+        this.loading = false
+        router.push('teams')
+      })
     }
   },
   watch: {
@@ -177,6 +235,19 @@ export default {
         background-color: rgba(0, 0, 0, 0);
       }
     }
+  }
+  .sensitive-button {
+    display: block;
+    margin: 40px 0 0;
+  }
+}
+.md-dialog-content {
+  p {
+    padding: 8px 0;
+  }
+  code {
+    color: #f58310;
+    padding: 2px 4px;
   }
 }
 </style>
