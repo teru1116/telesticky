@@ -18,7 +18,7 @@ export default {
   },
 
   createTeam (uid, team) {
-    let batch = db.batch()
+    const batch = db.batch()
 
     const newTeamRef = db.collection('scrumTeams').doc()
     const newUserTeamRef = db.collection('users').doc(uid).collection('teams').doc(newTeamRef.id)
@@ -49,8 +49,11 @@ export default {
 
     return new Promise((resolve, reject) => {
       // member.emailを渡して、Authenticationからユーザー情報を取得するAPI
-      // const url = 'http://localhost:5000/web-scrum-board/us-central1/getUsersWithEmails'
-      const url = 'https://us-central1-web-scrum-board.cloudfunctions.net/getUsersWithEmails'
+      const url = 'http://localhost:5000/web-scrum-board/us-central1/getUsersWithEmails'
+      // const url = 'https://us-central1-web-scrum-board.cloudfunctions.net/getUsersWithEmails'
+      console.log(JSON.stringify({
+        members: team.members
+      }))
       fetch(url, {
         method: 'POST',
         headers: new Headers({
@@ -63,23 +66,25 @@ export default {
       })
         .then(res => res.json())
         .then(response => {
-          response.forEach(member => {
-            // Authenticationに存在しないemailであれば、メールリンクを送信する
-            if (!member.uid) {
-              firebase.auth().sendSignInLinkToEmail(member.email, {
-                url: `http://localhost:8080/invited?t=${newTeamRef.id}&n=${member.displayName}&r=${member.role}`,
-                handleCodeInApp: true
-              })
-            // Authenticationに存在するemailであれば、そのuidで /teams/{teamId}/members/{uid} にセットする
-            } else {
-              batch.set(newTeamRef.collection('members').doc(member.uid), {
-                email: member.email,
-                displayName: member.displayName,
-                photoURL: member.photoURL
-              })
-              // TODO: onAddをトリガーに、新しくチームのmemberに追加されたことを通知するCloud Functions
-            }
-          })
+          if (response.length) {
+            response.forEach(member => {
+              // Authenticationに存在しないemailであれば、メールリンクを送信する
+              if (!member.uid) {
+                firebase.auth().sendSignInLinkToEmail(member.email, {
+                  url: `http://localhost:8080/invited?t=${newTeamRef.id}&n=${member.displayName}&r=${member.role}`,
+                  handleCodeInApp: true
+                })
+              // Authenticationに存在するemailであれば、そのuidで /teams/{teamId}/members/{uid} にセットする
+              } else {
+                batch.set(newTeamRef.collection('members').doc(member.uid), {
+                  email: member.email,
+                  displayName: member.displayName,
+                  photoURL: member.photoURL
+                })
+                // TODO: onAddをトリガーに、新しくチームのmemberに追加されたことを通知するCloud Functions
+              }
+            })
+          }
 
           // firestore書き込み実行
           return batch.commit()
@@ -96,6 +101,7 @@ export default {
           resolve(results)
         })
         .catch(error => {
+          console.error(error)
           reject(error)
         })
     })

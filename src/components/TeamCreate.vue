@@ -93,6 +93,11 @@
       </md-dialog-actions>
     </md-dialog-content>
 
+    <!-- indicator -->
+    <md-progress-spinner
+      v-if="updating"
+      md-mode="indeterminate"
+    />
   </div>
 </template>
 
@@ -115,7 +120,8 @@ export default {
     return {
       teamName: '',
       members: [],
-      sprintDuration: 7
+      sprintDuration: 7,
+      updating: false
     }
   },
   methods: {
@@ -123,19 +129,22 @@ export default {
       'createTeam'
     ]),
     onCreateTeamButtonClick () {
+      this.updating = true
       const members = this.members.filter(member => member.email.length > 0)
       this.createTeam({
-        'uid': this.uid,
-        'newTeam': {
-          'teamName': this.teamName,
-          'members': members,
-          'sprintDuration': this.sprintDuration
+        uid: this.uid,
+        newTeam: {
+          teamName: this.teamName,
+          members: members,
+          sprintDuration: this.sprintDuration
         }
       })
         .then(() => {
-          this.$emit('onCreateTeamFinish')
+          this.updating = false
+          this.$emit('createTeamFinish')
         })
         .catch(error => {
+          this.updating = false
           console.error(error)
         })
     }
