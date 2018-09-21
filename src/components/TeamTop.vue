@@ -10,7 +10,6 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import router from '@/router'
 
 export default {
   props: {

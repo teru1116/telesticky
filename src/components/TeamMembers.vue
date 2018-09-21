@@ -73,7 +73,9 @@ export default {
   created () {
     this.loading = true
     this.getMembers({ teamId: this.team.id })
-      .then(() => this.loading = false)
+      .then(() => {
+        this.loading = false
+      })
   }
 }
 </script>

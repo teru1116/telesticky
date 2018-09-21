@@ -6,11 +6,11 @@ const actions = {
   getTeamList ({ commit }, uid) {
     return new Promise((resolve, reject) => {
       api.getTeamList(uid)
-      .then(teams => {
-        commit('setTeamList', teams)
-        resolve()
-      })
-      .catch(error => reject(error))
+        .then(teams => {
+          commit('setTeamList', teams)
+          resolve()
+        })
+        .catch(error => reject(error))
     })
   },
 

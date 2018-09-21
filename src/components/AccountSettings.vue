@@ -50,7 +50,6 @@
 
 <script>
 import { mapActions } from 'vuex'
-import firebase from '@/firebase'
 // components
 import ProfileImageUploader from './ProfileImageUploader'
 

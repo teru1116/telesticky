@@ -194,9 +194,9 @@ export default {
     },
     deleteProject () {
       this.loading = true
-      this.deleteTeam({ teamId: this.team.id}).then(() => {
+      this.deleteTeam({ teamId: this.team.id }).then(() => {
         this.loading = false
-        router.push('teams')
+        this.$router.push('teams')
       })
     }
   },

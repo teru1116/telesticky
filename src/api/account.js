@@ -51,7 +51,7 @@ export default {
           batch.set(db.collection('scrumTeams').doc(teamId).collection('members').doc(uid), {
             photoURL: url
           })
-      
+
           batch.commit()
             .then(() => {
               resolve(url)

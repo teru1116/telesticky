@@ -33,12 +33,11 @@ export default {
             transaction.delete(db.collection('users').doc(uid).collection('teams').doc(teamId))
           })
           // team削除
-          transaction.delete(db.collection('scrumTeam').doc(teamId))
-          return
+          return transaction.delete(db.collection('scrumTeam').doc(teamId))
         })
       })
-      .then(() => redolve())
-      .catch(error => reject(error))
+        .then(() => resolve())
+        .catch(error => reject(error))
     })
   }
 }

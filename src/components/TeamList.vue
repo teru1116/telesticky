@@ -55,7 +55,7 @@
     >
       <router-view
         :uid="account ? account.uid : ''"
-        v-on:onCreateTeamFinish="onCreateTeamFinish"
+        v-on:createTeamFinish="isCorrectlyCreated = true"
       />
     </md-dialog>
     <md-snackbar
@@ -91,7 +91,6 @@ export default {
   data () {
     return {
       loading: true,
-      showsCreateTeamDialog: false,
       isCorrectlyCreated: false
     }
   },
@@ -105,10 +104,6 @@ export default {
       'getTeamList',
       'getTeam'
     ]),
-    onCreateTeamFinish () {
-      this.showsCreateTeamDialog = false
-      this.isCorrectlyCreated = true
-    },
     onTeamSelected (teamId) {
       this.loading = true
       this.getTeam({ teamId: teamId }).then(() => {
