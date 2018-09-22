@@ -43,7 +43,7 @@ export default {
     team: Object
   },
   components: {
-    'SprintBacklogBoard': SprintBacklogBoard
+    SprintBacklogBoard
   },
   methods: {
     onFinishSprintButtonClick: function () {
