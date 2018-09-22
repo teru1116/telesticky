@@ -51,7 +51,9 @@ const router = new Router({
       path: '/',
       name: 'container',
       component: Container,
-      meta: { requiresAuth: true },
+      meta: {
+        requiresAuth: true
+      },
       children: [
         {
           path: 'teams',
@@ -114,24 +116,57 @@ const router = new Router({
   ]
 })
 
-// ナビゲーションガード
+// ナビゲーションガード設定
 router.beforeEach((to, from, next) => {
-  // 遷移前に毎回、onAuthStateChangedをコールしてcurrentUserをチェック
+  // 認証が必要なURLへのアクセスの場合
   if (to.matched.some(record => record.meta.requiresAuth)) {
+    // 遷移前に毎回、onAuthStateChangedをコールしてcurrentUserをチェック
     firebase.auth().onAuthStateChanged(user => {
+      // サインイン状態の場合
       if (user) {
-        // ストアにauthUserをセット
+        // ストアにauthUserをセットする
         store.dispatch('setAuthUser', user)
-        // そのまま遷移
-        next()
+
+        let teamId = ''
+        let activeSprintId = ''
+        // 以下、リダイレクトが必要なパス
+        switch (to.name) {
+          case 'container':
+            // 前回使っていたteamが残っていれば、そのteamのスプリントあるいはプロダクトバックログ画面にリダイレクト
+            teamId = localStorage.getItem('tid')
+            activeSprintId = localStorage.getItem('sid')
+            if (teamId) {
+              if (activeSprintId) {
+                next({ name: 'sprintBacklog', params: { teamId: teamId } })
+              } else {
+                next({ name: 'productBacklog', params: { teamId: teamId } })
+              }
+            } else {
+              next('/teams')
+            }
+            break
+          case 'teamPageContainer':
+            teamId = localStorage.getItem('tid')
+            activeSprintId = localStorage.getItem('sid')
+            if (teamId) {
+              if (activeSprintId) {
+                next({ name: 'sprintBacklog', params: { teamId: teamId } })
+              } else {
+                next({ name: 'productBacklog', params: { teamId: teamId } })
+              }
+            } else {
+              next('/teams')
+            }
+            break
+          default:
+            next()
+            break
+        }
       } else {
-        // ストアのauthUserをremove
+        // サインアウト状態の場合は、ストアのauthUserをremove
         store.dispatch('signOut')
         // ログイン画面にリダイレクト
-        next({
-          name: 'signIn',
-          query: { redirect: to.fullPath }
-        })
+        next({ name: 'signIn', query: { redirect: to.fullPath } })
       }
     })
   } else {

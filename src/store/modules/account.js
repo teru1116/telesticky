@@ -15,6 +15,8 @@ const actions = {
   },
 
   signOut ({ commit }) {
+    localStorage.removeItem('tid')
+    localStorage.removeItem('sid')
     commit('signOut')
   },
 

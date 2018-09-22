@@ -47,7 +47,8 @@ export default {
   },
   methods: {
     onFinishSprintButtonClick: function () {
-      //
+      // Local Stoageから現在のスプリントIDを削除
+      localStorage.removeItem('sid')
     }
   }
 }

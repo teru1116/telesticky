@@ -14,11 +14,9 @@ const state = {
 const actions = {
   createAndStartSprint ({ commit }, payload) {
     return new Promise((resolve, reject) => {
-      api.createAndStartSprint(payload.teamId, payload.newSprint).then(() => {
-        resolve()
-      }, error => {
-        reject(error)
-      })
+      api.createAndStartSprint(payload.teamId, payload.newSprint)
+        .then(sprintId => resolve(sprintId))
+        .catch(error => reject(error))
     })
   },
 

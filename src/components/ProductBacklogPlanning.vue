@@ -131,8 +131,14 @@ export default {
           'items': this.selectedItems
         }
       })
-        .then(() => {
+        .then(sprintId => {
+          // Local StorgaeでアクティブなスプリントIDを保持
+          localStorage.setItem('sid', sprintId)
+
           this.$emit('onFinishPlanning')
+        })
+        .catch(error => {
+          console.log(error)
         })
     }
   },

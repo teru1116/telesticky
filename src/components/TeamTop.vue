@@ -62,6 +62,13 @@ export default {
     // storeにチーム情報をセットする
     const teamId = this.$route.params.teamId
     this.getTeam({ teamId: teamId })
+
+    // Local StorageにteamIdがない場合は書き込む
+    const tid = localStorage.getItem('tid')
+    if (!tid || tid !== teamId) {
+      localStorage.setItem('tid', teamId)
+    }
+
     // プロダクトバックログ リッスン開始
     this.listenItems({ teamId: teamId })
   }

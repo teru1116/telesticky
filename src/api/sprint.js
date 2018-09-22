@@ -55,7 +55,7 @@ export default {
     // commit
     return new Promise((resolve, reject) => {
       batch.commit().then(() => {
-        resolve()
+        resolve(newSprintId)
       })
     })
   }

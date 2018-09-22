@@ -95,9 +95,13 @@ export default {
     }
   },
   created () {
+    // チーム一覧を読み込み
     this.getTeamList(this.account.uid).then(() => {
       this.loading = false
     })
+
+    // Local StorageのteamIdを削除
+    localStorage.removeItem('tid')
   },
   methods: {
     ...mapActions([
