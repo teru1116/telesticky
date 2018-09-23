@@ -154,6 +154,7 @@ export default {
               height: 160px;
               font-size: 24px;
               color: #111;
+              line-height: 1.2;
             }
             &.team-info {
               border-top: 1px solid #d6d6d6;
