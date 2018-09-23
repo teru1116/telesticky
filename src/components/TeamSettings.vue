@@ -146,6 +146,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import router from '@/router'
 // components
 import ListedTextarea from '@/components/ListedTextarea'
 
@@ -175,12 +176,12 @@ export default {
     submit: function () {
       this.isProcessing = true
       this.update({
-        'teamId': this.team.id,
-        'teamSettings': {
-          'teamName': this.teamName,
-          'sprintDuration': this.sprintDuration,
-          'definitionsOfDone': this.definitionsOfDone,
-          'estimationUnit': this.estimationUnit
+        teamId: this.team.id,
+        teamSettings: {
+          teamName: this.teamName,
+          sprintDuration: this.sprintDuration,
+          definitionsOfDone: this.definitionsOfDone,
+          estimationUnit: this.estimationUnit
         }
       })
         .then(() => {
@@ -194,24 +195,16 @@ export default {
     },
     deleteProject () {
       this.loading = true
-      this.deleteTeam({ teamId: this.team.id }).then(() => {
-        this.loading = false
-        this.$router.push('teams')
+      this.deleteTeam({
+        teamId: this.team.id
       })
-    }
-  },
-  watch: {
-    'team.name': function () {
-      this.teamName = this.team.name
-    },
-    'team.sprintDuration': function () {
-      this.sprintDuration = this.team.sprintDuration
-    },
-    'team.definitionsOfDone': function () {
-      this.definitionsOfDone = this.team.definitionsOfDone
-    },
-    'team.estimationUnit': function () {
-      this.estimationUnit = this.team.estimationUnit
+        .then(() => {
+          this.loading = false
+          router.push('/teams')
+        })
+        .catch(error => {
+          console.error(error)
+        })
     }
   },
   components: {

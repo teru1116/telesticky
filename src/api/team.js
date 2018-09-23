@@ -24,20 +24,21 @@ export default {
 
   delete (teamId) {
     return new Promise((resolve, reject) => {
-      db.runTransaction(transaction => {
-        // 削除するteamに属しているユーザーのuidを取得
-        return transaction.get(db.collection('scrumTeam').doc(teamId).collection('members')).then(snapshot => {
-          // それぞれのユーザーのteamsコレクションから該当teamを削除
+      // 削除対象のteamのmembersのuidを取得
+      db.collection('scrumTeams').doc(teamId).collection('members').get()
+        .then(snapshot => {
+          // それぞれのユーザーのteamsコレクションから、このteamを削除
           snapshot.forEach(doc => {
             let uid = doc.id
-            transaction.delete(db.collection('users').doc(uid).collection('teams').doc(teamId))
+            // NOTE: 完了時の処理は特に書いていない
+            db.collection('users').doc(uid).collection('teams').doc(teamId).delete()
+              .catch(error => console.error(error))
           })
-          // team削除
-          return transaction.delete(db.collection('scrumTeam').doc(teamId))
+          // teamを削除
+          db.collection('scrumTeams').doc(teamId).delete()
+            .then(() => resolve())
+            .catch(error => reject(error))
         })
-      })
-        .then(() => resolve())
-        .catch(error => reject(error))
     })
   }
 }

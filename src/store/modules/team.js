@@ -40,25 +40,27 @@ const actions = {
   deleteTeam ({ commit }, payload) {
     const teamId = payload.teamId
     return new Promise((resolve, reject) => {
-      team.delete(teamId).then(() => {
-        const initialState = {
-          id: '',
-          name: '',
-          sprintDuration: 0,
-          definitionsOfDone: [],
-          estimationUnit: '',
-          itemStatusList: [],
-          taskStatusList: [],
-          initialItemStatus: 0,
-          initialSprintItemStatus: 0,
-          activeSprintId: '',
-          totalSprintCount: 0,
-          totalItemCount: 0,
-          doneItemCount: 0
-        }
-        commit('setTeam', initialState)
-        resolve()
-      })
+      team.delete(teamId)
+        .then(() => {
+          const initialState = {
+            id: '',
+            name: '',
+            sprintDuration: 0,
+            definitionsOfDone: [],
+            estimationUnit: '',
+            itemStatusList: [],
+            taskStatusList: [],
+            initialItemStatus: 0,
+            initialSprintItemStatus: 0,
+            activeSprintId: '',
+            totalSprintCount: 0,
+            totalItemCount: 0,
+            doneItemCount: 0
+          }
+          commit('setTeam', initialState)
+          resolve()
+        })
+        .catch(error => reject(error))
     })
   }
 }
