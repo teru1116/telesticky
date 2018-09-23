@@ -12,7 +12,10 @@
       <div
         class="header-items"
       >
-        <md-button class="md-raised md-primary primary-button">
+        <md-button
+          @click="$router.push({ name: 'memberInvite' })"
+          class="md-raised md-primary primary-button"
+        >
           <md-icon>add</md-icon>
           招待する
         </md-button>
@@ -39,6 +42,15 @@
         </md-table-row>
       </md-table>
     </div>
+
+    <!-- invite dialog -->
+    <md-dialog
+      :md-active="$route.name === 'memberInvite'"
+      :md-click-outside-to-close="false"
+      class="large-dialog"
+    >
+      <router-view/>
+    </md-dialog>
 
     <!-- indicator -->
     <md-progress-spinner

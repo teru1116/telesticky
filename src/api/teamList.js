@@ -1,4 +1,5 @@
 import firebase from '@/firebase'
+import admin from './admin'
 
 const db = firebase.firestore()
 
@@ -15,25 +16,6 @@ export default {
         })
         .catch(error => reject(error))
     })
-  },
-
-  async fetchAuthUsers (members) {
-    // member.emailを渡して、Authenticationからユーザー情報を取得するAPI
-    const url = 'http://localhost:5000/web-scrum-board/us-central1/getUsersWithEmails'
-    // const url = 'https://us-central1-web-scrum-board.cloudfunctions.net/getUsersWithEmails'
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      }),
-      body: JSON.stringify({
-        members: members
-      }),
-      mode: 'cors'
-    })
-
-    return response.json()
   },
 
   async createTeam (uid, team) {
@@ -73,7 +55,7 @@ export default {
 
     // メンバー招待処理
     if (team.members.length) {
-      const users = await this.fetchAuthUsers(team.members)
+      const users = await admin.fetchAuthUsers(team.members)
       users.forEach(user => {
         // uidが存在しない場合は、メールリンクで招待する
         if (!user.uid) {

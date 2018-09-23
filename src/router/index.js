@@ -17,6 +17,7 @@ import ProductBacklogItemDetail from '@/components/ProductBacklogItemDetail'
 import SprintBacklog from '@/components/SprintBacklog'
 import Settings from '@/components/TeamSettings'
 import Members from '@/components/TeamMembers'
+import MemberInvite from '@/components/TeamMemberInvite'
 import Account from '@/components/AccountSettings'
 
 Vue.use(Router)
@@ -102,7 +103,14 @@ const router = new Router({
             {
               path: 'members',
               name: 'members',
-              component: Members
+              component: Members,
+              children: [
+                {
+                  path: 'invite',
+                  name: 'memberInvite',
+                  component: MemberInvite
+                }
+              ]
             }
           ]
         },

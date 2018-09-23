@@ -1,4 +1,5 @@
 import firebase from '@/firebase'
+import admin from './admin'
 
 const db = firebase.firestore()
 
@@ -22,6 +23,32 @@ export default {
           })
         })
         .catch(error => reject(error))
+    })
+  },
+
+  async addMembers (teamId, email, displayName) {
+    const param = [{ email: email }]
+    const users = await admin.fetchAuthUsers(param)
+    const uid = users[0].uid
+
+    return new Promise((resolve, reject) => {
+      if (uid) {
+        // すでにサービスに登録済みのユーザーであれば、uidをmembersコレクションに追加する
+        db.collection('scrumTeams').doc(teamId).collection('members').doc(uid).set({
+          createdDate: firebase.firestore.FieldValue.serverTimestamp()
+        })
+          .then(() => db.collection('users').doc(uid).get())
+          .then(doc => resolve(Object.assign(doc.data(), { id: doc.id })))
+          .catch(error => reject(error))
+      } else {
+        // まだ登録されていないユーザーの場合は、メールリンクで招待する
+        firebase.auth().sendSignInLinkToEmail(email, {
+          url: `http://localhost:8080/invited?t=${teamId}&n=${displayName}`,
+          handleCodeInApp: true
+        })
+          .then(() => resolve())
+          .catch(error => reject(error))
+      }
     })
   }
 }

@@ -17,6 +17,19 @@ const actions = {
         })
         .catch(error => reject(error))
     })
+  },
+
+  addMembers ({ commit }, payload) {
+    return new Promise((resolve, reject) => {
+      api.addMembers()
+        .then(member => {
+          if (member) {
+            commit('addMember', member)
+          }
+          resolve(member)
+        })
+        .catch(error => reject(error))
+    })
   }
 }
 
@@ -25,6 +38,10 @@ const mutations = {
   setMembers (state, members) {
     state.splice(0, state.length)
     members.forEach(member => state.push(member))
+  },
+
+  addMember (state, member) {
+    state.push(member)
   }
 }
 
