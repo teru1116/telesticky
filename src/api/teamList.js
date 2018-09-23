@@ -73,7 +73,7 @@ export default {
 
     // メンバー招待処理
     if (team.members.length) {
-      const users = await this.getUsersWithEmail(team.members)
+      const users = await this.fetchAuthUsers(team.members)
       users.forEach(user => {
         // uidが存在しない場合は、メールリンクで招待する
         if (!user.uid) {
