@@ -46,6 +46,9 @@ input[type="text"], textarea {
 }
 input[type="text"] {
   height: 34px;
+  &.large {
+    width: 100%;
+  }
 }
 textarea {
   padding-top: 8px;

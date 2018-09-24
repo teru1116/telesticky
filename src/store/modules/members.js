@@ -19,9 +19,12 @@ const actions = {
     })
   },
 
-  addMembers ({ commit }, payload) {
+  addMember ({ commit }, payload) {
+    const teamId = payload.teamId
+    const email = payload.email
+
     return new Promise((resolve, reject) => {
-      api.addMembers()
+      api.addMember(teamId, email)
         .then(member => {
           if (member) {
             commit('addMember', member)

@@ -8,6 +8,7 @@ export default {
     return new Promise((resolve, reject) => {
       let members = []
       let count = 0
+
       db.collection('scrumTeams').doc(teamId).collection('members').get()
         .then(snapshot => {
           count = snapshot.size
@@ -26,9 +27,9 @@ export default {
     })
   },
 
-  async addMembers (teamId, email, displayName) {
-    const param = [{ email: email }]
-    const users = await admin.fetchAuthUsers(param)
+  async addMember (teamId, email) {
+    // Admin APIでemailを元に取得したユーザー情報の配列
+    const users = await admin.fetchAuthUsers([email])
     const uid = users[0].uid
 
     return new Promise((resolve, reject) => {
@@ -43,7 +44,7 @@ export default {
       } else {
         // まだ登録されていないユーザーの場合は、メールリンクで招待する
         firebase.auth().sendSignInLinkToEmail(email, {
-          url: `http://localhost:8080/invited?t=${teamId}&n=${displayName}`,
+          url: `http://localhost:8080/invited?t=${teamId}`,
           handleCodeInApp: true
         })
           .then(() => resolve())

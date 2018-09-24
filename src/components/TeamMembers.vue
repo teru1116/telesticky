@@ -47,9 +47,10 @@
     <md-dialog
       :md-active="$route.name === 'memberInvite'"
       :md-click-outside-to-close="false"
-      class="large-dialog"
     >
-      <router-view/>
+      <router-view
+        :teamId="team.id"
+      />
     </md-dialog>
 
     <!-- indicator -->
@@ -84,8 +85,16 @@ export default {
   },
   created () {
     this.loading = true
+
     this.getMembers({ teamId: this.team.id })
       .then(() => {
+        //
+      })
+      .catch(error => {
+        // TODO: メンバー情報の読み込みに失敗しました。
+        console.error(error)
+      })
+      .finally(() => {
         this.loading = false
       })
   }
