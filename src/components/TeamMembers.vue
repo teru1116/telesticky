@@ -86,7 +86,7 @@ export default {
   created () {
     this.loading = true
 
-    this.getMembers({ teamId: this.team.id })
+    this.getMembers({ teamId: this.$route.params.teamId })
       .then(() => {
         //
       })
