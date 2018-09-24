@@ -1,8 +1,8 @@
 export default {
   async fetchAuthUsers (emails) {
     // member.emailを渡して、Authenticationからユーザー情報を取得するAPI
-    const url = 'http://localhost:5000/web-scrum-board/us-central1/getUsersWithEmails'
-    // const url = 'https://us-central1-web-scrum-board.cloudfunctions.net/getUsersWithEmails'
+    // const url = 'http://localhost:5000/web-scrum-board/us-central1/getUsersWithEmails'
+    const url = 'https://us-central1-web-scrum-board.cloudfunctions.net/getUsersWithEmails'
 
     const response = await fetch(url, {
       method: 'POST',
