@@ -28,6 +28,27 @@ const actions = {
         commit('setSprintData', sprintData)
       })
     })
+  },
+
+  finishCurrentSprint ({ commit }, payload) {
+    const teamId = payload.teamId
+    const sprintId = payload.sprintId
+
+    return new Promise((resolve, reject) => {
+      api.finishCurrentSprint(teamId, sprintId)
+        .then(() => {
+          commit('setActiveSprintId', '')
+          commit('setSprintData', {
+            sprintNumber: 0,
+            startDate: '',
+            endDate: '',
+            sprintGoal: '',
+            planDescription: ''
+          })
+          resolve()
+        })
+        .catch(error => reject(error))
+    })
   }
 }
 

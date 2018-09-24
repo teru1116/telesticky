@@ -12,7 +12,8 @@
         class="header-items"
       >
         <md-button
-          @onclick="onFinishSprintButtonClick"
+          @click="showFinishSprintConfirm = true"
+          :disabled="sprint.id.length === 0"
           class="md-raised"
         >
           スプリントを終了する
@@ -29,10 +30,22 @@
         :team="team"
       />
     </div>
+
+    <!-- スプリント終了 確認ダイアログ -->
+    <md-dialog-confirm
+      :md-active.sync="showFinishSprintConfirm"
+      md-title="スプリント終了"
+      md-content="現在のスプリントを終了します。よろしいですか？<br />スプリントで選択したプロダクトバックログアイテムは削除されません。"
+      md-confirm-text="はい"
+      md-cancel-text="キャンセル"
+      @md-cancel="showFinishSprintConfirm = false"
+      @md-confirm="finishSprint"
+    />
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import SprintBacklogBoard from './SprintBacklogBoard'
 
 export default {
@@ -42,14 +55,34 @@ export default {
     sprintTasks: Object,
     team: Object
   },
-  components: {
-    SprintBacklogBoard
+  data () {
+    return {
+      showFinishSprintConfirm: false
+    }
   },
   methods: {
-    onFinishSprintButtonClick: function () {
+    ...mapActions([
+      'finishCurrentSprint'
+    ]),
+    finishSprint () {
       // Local Stoageから現在のスプリントIDを削除
       localStorage.removeItem('sid')
+
+      // スプリント終了API
+      this.finishCurrentSprint({
+        teamId: this.team.id,
+        sprintId: this.sprint.id
+      })
+        .then(() => {
+          //
+        })
+        .catch(error => {
+          console.error(error)
+        })
     }
+  },
+  components: {
+    SprintBacklogBoard
   }
 }
 </script>

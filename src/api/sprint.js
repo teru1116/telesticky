@@ -1,12 +1,8 @@
 import firebase from '@/firebase'
-
 const db = firebase.firestore()
-const settings = {
-  timestampsInSnapshots: true
-}
-db.settings(settings)
 
 export default {
+  // 現在のスプリントIDを取得
   getActiveSprintId (teamId) {
     return new Promise((resolve, reject) => {
       db.collection('scrumTeams').doc(teamId).get().then(doc => {
@@ -15,6 +11,7 @@ export default {
     })
   },
 
+  // スプリント情報のリッスンを開始
   // NOTE: listenはPromiseではリアクティブ更新がされなかったため、callback方式に差し替え
   listenSprint (teamId, sprintId, callback) {
     db.collection('scrumTeams').doc(teamId).collection('sprints').doc(sprintId).onSnapshot(doc => {
@@ -22,6 +19,7 @@ export default {
     })
   },
 
+  // 新規スプリント作成
   createAndStartSprint (teamId, newSprint) {
     const teamRef = db.collection('scrumTeams').doc(teamId)
 
@@ -57,6 +55,37 @@ export default {
       batch.commit().then(() => {
         resolve(newSprintId)
       })
+    })
+  },
+
+  // 現在のスプリントを終了
+  finishCurrentSprint (teamId, sprintId) {
+    const batch = db.batch()
+    const teamRef = db.collection('scrumTeams').doc(teamId)
+
+    return new Promise((resolve, reject) => {
+      teamRef.collection('productBacklog').where('isSelectedForSprint', '==', true).get()
+        .then(snapshot => {
+          // プロダクトバックログアイテムのスプリントフラグをOFF
+          snapshot.forEach(doc => {
+            batch.update({ isSelectedForSprint: false })
+          })
+
+          // sprintのcancelDateフィールドに現在日時をセット
+          batch.update(teamRef.collection('sprints').doc(sprintId), {
+            canceledDate: firebase.firestore.FieldValue.serverTimestamp()
+          })
+
+          // teamのactiveSprintIdを削除
+          batch.update(teamRef, {
+            activeSprintId: ''
+          })
+
+          // 一括書き込み実行
+          return batch.commit()
+        })
+        .then(() => resolve())
+        .catch(error => reject(error))
     })
   }
 }
