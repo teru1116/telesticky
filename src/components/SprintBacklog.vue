@@ -62,14 +62,14 @@ export default {
   },
   methods: {
     ...mapActions([
-      'finishCurrentSprint'
+      'finishSprint'
     ]),
     finishSprint () {
       // Local Stoageから現在のスプリントIDを削除
       localStorage.removeItem('sid')
 
       // スプリント終了API
-      this.finishCurrentSprint({
+      this.finishSprint({
         teamId: this.team.id,
         sprintId: this.sprint.id
       })

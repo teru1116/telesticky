@@ -88,8 +88,7 @@ export default {
           }
         })
         .catch(error => {
-          this.firebaseErrorCode = error.code
-          switch (this.firebaseErrorCode) {
+          switch (error.code) {
             case 'auth/invalid-email':
               this.emailError = 'メールアドレスの形式が無効です。'
               break

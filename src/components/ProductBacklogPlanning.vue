@@ -100,7 +100,7 @@ export default {
     selectedItems: Array
   },
   computed: {
-    selectedTotalEstimate: function () {
+    selectedTotalEstimate () {
       let total = 0
       this.selectedItems.forEach(item => {
         total += item.estimate
@@ -108,7 +108,7 @@ export default {
       return total
     }
   },
-  data: function () {
+  data () {
     return {
       sprintGoal: '',
       startDate: new Date(),
@@ -118,28 +118,21 @@ export default {
   },
   methods: {
     ...mapActions([
-      'createAndStartSprint'
+      'startSprint'
     ]),
-    onStartSprintButtonClick: function () {
-      this.createAndStartSprint({
-        'teamId': this.team.id,
-        'newSprint': {
-          'sprintNumber': this.team.totalSprintCount + 1,
-          'startDate': this.startDate,
-          'endDate': this.endDate,
-          'sprintGoal': this.sprintGoal,
-          'items': this.selectedItems
+    async onStartSprintButtonClick () {
+      const params = {
+        teamId: this.team.id,
+        newSprintData: {
+          sprintNumber: this.team.totalSprintCount + 1,
+          startDate: this.startDate,
+          endDate: this.endDate,
+          sprintGoal: this.sprintGoal,
+          items: this.selectedItems
         }
-      })
-        .then(sprintId => {
-          // Local StorgaeでアクティブなスプリントIDを保持
-          localStorage.setItem('sid', sprintId)
-
-          this.$emit('onFinishPlanning')
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      }
+      await this.startSprint(params)
+      this.$emit('onFinishPlanning')
     }
   },
   components: {
@@ -149,7 +142,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .modal-header {
   height: 48px;
   margin: 8px 0 0;

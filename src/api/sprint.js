@@ -2,25 +2,7 @@ import firebase from '@/firebase'
 const db = firebase.firestore()
 
 export default {
-  // 現在のスプリントIDを取得
-  getActiveSprintId (teamId) {
-    return new Promise((resolve, reject) => {
-      db.collection('scrumTeams').doc(teamId).get().then(doc => {
-        resolve(doc.data().activeSprintId)
-      })
-    })
-  },
-
-  // スプリント情報のリッスンを開始
-  // NOTE: listenはPromiseではリアクティブ更新がされなかったため、callback方式に差し替え
-  listenSprint (teamId, sprintId, callback) {
-    db.collection('scrumTeams').doc(teamId).collection('sprints').doc(sprintId).onSnapshot(doc => {
-      callback(doc.data())
-    })
-  },
-
-  // 新規スプリント作成
-  createAndStartSprint (teamId, newSprint) {
+  async start (teamId, newSprint) {
     const teamRef = db.collection('scrumTeams').doc(teamId)
 
     const newSprintRef = teamRef.collection('sprints').doc()
@@ -29,15 +11,16 @@ export default {
     // 一括書き込み開始
     const batch = db.batch()
 
-    // SprintsコレクションにDocを新規追加
-    batch.set(newSprintRef, {
+    // sprintドキュメントを新規作成
+    const newSprintData = {
       sprintNumber: newSprint.sprintNumber,
       startDate: newSprint.startDate,
       endDate: newSprint.endDate,
       sprintGoal: newSprint.sprintGoal
-    })
+    }
+    batch.set(newSprintRef, newSprintData)
 
-    // 選択したProductBacklogItemのスプリントフラグを更新
+    // スプリントで選択したバックログアイテムのスプリントフラグをON
     newSprint.items.forEach(item => {
       batch.update(db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(item.id), {
         isSelectedForSprint: true
@@ -50,42 +33,42 @@ export default {
       totalSprintCount: newSprint.sprintNumber
     })
 
-    // commit
-    return new Promise((resolve, reject) => {
-      batch.commit().then(() => {
-        resolve(newSprintId)
-      })
-    })
+    await batch.commit()
+
+    // DBへの書き込みが成功したら、Local StorageにスプリントIDを書き込む（ルーティングに使う）
+    localStorage.setItem('sid', sprintData.id)
+
+    return Object.assign(newSprintData, { id: newSprintId })
   },
 
-  // 現在のスプリントを終了
-  finishCurrentSprint (teamId, sprintId) {
+  async getActiveSprintId (teamId) {
+    const doc = await db.collection('scrumTeams').doc(teamId).get()
+    return doc.data().activeSprintId
+  },
+
+  async getSprintData (teamId, sprintId) {
+    const doc = await db.collection('scrumTeams').doc(teamId).collection('sprints').doc(sprintId).get()
+    return Object.assign(doc.data(), { id: doc.id })
+  },
+
+  async finish (teamId, sprintId) {
     const batch = db.batch()
     const teamRef = db.collection('scrumTeams').doc(teamId)
+    const snapshot = await teamRef.collection('productBacklog').where('isSelectedForSprint', '==', true).get()
 
-    return new Promise((resolve, reject) => {
-      teamRef.collection('productBacklog').where('isSelectedForSprint', '==', true).get()
-        .then(snapshot => {
-          // プロダクトバックログアイテムのスプリントフラグをOFF
-          snapshot.forEach(doc => {
-            batch.update({ isSelectedForSprint: false })
-          })
-
-          // sprintのcancelDateフィールドに現在日時をセット
-          batch.update(teamRef.collection('sprints').doc(sprintId), {
-            canceledDate: firebase.firestore.FieldValue.serverTimestamp()
-          })
-
-          // teamのactiveSprintIdを削除
-          batch.update(teamRef, {
-            activeSprintId: ''
-          })
-
-          // 一括書き込み実行
-          return batch.commit()
-        })
-        .then(() => resolve())
-        .catch(error => reject(error))
+    // プロダクトバックログアイテムのスプリントフラグをOFF
+    snapshot.forEach(doc => {
+      batch.update({ isSelectedForSprint: false })
     })
+
+    // sprintのcancelDateフィールドに現在日時をセット
+    batch.update(teamRef.collection('sprints').doc(sprintId), {
+      canceledDate: firebase.firestore.FieldValue.serverTimestamp()
+    })
+
+    // teamのactiveSprintIdを削除
+    batch.update(teamRef, { activeSprintId: '' })
+
+    batch.commit()
   }
 }

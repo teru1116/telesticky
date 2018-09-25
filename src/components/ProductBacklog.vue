@@ -166,7 +166,7 @@ export default {
     team: Object,
     menuVisible: Boolean
   },
-  data: function () {
+  data () {
     return {
       mode: 'default', // default/planning/change_sprint_item
       isUpdating: false,

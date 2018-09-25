@@ -114,9 +114,7 @@ export default {
         })
         .then(() => {
           // displayNameをAuth Userに登録
-          // 会員登録が完了しているこの時点でcurrentUserがnullになることはないよね？？
           const user = firebase.auth().currentUser
-          console.log(user)
           return user.updateProfile({
             displayName: this.displayName
           })
