@@ -1,117 +1,94 @@
 <template>
-  <div>
-    <header>
-      <div
-        class="inner"
-      >
-        <h1>
-          Scrum
-        </h1>
-      </div>
-    </header>
-
-    <h2>
-      さっそくScrumをはじめよう！
-      <small>
-        スクラムは、経験的プロセス制御の理論（経験主義）を基本にしている。
-      </small>
-    </h2>
-
-    <div
-      class="form-box"
-    >
-      <ul
-        class="signup-form-items"
-      >
+  <div class="signin-container">
+    <div class="inner">
+      <h1>アカウントを新規作成</h1>
+      <ul class="signup-form-items">
         <!-- ユーザー名 -->
         <li>
+          <label>ユーザー名</label>
           <input
             v-model="displayName"
-            type=text
-            placeholder="ユーザー名"
+            type="text"
           />
           <span
             class="error">
-          {{ displayNameError }}
+            {{ displayNameError }}
           </span>
         </li>
-
         <!-- メールアドレス -->
         <li>
+          <label>メールアドレス</label>
           <input
             v-model="email"
-            type=email
-            placeholder="メールアドレス"
+            type="text"
           />
           <span
             class="error">
-          {{ emailError }}
+            {{ emailError }}
           </span>
         </li>
-
         <!-- パスワード -->
         <li>
+          <label>パスワード</label>
           <input
             v-model="password"
-            type=password
-            placeholder="パスワード"
+            type="password"
           />
           <span
             class="error">
-          {{ passwordError }}
+            {{ passwordError }}
           </span>
         </li>
       </ul>
-    </div>
-
-    <div
-      class="actions"
-    >
-      <!-- submit -->
+      <!-- アカウントを作成 -->
       <md-button
-        @click="signup"
-        class="auth-submit"
+        @click="signUp"
+        class="md-raised md-primary primary-button"
       >
-        さっそく使ってみる
+        アカウントを作成
       </md-button>
-      <!-- ログインページへ -->
-      <div>
-        <router-link
-          :to="'/auth/sign_in'"
-          class="link-signin"
-        >
-          すでにアカウントをお持ちの方はこちら
-        </router-link>
-      </div>
+      <!-- ログイン画面へ -->
+      <router-link
+        :to="'/sign_in'"
+        class="switch-sign-in-up"
+      >
+        すでにアカウントをお持ちの方はこちら
+      </router-link>
     </div>
 
+    <!-- indicator -->
+    <md-progress-spinner
+      v-if="isProcessing"
+      md-mode="indeterminate"
+    />
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
-import router from './../router'
+import router from '@/router'
 import firebase from '@/firebase'
 const db = firebase.firestore()
 
+import '@/assets/sass/signup.scss'
+
 export default {
-  data: function () {
+  data () {
     return {
-      // 入力項目
-      'displayName': '',
-      'email': '',
-      'password': '',
-      // エラー
-      'displayNameError': '',
-      'emailError': '',
-      'passwordError': ''
+      displayName: '',
+      displayNameError: '',
+      email: '',
+      emailError: '',
+      password: '',
+      passwordError: '',
+      isProcessing: false
     }
   },
   methods: {
     ...mapActions([
       'setAuthUser'
     ]),
-    signup: function () {
+    signUp () {
       // ユーザー名バリデーション
       const regex = /^[a-zA-Z0-9_\-.]{3,15}/
       if (!regex.test(this.displayName)) {
@@ -120,20 +97,33 @@ export default {
       } else {
         this.displayNameError = ''
       }
+
       // 会員登録API
+      this.isProcessing = true
+      
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then(userCredential => {
-          // authUserをstoreにセット
+          // Auth Userをストアのステートにセット
           this.setAuthUser(userCredential.user)
           // FirestoreのUsersコレクションへ追加
           const uid = userCredential.user.uid
           return db.collection('users').doc(uid).set({
-            email: userCredential.user.email
+            email: userCredential.user.email,
+            displayName: this.displayName
+          })
+        })
+        .then(() => {
+          // displayNameをAuth Userに登録
+          // 会員登録が完了しているこの時点でcurrentUserがnullになることはないよね？？
+          const user = firebase.auth().currentUser
+          console.log(user)
+          return user.updateProfile({
+            displayName: this.displayName
           })
         })
         .then(() => {
           // チーム一覧画面へ遷移
-          router.push('/teams')
+          router.push({ name: 'teamList' })
         })
         .catch(error => {
           switch (error.code) {
@@ -147,71 +137,14 @@ export default {
               this.passwordError = '入力されたパスワードが簡単すぎます。'
               break
             default:
+              this.emailError = '入力されたメールアドレスまたはパスワードが無効です。'
               break
           }
+        })
+        .finally(() => {
+          this.isProcessing = false
         })
     }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-header {
-  height: 48px;
-  .inner {
-    width: 1000px;
-    margin: 0 auto;
-    h1 {
-      //
-    }
-  }
-}
-h2 {
-  font-size: 40px;
-  font-weight: 400;
-  line-height: 1.7;
-  text-align: center;
-  small {
-    font-size: 16px;
-    color: #666;
-    display: block;
-  }
-}
-div.form-box {
-  width: 600px;
-  margin: 0 auto;
-  ul.signup-form-items {
-    margin: 40px 0 32px;
-    li {
-      position: relative;
-      margin-bottom: 32px;
-      text-align: center;
-      input {
-        padding: 32px 24px;
-        font-size: 18px;
-        width: 400px;
-        border-radius: 4px;
-      }
-      span.error {
-        position: absolute;
-        left: 100px;
-        bottom: -24px;
-        color: #f58210;
-      }
-    }
-  }
-}
-div.actions {
-  width: 600px;
-  margin: 64px auto 0;
-  text-align: center;
-  button.auth-submit {
-    margin: 16px 0;
-    padding: 0 32px;
-    height: 64px;
-  }
-  a.link-signin {
-    text-decoration: underline;
-  }
-}
-</style>

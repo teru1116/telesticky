@@ -94,7 +94,7 @@ export default {
   },
   computed: {
     photoURL () {
-      return this.account.photoURL || require('./../assets/placeholderImages/profile.png')
+      return this.account.photoURL || require('./../assets/images/profile.png')
     }
   },
   data () {

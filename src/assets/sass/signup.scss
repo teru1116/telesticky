@@ -1,0 +1,39 @@
+.signin-container {
+  padding: 60px 0;
+  .inner {
+    width: 440px;
+    h1 {
+      font-size: 32px;
+      line-height: 32px;
+    }
+    ul.signup-form-items {
+      margin: 24px 0;
+      li {
+        margin: 0 0 32px;
+        label {
+          display: block;
+          margin: 0 0 8px;
+        }
+        label {
+          font-size: 16px;
+        }
+        input[type="text"], input[type="password"] {
+          width: 440px;
+          font-size: 20px;
+          padding: 8px;
+        }
+      }
+    }
+    .md-button {
+      width: 440px;
+      height: 48px;
+      font-size: 16px;
+    }
+    a.switch-sign-in-up {
+      display: block;
+      margin: 24px 0;
+      font-size: 16px;
+      text-align: center;
+    }
+  }
+}

@@ -1,16 +1,3 @@
-<template>
-  <div>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <router-view />
-  </div>
-</template>
-
-<script>
-import 'reset-css'
-export default {}
-</script>
-
-<style lang="scss">
 a, button {
   cursor: pointer;
 }
@@ -215,4 +202,3 @@ ul.form-items {
   top: calc(50% - 40px);
   left: calc(50% - 30px);
 }
-</style>

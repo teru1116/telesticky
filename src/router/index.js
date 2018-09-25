@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import firebase from '@/firebase'
 import store from '@/store'
 // components
-import AuthPageContainer from '@/components/AuthContainer'
 import Container from '@/components/SignedInPageContainer'
 import SignUp from '@/components/SignUp'
 import SignIn from '@/components/SignIn'
@@ -27,25 +26,19 @@ const router = new Router({
   routes: [
     // auth
     {
-      path: '/auth',
-      component: AuthPageContainer,
-      children: [
-        {
-          path: 'sign_up',
-          name: 'signUp',
-          component: SignUp
-        },
-        {
-          path: 'sign_in',
-          name: 'signIn',
-          component: SignIn
-        },
-        {
-          path: 'invited',
-          name: 'invited',
-          component: Invited
-        }
-      ]
+      path: '/sign_up',
+      name: 'signUp',
+      component: SignUp
+    },
+    {
+      path: '/sign_in',
+      name: 'signIn',
+      component: SignIn
+    },
+    {
+      path: '/invited',
+      name: 'invited',
+      component: Invited
     },
     // signed in
     {

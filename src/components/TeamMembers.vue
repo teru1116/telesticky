@@ -33,7 +33,7 @@
             :style="{ width: '40px' }"
           >
             <div
-              :style="item.photoURL ? {'background-image': 'url(' + item.photoURL + ')'} : {'background-image': 'url(' + require('./../assets/placeholderImages/profile.png') + ')'}"
+              :style="item.photoURL ? {'background-image': 'url(' + item.photoURL + ')'} : {'background-image': 'url(' + require('./../assets/images/profile.png') + ')'}"
               class="member_thumbnail"
             />
           </md-table-cell>
