@@ -36,7 +36,7 @@ export default {
     await batch.commit()
 
     // DBへの書き込みが成功したら、Local StorageにスプリントIDを書き込む（ルーティングに使う）
-    localStorage.setItem('sid', sprintData.id)
+    localStorage.setItem('sid', newSprintId)
 
     return Object.assign(newSprintData, { id: newSprintId })
   },
