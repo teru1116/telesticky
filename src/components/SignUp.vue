@@ -68,9 +68,9 @@
 import { mapActions } from 'vuex'
 import router from '@/router'
 import firebase from '@/firebase'
-const db = firebase.firestore()
-
 import '@/assets/sass/signup.scss'
+
+const db = firebase.firestore()
 
 export default {
   data () {
@@ -100,7 +100,7 @@ export default {
 
       // 会員登録API
       this.isProcessing = true
-      
+
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then(userCredential => {
           // Auth Userをストアのステートにセット
