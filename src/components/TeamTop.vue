@@ -21,8 +21,8 @@ export default {
       'sprint',
       'productBacklog'
     ]),
-    activeSprint () {
-      return this.team.activeSprint
+    activeSprintId () {
+      return this.team.activeSprintId
     },
     sprintTasks () {
       let sprintTasks = {}
@@ -41,27 +41,25 @@ export default {
   methods: {
     ...mapActions([
       'listenItems',
-      'listenSprint',
+      'getSprintData',
       'getTeam'
     ]),
-    toggleMenu () {
-      this.menuVisible = !this.menuVisible
-    }
   },
   watch: {
-    // activeSprintが変化したら、スプリントのリッスンを開始する
-    activeSprint () {
-      if (!this.activeSprint) return
-      this.listenSprint({
+    // team.activeSprintIdを購読し、更新されたらSprint Dataを読み込んでステートにセット
+    activeSprintId () {
+      if (!this.activeSprintId) return
+      this.getSprintData({
         teamId: this.team.id,
-        activeSprintId: this.team.activeSprint
+        sprintId: this.team.activeSprintId
       })
     }
   },
   created () {
-    // storeにチーム情報をセットする
     const teamId = this.$route.params.teamId
-    this.getTeam({ teamId: teamId })
+
+    // storeにチーム情報をセットする
+    this.getTeam({ teamId: this.$route.params.teamId })
 
     // Local StorageにteamIdがない場合は書き込む
     const tid = localStorage.getItem('tid')
