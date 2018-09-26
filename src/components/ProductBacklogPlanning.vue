@@ -1,20 +1,16 @@
 <template>
   <md-card>
     <div class="modal-header">
-      <h2>
-        スプリントプランニング
-      </h2>
+      <h2>スプリントプランニング</h2>
       <md-button
         class="close-modal"
-        @click="$emit('closeModal')"
+        @click="$emit('close')"
       >
         <md-icon>clear</md-icon>
       </md-button>
     </div>
 
-    <md-steppers
-      md-vertical
-    >
+    <md-steppers md-vertical>
 
       <!-- step 1 -->
       <md-step
@@ -55,9 +51,7 @@
         id="third"
         md-label="スプリントの開始"
       >
-        <ul
-          class="date-pickers"
-        >
+        <ul class="date-pickers">
           <li>
             <label>
               スプリント開始日
@@ -85,13 +79,17 @@
         </md-button>
       </md-step>
     </md-steppers>
+
+    <!-- インジケータ -->
+    <md-progress-spinner
+      v-if="showsIndicator"
+      md-mode="indeterminate"
+    />
   </md-card>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
 import Datepicker from 'vuejs-datepicker'
-// components
 import AutogrowTextarea from '@/components/AutogrowTextarea'
 
 export default {
@@ -113,15 +111,13 @@ export default {
       sprintGoal: '',
       startDate: new Date(),
       // FIXME: [Vue Warn] expected Date, got Number
-      endDate: new Date().setDate(new Date().getDate() + this.team.sprintDuration)
+      endDate: new Date().setDate(new Date().getDate() + this.team.sprintDuration),
+      showsIndicator: false
     }
   },
   methods: {
-    ...mapActions([
-      'startSprint'
-    ]),
     async onStartSprintButtonClick () {
-      const params = {
+      const payload = {
         teamId: this.team.id,
         newSprintData: {
           sprintNumber: this.team.totalSprintCount + 1,
@@ -131,8 +127,13 @@ export default {
           items: this.selectedItems
         }
       }
-      await this.startSprint(params)
-      this.$emit('onFinishPlanning')
+
+      this.showsIndicator = true
+
+      this.$store.dispatch('startSprint', payload)
+        .then(() => this.$emit('startSprintSucceeded'))
+        .catch(error => this.$emit('startSprintFailed'))
+        .finally(() => { this.showsIndicator = true })
     }
   },
   components: {

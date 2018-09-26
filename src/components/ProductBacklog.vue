@@ -2,13 +2,9 @@
   <div>
 
     <!-- header -->
-    <div
-      class="content-header"
-    >
+    <div class="content-header">
       <h2>プロダクトバックログ</h2>
-      <div
-        class="header-items"
-      >
+      <div class="header-items">
         <md-button
           @click="$router.push({ name: 'productBacklogItemCreate' })"
           class="md-raised md-primary primary-button"
@@ -18,7 +14,7 @@
           アイテムを追加
         </md-button>
         <md-button
-          @click="onNewSprintButtonClick"
+          @click="onStartSprintButtonClick"
           class="md-raised"
           :disabled="mode !== 'default'"
         >
@@ -27,24 +23,13 @@
         <md-button
           @click="mode = 'change_sprint_item'"
           class="md-raised"
-          :disabled="mode !== 'default'"
+          :disabled="mode !== 'default' || !sprint.id"
         >
           スプリントのアイテムを変更
         </md-button>
       </div>
     </div>
-    <!-- header -->
-
-    <!-- alert -->
-    <md-dialog-confirm
-      :md-active.sync="showsAlertNewSprint"
-      md-title="新しいスプリントを作成します。よろしいですか？"
-      md-content="まだ前のスプリント期間が終了していません。<br />スプリント期間は固定であるべきです。<br />本当に新しいスプリントを作成しますか？"
-      md-confirm-text="OK"
-      md-cancel-text="キャンセル"
-      @md-cancel="showsAlertNewSprint = false"
-      @md-confirm="startCreatingNewSprint"
-    />
+    <!-- header -->    
 
     <!-- body -->
     <div class="content-body">
@@ -109,14 +94,19 @@
     </div>
     <!-- body -->
 
-    <!-- planning mode -->
+    <!-- 新しいスプリント -->
+    <md-dialog-alert
+      :md-active.sync="showsAlertStartSprint"
+      md-content="まだ前のスプリントが終了されていません。<br />スプリントを終了してから、新しいスプリントを開始して下さい。"
+    />
     <ProductBacklogPlanning
       :team="team"
       :selectedItems="selectedItems"
-      v-on:closeModal="mode = 'default'"
-      v-on:finishPlanning="onFinishPlanning"
-      class="modal"
       :class="mode === 'planning' ? 'show' : ''"
+      class="modal"
+      v-on:close="mode = 'default'"
+      v-on:startSprintSucceeded="onStartSprintSucceeded"
+      v-on:startSprintFailed="onStartSprintFailed"
     />
     <md-snackbar
       :md-position="'center'"
@@ -148,12 +138,20 @@
         {{ changeSprintItemSucceeded ? 'スプリントのアイテムを変更しました。' : 'スプリントのアイテムの変更に失敗しました。時間を置いて再度お試し下さい。' }}
       </span>
     </md-snackbar>
+
+    <!-- トースト -->
+    <md-snackbar
+      :md-position="'center'"
+      :md-duration="4000"
+      :md-active.sync="showsSnackbar"
+      md-persistent
+    >
+      <span>{{ snackbarMessage }}</span>
+    </md-snackbar>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-// components
 import draggable from 'vuedraggable'
 import ProductBacklogItem from './ProductBacklogItem'
 import ProductBacklogPlanning from './ProductBacklogPlanning'
@@ -176,7 +174,11 @@ export default {
       checkedItems: [],
       uncheckedItems: [],
       showChangeSprintItemSnackBar: false,
-      changeSprintItemSucceeded: false
+      changeSprintItemSucceeded: false,
+
+      showsSnackbar: false,
+      snackbarMessage: '',
+      showsAlertStartSprint: false
     }
   },
   components: {
@@ -205,20 +207,28 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      move: 'moveItem'
-    }),
-    onNewSprintButtonClick: function () {
-      this.startCreatingNewSprint()
-      // const today = new Date()
-      // if (this.sprint && !util.isLater(today, this.sprint.endDate)) {
-      //   this.showsAlertNewSprint = true
-      // } else {
-      //   this.startCreatingNewSprint()
-      // }
+    // 新しいスプリントを開始するボタン クリック時
+    onStartSprintButtonClick () {
+      // 前のスプリントが続いている場合は、先に終了するようユーザーに伝える
+      if (this.sprint.id) {
+        this.showsAlertStartSprint = true
+      } else {
+        this.mode = 'planning'
+      }
     },
-    startCreatingNewSprint: function () {
-      this.mode = 'planning'
+    // スプリントを開始する: 成功時処理
+    onStartSprintSucceeded () {
+      this.mode = 'default'
+      this.showSnackbar('新しいスプリントが開始されました。')
+    },
+    // スプリントを開始する: 失敗時処理
+    onStartSprintFailed (error) {
+      this.mode = 'default'
+      this.showSnackbar('エラー：新しいスプリントの開始に失敗しました。')
+    },
+    showSnackbar (message) {
+      this.showsSnackbar = true
+      this.snackbarMessage = message
     },
     onFinishPlanning: function () {
       this.mode = 'default'
@@ -240,7 +250,7 @@ export default {
       // アイテムの移動に伴って位置が変わる全てのアイテム
       const relatedItems = isRaised ? this.productBacklog.items.slice(newIndex, oldIndex + 1) : this.productBacklog.items.slice(oldIndex, newIndex + 1)
       // order更新処理開始
-      this.move({
+      this.$store.dispatch('moveItem', {
         'teamId': this.team.id,
         'movedItem': movedItem,
         'newIndex': newIndex,
