@@ -29,7 +29,7 @@
         </md-button>
       </div>
     </div>
-    <!-- header -->    
+    <!-- header -->
 
     <!-- body -->
     <div class="content-body">
@@ -166,7 +166,7 @@ export default {
   },
   data () {
     return {
-      mode: 'default', // default/planning/change_sprint_item
+      mode: 'default', // default, planning, change_sprint_item
       isUpdating: false,
       showsAlertNewSprint: false,
       isCorrectlyAdded: false,

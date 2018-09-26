@@ -59,7 +59,7 @@ export default {
   async finish (teamId, sprintId) {
     const batch = db.batch()
     const teamRef = db.collection('scrumTeams').doc(teamId)
-    
+
     // プロダクトバックログアイテムのスプリントフラグをOFF
     const productBacklogRef = teamRef.collection('productBacklog')
     const snapshot = await productBacklogRef.where('isSelectedForSprint', '==', true).get().catch(error => { throw new Error(error) })

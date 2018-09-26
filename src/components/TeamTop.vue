@@ -43,7 +43,7 @@ export default {
       'listenItems',
       'getSprintData',
       'getTeam'
-    ]),
+    ])
   },
   watch: {
     // team.activeSprintIdを購読し、更新されたらSprint Dataを読み込んでステートにセット
