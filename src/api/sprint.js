@@ -58,7 +58,6 @@ export default {
     // プロダクトバックログアイテムのスプリントフラグをOFF
     const productBacklogRef = teamRef.collection('productBacklog')
     const snapshot = await productBacklogRef.where('isSelectedForSprint', '==', true).get().catch(error => { throw new Error(error) })
-
     snapshot.forEach(doc => {
       batch.update(productBacklogRef.doc(doc.id), { isSelectedForSprint: false })
     })
@@ -71,9 +70,10 @@ export default {
     // teamのactiveSprintIdを削除
     batch.update(teamRef, { activeSprintId: '' })
 
+    // 書き込み実行
     await batch.commit().catch(error => { throw new Error(error) })
 
-    // DBからの削除が成功したら、Local Stoageから現在のスプリントIDを削除
+    // 書き込みが成功したら、Local Stoageから現在のスプリントIDを削除
     localStorage.removeItem('sid')
   }
 }
