@@ -110,8 +110,7 @@ export default {
     return {
       sprintGoal: '',
       startDate: new Date(),
-      // FIXME: [Vue Warn] expected Date, got Number
-      endDate: new Date().setDate(new Date().getDate() + this.team.sprintDuration),
+      endDate: new Date(Date.now() + this.team.sprintDuration * 60 * 60 * 24 * 1000),
       showsIndicator: false
     }
   },
