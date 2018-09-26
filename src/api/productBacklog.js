@@ -1,10 +1,5 @@
 import firebase from '@/firebase'
-
 const db = firebase.firestore()
-const settings = {
-  timestampsInSnapshots: true
-}
-db.settings(settings)
 
 export default {
   listenItems (teamId, callback) {
@@ -20,28 +15,44 @@ export default {
       })
   },
 
-  addItem (teamId, newItem) {
-    return new Promise((resolve, reject) => {
-      return db.runTransaction(transaction => {
-        const teamRef = db.collection('scrumTeams').doc(teamId)
-        const pbRef = teamRef.collection('productBacklog')
-        return transaction.get(teamRef).then(doc => {
-          const data = doc.data()
-          const newCount = data.totalItemCount + 1
-          const newItemRef = pbRef.doc()
-          transaction.set(newItemRef, Object.assign(newItem, {
-            number: newCount,
-            order: newCount,
-            isSelectedForSprint: false
-          }))
-          transaction.update(teamRef, { totalItemCount: newCount })
+  listenTasks (teamId, itemIds, callback) {
+    let tasks = {}
+    const pbRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog')
+    itemIds.forEach((itemId, index) => {
+      pbRef.doc(itemId).collection('tasks').onSnapshot(snapshot => {
+        tasks[itemId] = []
+        snapshot.forEach(doc => {
+          let data = doc.data()
+          if (!tasks[itemId][data.status]) tasks[itemId][data.status] = []
+          tasks[itemId][data.status].push(Object.assign(data, { id: doc.id }))
         })
-      }).then(() => {
-        resolve()
-      }).catch(error => {
-        reject(error)
+        // NOTE: tasksが全部揃ってからcallback()を呼ぶ. 逐一呼ぶと最初しかObserverが付加されなかったため
+        if (Object.keys(tasks).length === itemIds.length) {
+          callback(tasks)
+        }
       })
     })
+  },
+
+  async addItem (teamId, newItem) {
+    const teamRef = db.collection('scrumTeams').doc(teamId)
+    const newItemRef = teamRef.collection('productBacklog').doc()
+
+    // チームの合計アイテム数に基づいて、アイテムにインクリメントされた番号を登録するため、トランザクションを使用
+    await db.runTransaction(async transaction => {
+      const doc = await transaction.get(teamRef).catch(error => { throw new Error(error) })
+      const itemNumber = doc.data().totalItemCount + 1
+      // アイテムを新規追加
+      transaction.set(newItemRef, Object.assign(newItem, {
+        number: itemNumber,
+        order: itemNumber,
+        isSelectedForSprint: false
+      }))
+      // チームの合計アイテム数を更新
+      transaction.update(teamRef, {
+        totalItemCount: itemNumber
+      })
+    }).catch(error => { throw new Error(error) })
   },
 
   moveItem (teamId, movedItem, newIndex, oldIndex, isRaised, relatedItems) {
@@ -113,25 +124,6 @@ export default {
       db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).delete()
         .then(() => resolve())
         .catch(error => reject(error))
-    })
-  },
-
-  listenTasks (teamId, itemIds, callback) {
-    let tasks = {}
-    const pbRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog')
-    itemIds.forEach((itemId, index) => {
-      pbRef.doc(itemId).collection('tasks').onSnapshot(snapshot => {
-        tasks[itemId] = []
-        snapshot.forEach(doc => {
-          let data = doc.data()
-          if (!tasks[itemId][data.status]) tasks[itemId][data.status] = []
-          tasks[itemId][data.status].push(Object.assign(data, { id: doc.id }))
-        })
-        // NOTE: tasksが全部揃ってからcallback()を呼ぶ. 逐一呼ぶと最初しかObserverが付加されなかったため
-        if (Object.keys(tasks).length === itemIds.length) {
-          callback(tasks)
-        }
-      })
     })
   },
 

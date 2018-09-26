@@ -1,4 +1,4 @@
-import api from '../../api/productBacklog'
+import productBacklog from '@/api/productBacklog'
 
 const state = {
   items: [],
@@ -6,36 +6,26 @@ const state = {
 }
 
 const actions = {
-  listenItems ({ commit }, payload) {
-    api.listenItems(payload.teamId, items => {
+  listenItemsAndTasks ({ commit }, payload) {
+    const teamId = payload.teamId
+    productBacklog.listenItems(teamId, items => {
       commit('setItems', items)
 
       if (!items.length) return
 
-      let itemIds = []
-      items.forEach(item => {
-        itemIds.push(item.id)
-      })
-
-      api.listenTasks(payload.teamId, itemIds, tasks => {
-        commit('setTasks', tasks)
-      })
+      // 取得したアイテムに紐づいたタスクもリッスンする
+      const itemIds = items.map(item => { return item.id })
+      productBacklog.listenTasks(teamId, itemIds, tasks => commit('setTasks', tasks))
     })
   },
 
-  addItem ({ commit }, payload) {
-    return new Promise((resolve, reject) => {
-      api.addItem(payload.teamId, payload.newItem).then(() => {
-        resolve()
-      }, error => {
-        reject(error)
-      })
-    })
+  async addItem ({ commit }, payload) {
+    await productBacklog.addItem(payload.teamId, payload.newItem).catch(error => { throw new Error(error) })
   },
 
   moveItem ({ commit }, payload) {
     return new Promise((resolve, reject) => {
-      api.moveItem(
+      productBacklog.moveItem(
         payload.teamId,
         payload.movedItem,
         payload.newIndex,
@@ -58,7 +48,7 @@ const actions = {
     const item = payload.item
 
     return new Promise((resolve, reject) => {
-      api.updateItem(teamId, itemId, item)
+      productBacklog.updateItem(teamId, itemId, item)
         .then(() => resolve())
         .catch(error => reject(error))
     })
@@ -70,7 +60,7 @@ const actions = {
     const uncheckedItems = payload.uncheckedItems
 
     return new Promise((resolve, reject) => {
-      api.changeSprintItem(teamId, checkedItems, uncheckedItems)
+      productBacklog.changeSprintItem(teamId, checkedItems, uncheckedItems)
         .then(() => resolve())
         .catch(error => reject(error))
     })
@@ -81,7 +71,7 @@ const actions = {
     const itemId = payload.itemId
 
     return new Promise((resolve, reject) => {
-      api.deleteItem(teamId, itemId)
+      productBacklog.deleteItem(teamId, itemId)
         .then(() => resolve())
         .catch(error => reject(error))
     })
@@ -89,7 +79,7 @@ const actions = {
 
   addTask ({ commit }, payload) {
     return new Promise((resolve, reject) => {
-      api.addTask(payload.teamId, payload.itemId, payload.newTask).then(() => {
+      productBacklog.addTask(payload.teamId, payload.itemId, payload.newTask).then(() => {
         resolve()
       }, error => {
         reject(error)
@@ -99,7 +89,7 @@ const actions = {
 
   moveTask ({ commit }, payload) {
     return new Promise((resolve, reject) => {
-      api.moveTask(
+      productBacklog.moveTask(
         payload.teamId,
         payload.itemId,
         payload.taskId,

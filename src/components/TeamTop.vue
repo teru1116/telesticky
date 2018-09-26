@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   props: {
@@ -38,18 +38,11 @@ export default {
       return sprintTasks
     }
   },
-  methods: {
-    ...mapActions([
-      'listenItems',
-      'getSprintData',
-      'getTeam'
-    ])
-  },
   watch: {
     // team.activeSprintIdを購読し、更新されたらSprint Dataを読み込んでステートにセット
     activeSprintId () {
       if (!this.activeSprintId) return
-      this.getSprintData({
+      this.$store.dispatch('getSprintData', {
         teamId: this.team.id,
         sprintId: this.team.activeSprintId
       })
@@ -59,7 +52,7 @@ export default {
     const teamId = this.$route.params.teamId
 
     // storeにチーム情報をセットする
-    this.getTeam({ teamId: this.$route.params.teamId })
+    this.$store.dispatch('getTeam', { teamId: this.$route.params.teamId })
 
     // Local StorageにteamIdがない場合は書き込む
     const tid = localStorage.getItem('tid')
@@ -68,7 +61,7 @@ export default {
     }
 
     // プロダクトバックログ リッスン開始
-    this.listenItems({ teamId: teamId })
+    this.$store.dispatch('listenItemsAndTasks', { teamId: teamId })
   }
 }
 </script>

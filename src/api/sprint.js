@@ -46,11 +46,6 @@ export default {
     })
   },
 
-  async getActiveSprintId (teamId) {
-    const doc = await db.collection('scrumTeams').doc(teamId).get().catch(error => { throw new Error(error) })
-    return doc.data().activeSprintId
-  },
-
   async getSprintData (teamId, sprintId) {
     const doc = await db.collection('scrumTeams').doc(teamId).collection('sprints').doc(sprintId).get().catch(error => { throw new Error(error) })
     return Object.assign(doc.data(), { id: doc.id })

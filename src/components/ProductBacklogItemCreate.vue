@@ -1,13 +1,7 @@
 <template>
-  <div
-    class="dialog-content"
-  >
-    <div
-      class="dialog-header"
-    >
-      <h2>
-        新規プロダクトバックログアイテム作成
-      </h2>
+  <div class="dialog-content">
+    <div class="dialog-header">
+      <h2>新規プロダクトバックログアイテム作成</h2>
       <md-button
         @click="$router.push({ name: 'productBacklog' })"
         class="close-modal"
@@ -16,18 +10,11 @@
       </md-button>
     </div>
     <md-dialog-content>
-      <div
-        class="dialog-content-inner"
-      >
-
-        <ul
-          class="form-items"
-        >
+      <div class="dialog-content-inner">
+        <ul class="form-items">
           <!-- タイトル-->
           <li>
-            <h3>
-              タイトル
-            </h3>
+            <h3>タイトル</h3>
             <AutogrowTextarea
               v-model="title"
             />
@@ -35,29 +22,19 @@
 
           <!-- 見積り -->
           <li>
-            <h3>
-              見積り
-            </h3>
+            <h3>見積り</h3>
             <input
               v-model.number="estimate"
-              type=text
+              type="text"
               class="form-item-estimate"
             />
-            <span
-              class="input-estimation-unit"
-            >
-              {{ estimationUnit }}
-            </span>
+            <span class="input-estimation-unit">{{ estimationUnit }}</span>
           </li>
 
           <!-- 詳細 -->
           <li>
-            <h3>
-              詳細
-            </h3>
-            <small>
-              Markdown形式で入力できます
-            </small>
+            <h3>詳細</h3>
+            <small>Markdown形式で入力できます</small>
             <AutogrowTextarea
               v-if="!showsDescriptionPreview"
               v-model="description"
@@ -81,9 +58,7 @@
 
           <!-- 価値 -->
           <li>
-            <h3>
-              価値
-            </h3>
+            <h3>価値</h3>
             <AutogrowTextarea
               v-model="value"
             />
@@ -91,12 +66,8 @@
 
           <!-- 完成の定義 -->
           <li>
-            <div
-              class="multi-inputs"
-            >
-              <h3>
-                完成の定義
-              </h3>
+            <div class="multi-inputs">
+              <h3>完成の定義</h3>
               <ListedTextarea
                 v-bind:source="definitionsOfItemDone"
                 v-on:update="updatedSource => definitionsOfItemDone = updatedSource"
@@ -109,7 +80,7 @@
       </div>
       <md-dialog-actions>
         <md-button
-          @click="submit"
+          @click="addItem"
           class="md-raised primary-button"
           :disabled="!title"
         >
@@ -118,9 +89,9 @@
       </md-dialog-actions>
     </md-dialog-content>
 
-    <!-- indicator -->
+    <!-- インジケータ -->
     <md-progress-spinner
-      v-if="isProcessing"
+      v-if="showsIndicator"
       md-mode="indeterminate"
     />
   </div>
@@ -128,8 +99,6 @@
 
 <script>
 import VueMarkdown from 'vue-markdown'
-import { mapActions } from 'vuex'
-// components
 import AutogrowTextarea from '@/components/AutogrowTextarea'
 import ListedTextarea from '@/components/ListedTextarea'
 
@@ -140,42 +109,41 @@ export default {
     initialItemStatus: Number,
     definitionsOfDone: Array
   },
-  data: function () {
+  data () {
     return {
-      'title': '',
-      'estimate': null,
-      'description': '',
-      'showsDescriptionPreview': false,
-      'value': '',
-      'definitionsOfItemDone': this.definitionsOfDone,
-      'isProcessing': false
+      title: '',
+      estimate: null,
+      description: '',
+      showsDescriptionPreview: false,
+      value: '',
+      definitionsOfItemDone: this.definitionsOfDone,
+      showsIndicator: false
     }
   },
   methods: {
-    ...mapActions({
-      addItem: 'addItem'
-    }),
-    submit: function () {
-      this.isProcessing = true
-      this.addItem({
-        'teamId': this.teamId,
-        'newItem': {
-          'title': this.title,
-          'estimate': this.estimate,
-          'description': this.description,
-          'value': this.value,
-          'definitionsOfItemDone': this.definitionsOfDone,
-          'status': this.initialItemStatus
+    addItem () {
+      this.showsIndicator = true
+
+      this.$store.dispatch('addItem', {
+        teamId: this.teamId,
+        newItem: {
+          title: this.title,
+          estimate: this.estimate,
+          description: this.description,
+          value: this.value,
+          definitionsOfItemDone: this.definitionsOfDone,
+          status: this.initialItemStatus
         }
       })
         .then(() => {
-          this.isProcessing = false
-          this.$emit('onCreateItemFinish')
+          this.$emit('createItemSucceeded')
           this.$router.push({ name: 'productBacklog' })
         })
         .catch(error => {
-          this.isProcessing = false
-          console.error(error)
+          this.$emit('createItemFailed', error)
+        })
+        .finally(() => {
+          this.showsIndicator = false
         })
     }
   },

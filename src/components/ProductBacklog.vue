@@ -34,7 +34,7 @@
     <!-- body -->
     <div class="content-body">
 
-      <!-- show items -->
+      <!-- アイテム一覧 -->
       <div class="pb-items-column">
         <div class="pb-items-column-scroll-view">
           <draggable
@@ -54,47 +54,10 @@
           </draggable>
         </div>
       </div>
-
-      <!-- show item detail -->
-      <md-dialog
-        :md-active="$route.name === 'productBacklogItemDetail'"
-        :md-click-outside-to-close="false"
-        class="large-dialog"
-      >
-        <router-view
-          :item="activeItem"
-          :teamId="team.id"
-          :estimationUnit="team.estimationUnit"
-          :definitionsOfDone="team.definitionsOfDone"
-        />
-      </md-dialog>
-
-      <!-- add item dialog -->
-      <md-dialog
-        :md-active="$route.name === 'productBacklogItemCreate'"
-        class="large-dialog"
-      >
-        <router-view
-          :teamId="team.id"
-          :estimationUnit="team.estimationUnit"
-          :initialItemStatus="team.initialItemStatus"
-          :definitionsOfDone="team.definitionsOfDone"
-          :selectedItems="selectedItems"
-          v-on:onCreateItemFinish="onCreateItemFinish"
-        />
-      </md-dialog>
-      <md-snackbar
-        :md-position="'center'"
-        :md-duration="4000"
-        :md-active.sync="isCorrectlyAdded"
-        md-persistent
-      >
-        <span>プロダクトバックログにアイテムが追加されました</span>
-      </md-snackbar>
     </div>
     <!-- body -->
 
-    <!-- 新しいスプリント -->
+    <!-- スライドビュー: 新しいスプリント -->
     <md-dialog-alert
       :md-active.sync="showsAlertStartSprint"
       md-content="まだ前のスプリントが終了されていません。<br />スプリントを終了してから、新しいスプリントを開始して下さい。"
@@ -117,7 +80,7 @@
       <span>新しいスプリントが開始されました</span>
     </md-snackbar>
 
-    <!-- change sprint item mode -->
+    <!-- スライドビュー: スプリントのアイテムを変更 -->
     <ProductBacklogChangeSprintItem
       :team="team"
       :selectedItems="selectedItems"
@@ -137,6 +100,44 @@
       <span>
         {{ changeSprintItemSucceeded ? 'スプリントのアイテムを変更しました。' : 'スプリントのアイテムの変更に失敗しました。時間を置いて再度お試し下さい。' }}
       </span>
+    </md-snackbar>
+
+    <!-- アイテム詳細モーダル -->
+    <md-dialog
+      :md-active="$route.name === 'productBacklogItemDetail'"
+      :md-click-outside-to-close="false"
+      class="large-dialog"
+    >
+      <router-view
+        :item="activeItem"
+        :teamId="team.id"
+        :estimationUnit="team.estimationUnit"
+        :definitionsOfDone="team.definitionsOfDone"
+      />
+    </md-dialog>
+
+    <!-- アイテム追加モーダル -->
+    <md-dialog
+      :md-active="$route.name === 'productBacklogItemCreate'"
+      class="large-dialog"
+    >
+      <router-view
+        :teamId="team.id"
+        :estimationUnit="team.estimationUnit"
+        :initialItemStatus="team.initialItemStatus"
+        :definitionsOfDone="team.definitionsOfDone"
+        :selectedItems="selectedItems"
+        v-on:createItemSucceeded="onCreateItemSucceeded"
+        v-on:createItemFailed="onCreateItemFailed"
+      />
+    </md-dialog>
+    <md-snackbar
+      :md-position="'center'"
+      :md-duration="4000"
+      :md-active.sync="isCorrectlyAdded"
+      md-persistent
+    >
+      <span>プロダクトバックログにアイテムが追加されました</span>
     </md-snackbar>
 
     <!-- トースト -->
@@ -227,13 +228,16 @@ export default {
       this.showSnackbar('エラー：新しいスプリントの開始に失敗しました。')
       console.error(error)
     },
+    onCreateItemSucceeded () {
+      this.showSnackbar('新しいアイテムを追加しました。')
+    },
+    onCreateItemFailed (error) {
+      this.showSnackbar('エラー：新しいアイテムの作成に失敗しました。')
+      console.error(error)
+    },
     showSnackbar (message) {
       this.showsSnackbar = true
       this.snackbarMessage = message
-    },
-    onFinishPlanning: function () {
-      this.mode = 'default'
-      this.isCorrectlyCreatedSprint = true
     },
     onEditSprintButtonClick: function () {
       this.isSelectionMode = !this.isSelectionMode
