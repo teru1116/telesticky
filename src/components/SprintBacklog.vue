@@ -2,15 +2,11 @@
   <div>
 
     <!-- header -->
-    <div
-      class="content-header"
-    >
+    <div class="content-header">
       <h2>
         {{ sprint.sprintNumber ? 'スプリント' + sprint.sprintNumber : 'スプリントバックログ' }}
       </h2>
-      <div
-        class="header-items"
-      >
+      <div class="header-items">
         <md-button
           @click="showFinishSprintConfirm = true"
           :disabled="sprint.id.length === 0"
@@ -39,7 +35,7 @@
       md-confirm-text="はい"
       md-cancel-text="キャンセル"
       @md-cancel="showFinishSprintConfirm = false"
-      @md-confirm="finishSprint"
+      @md-confirm="onFinishSprintConfirm"
     />
   </div>
 </template>
@@ -64,21 +60,12 @@ export default {
     ...mapActions([
       'finishSprint'
     ]),
-    finishSprint () {
-      // Local Stoageから現在のスプリントIDを削除
-      localStorage.removeItem('sid')
-
-      // スプリント終了API
+    // "スプリントを終了する" テスト中...
+    onFinishSprintConfirm () {
       this.finishSprint({
         teamId: this.team.id,
         sprintId: this.sprint.id
       })
-        .then(() => {
-          //
-        })
-        .catch(error => {
-          console.error(error)
-        })
     }
   },
   components: {

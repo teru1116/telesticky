@@ -54,11 +54,12 @@ export default {
   async finish (teamId, sprintId) {
     const batch = db.batch()
     const teamRef = db.collection('scrumTeams').doc(teamId)
-    const snapshot = await teamRef.collection('productBacklog').where('isSelectedForSprint', '==', true).get()
-
+    
     // プロダクトバックログアイテムのスプリントフラグをOFF
+    const productBacklogRef = teamRef.collection('productBacklog')
+    const snapshot = await productBacklogRef.where('isSelectedForSprint', '==', true).get()
     snapshot.forEach(doc => {
-      batch.update({ isSelectedForSprint: false })
+      batch.update(productBacklogRef.doc(doc.id), { isSelectedForSprint: false })
     })
 
     // sprintのcancelDateフィールドに現在日時をセット
@@ -70,5 +71,8 @@ export default {
     batch.update(teamRef, { activeSprintId: '' })
 
     batch.commit()
+
+    // DBからの削除が成功したら、Local Stoageから現在のスプリントIDを削除
+    localStorage.removeItem('sid')
   }
 }
