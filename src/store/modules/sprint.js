@@ -20,7 +20,7 @@ const actions = {
   },
 
   async finishSprint ({ commit }, payload) {
-    await sprint.finish(payload.teamId, payload.sprintId)
+    await sprint.finish(payload.teamId, payload.sprintId).catch(error => { throw new Error(error) })
     commit('clearSprintData')
   }
 }
