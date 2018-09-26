@@ -3,13 +3,10 @@ const db = firebase.firestore()
 
 export default {
   async start (teamId, newSprint) {
+    const batch = db.batch()
     const teamRef = db.collection('scrumTeams').doc(teamId)
-
     const newSprintRef = teamRef.collection('sprints').doc()
     const newSprintId = newSprintRef.id
-
-    // 一括書き込み開始
-    const batch = db.batch()
 
     // sprintドキュメントを新規作成
     const newSprintData = {
@@ -33,21 +30,22 @@ export default {
       totalSprintCount: newSprint.sprintNumber
     })
 
-    await batch.commit()
+    // 書き込み実行
+    await batch.commit().catch(error => { throw new Error(error) })
 
-    // DBへの書き込みが成功したら、Local StorageにスプリントIDを書き込む（ルーティングに使う）
+    // 書き込みが成功したら、Local StorageにスプリントIDを書き込む（ルーティングに使う）
     localStorage.setItem('sid', newSprintId)
 
     return Object.assign(newSprintData, { id: newSprintId })
   },
 
   async getActiveSprintId (teamId) {
-    const doc = await db.collection('scrumTeams').doc(teamId).get()
+    const doc = await db.collection('scrumTeams').doc(teamId).get().catch(error => { throw new Error(error) })
     return doc.data().activeSprintId
   },
 
   async getSprintData (teamId, sprintId) {
-    const doc = await db.collection('scrumTeams').doc(teamId).collection('sprints').doc(sprintId).get()
+    const doc = await db.collection('scrumTeams').doc(teamId).collection('sprints').doc(sprintId).get().catch(error => { throw new Error(error) })
     return Object.assign(doc.data(), { id: doc.id })
   },
 

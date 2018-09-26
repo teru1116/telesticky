@@ -12,11 +12,13 @@ const state = Object.assign({}, initialState)
 
 const actions = {
   async startSprint ({ commit }, payload) {
-    commit('setSprintData', await sprint.start(payload.teamId, payload.newSprintData))
+    const sprintData = await sprint.start(payload.teamId, payload.newSprintData).catch(error => { throw new Error(error) })
+    commit('setSprintData', sprintData)
   },
 
   async getSprintData ({ commit }, payload) {
-    commit('setSprintData', await sprint.getSprintData(payload.teamId, payload.sprintId))
+    const sprintData = await sprint.getSprintData(payload.teamId, payload.sprintId).catch(error => { throw new Error(error) })
+    commit('setSprintData', sprintData)
   },
 
   async finishSprint ({ commit }, payload) {
