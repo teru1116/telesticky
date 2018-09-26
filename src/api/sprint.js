@@ -2,41 +2,48 @@ import firebase from '@/firebase'
 const db = firebase.firestore()
 
 export default {
-  async start (teamId, newSprint) {
-    const batch = db.batch()
+  async start (teamId, newSprintData) {
     const teamRef = db.collection('scrumTeams').doc(teamId)
     const newSprintRef = teamRef.collection('sprints').doc()
     const newSprintId = newSprintRef.id
 
-    // sprintドキュメントを新規作成
-    const newSprintData = {
-      sprintNumber: newSprint.sprintNumber,
-      startDate: newSprint.startDate,
-      endDate: newSprint.endDate,
-      sprintGoal: newSprint.sprintGoal
-    }
-    batch.set(newSprintRef, newSprintData)
+    // チームの合計スプリント数に基づいて新しいスプリント番号を書き込めるよう、トランザクションで書き込み処理
+    let newSprintNumber = 0
+    await db.runTransaction(async transaction => {
+      const doc = await transaction.get(teamRef).catch(error => { throw new Error(error) })
+      const data = doc.data()
+      // 新しいスプリント番号を算出
+      newSprintNumber = data.totalSprintCount + 1
 
-    // スプリントで選択したバックログアイテムのスプリントフラグをON
-    newSprint.items.forEach(item => {
-      batch.update(db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(item.id), {
-        isSelectedForSprint: true
+      // sprintドキュメントを新規作成
+      transaction.set(newSprintRef, {
+        sprintNumber: newSprintNumber,
+        startDate: newSprintData.startDate,
+        endDate: newSprintData.endDate,
+        sprintGoal: newSprintData.sprintGoal
       })
-    })
 
-    // teamドキュメントを更新
-    batch.update(teamRef, {
-      activeSprintId: newSprintId,
-      totalSprintCount: newSprint.sprintNumber
-    })
+      // スプリントで選択したバックログアイテムのスプリントフラグをON
+      newSprintData.items.forEach(item => {
+        transaction.update(teamRef.collection('productBacklog').doc(item.id), {
+          isSelectedForSprint: true
+        })
+      })
 
-    // 書き込み実行
-    await batch.commit().catch(error => { throw new Error(error) })
+      // teamドキュメントを更新
+      transaction.update(teamRef, {
+        activeSprintId: newSprintId,
+        totalSprintCount: newSprintNumber
+      })
+    }).catch(error => { throw new Error(error) })
 
     // 書き込みが成功したら、Local StorageにスプリントIDを書き込む（ルーティングに使う）
     localStorage.setItem('sid', newSprintId)
 
-    return Object.assign(newSprintData, { id: newSprintId })
+    return Object.assign(newSprintData, {
+      id: newSprintId,
+      sprintNumber: newSprintNumber
+    })
   },
 
   async getActiveSprintId (teamId) {

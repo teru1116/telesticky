@@ -225,6 +225,7 @@ export default {
     onStartSprintFailed (error) {
       this.mode = 'default'
       this.showSnackbar('エラー：新しいスプリントの開始に失敗しました。')
+      console.error(error)
     },
     showSnackbar (message) {
       this.showsSnackbar = true

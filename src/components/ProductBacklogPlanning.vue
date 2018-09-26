@@ -120,7 +120,6 @@ export default {
       const payload = {
         teamId: this.team.id,
         newSprintData: {
-          sprintNumber: this.team.totalSprintCount + 1,
           startDate: this.startDate,
           endDate: this.endDate,
           sprintGoal: this.sprintGoal,
@@ -132,7 +131,7 @@ export default {
 
       this.$store.dispatch('startSprint', payload)
         .then(() => this.$emit('startSprintSucceeded'))
-        .catch(error => this.$emit('startSprintFailed'))
+        .catch(error => this.$emit('startSprintFailed', error))
         .finally(() => { this.showsIndicator = true })
     }
   },
