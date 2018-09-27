@@ -1,13 +1,7 @@
 <template>
-  <div
-    class="dialog-content"
-  >
-    <div
-      class="dialog-header"
-    >
-      <h2>
-        プロダクトバックログアイテム
-      </h2>
+  <div class="dialog-content">
+    <div class="dialog-header">
+      <h2>プロダクトバックログアイテム</h2>
       <md-button
         @click="$router.push({ name: 'productBacklog' })"
         class="close-modal"
@@ -17,13 +11,9 @@
     </div>
 
     <md-dialog-content>
-      <div
-        class="dialog-content-inner"
-      >
+      <div class="dialog-content-inner">
 
-        <ul
-          class="form-items"
-        >
+        <ul class="form-items">
           <!-- タイトル -->
           <li>
             <h3>
@@ -139,7 +129,7 @@
 
       <md-dialog-actions>
         <md-button
-          @click="showDeletionConfirm = true"
+          @click="showsConfirmDeleteItem = true"
           class="md-raised"
         >
           アイテムを削除
@@ -156,39 +146,35 @@
 
     <!-- deletion confirm dialog -->
     <md-dialog-confirm
-      :md-active.sync="showDeletionConfirm"
+      :md-active.sync="showsConfirmDeleteItem"
       md-title="このアイテムを削除します"
       md-content="このアイテムを削除します。<br />よろしいですか？"
       md-confirm-text="削除する"
       md-cancel-text="キャンセル"
-      @md-cancel="showDeletionConfirm = false"
+      @md-cancel="showsConfirmDeleteItem = false"
       @md-confirm="onDeleteButtonClick"
     />
 
-    <!-- indicator -->
+    <!-- インジケータ -->
     <md-progress-spinner
-      v-if="updating"
+      v-if="showsIndicator"
       md-mode="indeterminate"
     />
 
-    <!-- snack bar -->
+    <!-- トースト -->
     <md-snackbar
-      :md-active.sync="showSavedSnackbar"
+      :md-active.sync="showsSnackbar"
       :md-duration="4000"
       :md-position="'center'"
       md-persistent
     >
-      <span>
-        {{ updateSucceeded ? `アイテムを更新しました。` : `アイテムの更新に失敗しました。時間を置いて再度お試しください。` }}
-      </span>
+      <span>{{ snackbarMessage }}</span>
     </md-snackbar>
   </div>
 </template>
 
 <script>
 import VueMarkdown from 'vue-markdown'
-import { mapActions } from 'vuex'
-// components
 import AutogrowTextarea from '@/components/AutogrowTextarea'
 import ListedTextarea from '@/components/ListedTextarea'
 
@@ -207,24 +193,20 @@ export default {
       value: this.item.value,
       definitionsOfItemDone: this.item.definitionsOfItemDone,
       editingForm: '',
-      updating: false,
-      showSavedSnackbar: false,
-      updateSucceeded: false,
-      showDeletionConfirm: false,
-      showDeletionSnackbar: false
+      showsConfirmDeleteItem: false,
+      showsIndicator: false,
+      showsSnackbar: false,
+      snackbarMessage: '',
     }
   },
   methods: {
-    ...mapActions([
-      'updateItem',
-      'deleteItem'
-    ]),
     onSaveButtonClick () {
-      this.updating = true
-      this.updateItem({
+      this.showsIndicator = true
+
+      this.$store.dispatch('updateItem', {
         teamId: this.teamId,
         itemId: this.item.id,
-        item: {
+        newItem: {
           title: this.title,
           estimate: this.estimate,
           description: this.description,
@@ -233,32 +215,39 @@ export default {
         }
       })
         .then(() => {
-          this.updating = false
-          this.showSavedSnackbar = true
-          this.updateSucceeded = true
+          this.$emit('updateItemSucceeded')
+          this.$router.push({ name: 'productBacklog' })
         })
         .catch(error => {
-          this.updating = false
-          this.showSnackbar = true
-          this.updateSucceeded = false
-          console.error(error)
+          this.$emit('updateItemFailed')
+        })
+        .finally(() => {
+          this.showsIndicator = false
         })
     },
     onDeleteButtonClick () {
-      this.showDeletionConfirm = false
-      this.updating = true
-      this.deleteItem({
+      this.showsConfirmDeleteItem = false
+      this.showsIndicator = true
+
+      this.$store.dispatch('deleteItem', {
         teamId: this.teamId,
         itemId: this.item.id
       })
         .then(() => {
+          this.$emit('deleteItemSucceeded')
           this.$router.push({ name: 'productBacklog' })
         })
         .catch(error => {
-          this.updating = false
-          this.showDeletionSnackbar = true
+          this.showSnackbar('エラー：アイテムの削除に失敗しました。')
           console.error(error)
         })
+        .finally(() => {
+          this.showsIndicator = false
+        })
+    },
+    showSnackbar (message) {
+      this.showsSnackbar = true
+      this.snackbarMessage = message
     }
   },
   components: {

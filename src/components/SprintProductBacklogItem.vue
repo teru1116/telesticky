@@ -1,29 +1,9 @@
 <template>
-  <li
-    :style="{ width: itemCardWidth + 'px', height: itemCardHeight + 'px', marginBottom: isLastChild ? '0' : verticalPadding * 2 + 'px' }"
-  >
+  <li :style="{ width: itemCardWidth + 'px', height: itemCardHeight + 'px', marginBottom: isLastChild ? '0' : verticalPadding * 2 + 'px' }">
     <md-card>
-      <h3>
-        {{ data.title }}
-      </h3>
-      <div
-        class="card-footer"
-      >
+      <h3>{{ data.title }}</h3>
+      <div class="card-footer">
         <p>{{ data.estimate + ' ' + estimationUnit}}</p>
-        <!-- <md-field>
-          <md-select
-            v-model="status"
-            md-selected="onStatusChanged"
-          >
-            <md-option
-              v-for="(statusName, status) in itemStatusList"
-              :value="status"
-              :key="status"
-            >
-              {{ statusName }}
-            </md-option>
-          </md-select>
-        </md-field> -->
       </div>
     </md-card>
   </li>
@@ -41,7 +21,7 @@ export default {
     verticalPadding: Number,
     isLastChild: Boolean
   },
-  data: function () {
+  data () {
     return {
       status: this.data.status
     }
@@ -49,7 +29,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 li {
   &:last-child {
     margin: 0;

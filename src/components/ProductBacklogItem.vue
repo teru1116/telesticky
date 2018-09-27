@@ -1,31 +1,27 @@
 <template>
   <li
-    v-on:click="$router.push({ name: 'productBacklogItemDetail', params: { itemId: data.id } })"
+    v-on:click="$router.push({ name: 'productBacklogItemDetail', params: { itemId: item.id } })"
   >
     <md-card>
-      <div
-        class="card-body"
-      >
-        <p>{{ data.title }}</p>
+      <div class="card-body">
+        <p>{{ item.title }}</p>
       </div>
       <md-divider/>
       <div class="card-footer">
         <span
-          :style="data.estimate === null ? { color: '#999' } : {}"
+          :style="item.estimate === null ? { color: '#999' } : {}"
           class="footer-left-items"
         >
-          {{ data.estimate !== null ? data.estimate + ' ' + estimationUnit : '見積り未入力' }}
+          {{ item.estimate !== null ? item.estimate + ' ' + estimationUnit : '見積り未入力' }}
         </span>
-        <span
-          class="footer-right-items"
-        >
+        <span class="footer-right-items">
           <md-checkbox
             v-if="mode === 'planning' || mode === 'change_sprint_item'"
-            v-model="isChecked"
-            @change="$emit('onItemCheck', { 'item': data, 'isChecked': isChecked })"
+            v-model="checked"
+            @change="$emit('onItemCheck', item, checked)"
           />
           <span
-            v-if="data.isSelectedForSprint"
+            v-if="item.isSelectedForSprint"
             class="item-status-label"
           >
             現在のスプリント
@@ -39,19 +35,19 @@
 <script>
 export default {
   props: {
-    data: Object,
+    item: Object,
     mode: String,
     estimationUnit: String
   },
-  data: function () {
+  data () {
     return {
-      isChecked: this.data.isSelectedForSprint
+      checked: this.item.isSelectedForSprint
     }
   }
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 li {
   margin: 0 16px 16px 0;
   .md-card {

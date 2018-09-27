@@ -3,15 +3,11 @@
     :style="style"
     @mousedown="onMouseDown"
   >
-    <md-card>
-      {{ task.title }}
-    </md-card>
+    <md-card>{{ task.title }}</md-card>
   </li>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-
 export default {
   props: {
     task: Object,
@@ -29,7 +25,7 @@ export default {
     laneSidePadding: Number,
     verticalPadding: Number
   },
-  data: function () {
+  data () {
     return {
       isDragging: false,
       draggingX: 0,
@@ -37,7 +33,7 @@ export default {
     }
   },
   computed: {
-    style: function () {
+    style () {
       return {
         width: this.taskCardWidth + 'px',
         height: this.taskCardHeight + 'px',
@@ -46,24 +42,24 @@ export default {
         zIndex: this.isDragging ? '1000' : null
       }
     },
-    left: function () {
+    left () {
       const columnNumber = this.index <= 3 ? this.index % 2 : Math.floor(this.index / 2)
       const baseX = this.baseXs[this.task.status] + this.laneSidePadding
       return baseX + columnNumber * this.taskCardWidth + columnNumber * this.taskCardMargin
     },
-    top: function () {
+    top () {
       const rowNumber = this.index <= 3 ? Math.floor(this.index / 2) : this.index % 2
       return this.verticalPadding + rowNumber * 64 + rowNumber * 4
     }
   },
   methods: {
-    onMouseDown: function () {
+    onMouseDown () {
       this.draggingX = this.left
       this.draggingY = this.top
       this.isDragging = true
       this.parentRefs.sprintBoard.addEventListener('mousemove', this.onTouchMove, false)
     },
-    onTouchMove: function (e) {
+    onTouchMove (e) {
       this.parentRefs.sprintBoard.addEventListener('mouseup', this.onTouchUp, false)
 
       // マウス座標からカードのX座標を算出
@@ -75,7 +71,7 @@ export default {
 
       // FIXME: スクロールが考慮されていないため、ある程度スクロールした状態でmousemoveするとdraggingX/Yが期待と違う値になる
     },
-    onTouchUp: function (e) {
+    onTouchUp (e) {
       this.parentRefs.sprintBoard.removeEventListener('mousemove', this.onTouchMove, false)
       this.parentRefs.sprintBoard.removeEventListener('mouseup', this.onTouchUp, false)
       this.isDragging = false
@@ -92,29 +88,19 @@ export default {
       }
       if (status === this.task.status) return
 
-      // 更新処理実行
-      this.moveTask({
-        'teamId': this.teamId,
-        'itemId': this.itemId,
-        'taskId': this.task.id,
-        'status': status
-      })
+      this.$store.dispatch('moveTask', { teamId: this.teamId, itemId: this.itemId, taskId: this.task.id, status})
     },
-    ...mapActions([
-      'moveTask'
-    ])
   }
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 li {
   position: absolute;
   font-size: 11px;
   font-weight: 300;
   background-color: #fff;
   cursor: pointer;
-
   .md-card {
     width: 100%;
     height: 100%;

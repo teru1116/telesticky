@@ -6,6 +6,7 @@ const state = {
 }
 
 const actions = {
+  // アイテムとタスクをリッスン
   listenItemsAndTasks ({ commit }, payload) {
     const teamId = payload.teamId
     productBacklog.listenItems(teamId, items => {
@@ -15,100 +16,55 @@ const actions = {
 
       // 取得したアイテムに紐づいたタスクもリッスンする
       const itemIds = items.map(item => { return item.id })
-      productBacklog.listenTasks(teamId, itemIds, tasks => commit('setTasks', tasks))
+      productBacklog.listenTasks(teamId, itemIds, tasks => {
+        commit('setTasks', tasks)
+      }, error => {
+        throw new Error(error)
+      })
+    }, error => {
+      throw new Error(error)
     })
   },
 
   async addItem ({ commit }, payload) {
-    await productBacklog.addItem(payload.teamId, payload.newItem).catch(error => { throw new Error(error) })
+    await productBacklog.addItem(payload.teamId, payload.newItem)
+      .catch(error => { throw new Error(error) })
   },
 
-  moveItem ({ commit }, payload) {
-    return new Promise((resolve, reject) => {
-      productBacklog.moveItem(
-        payload.teamId,
-        payload.movedItem,
-        payload.newIndex,
-        payload.oldIndex,
-        payload.isRaised,
-        payload.relatedItems
-      )
-        .then(() => {
-          resolve()
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
+  async moveItem ({ commit }, payload) {
+    await productBacklog.moveItem(payload.teamId, payload.movedItem, payload.newIndex, payload.oldIndex, payload.isRaised, payload.sandwichedItems)
+      .catch(error => { throw new Error(error) })
   },
 
-  updateItem ({ commit }, payload) {
-    const teamId = payload.teamId
-    const itemId = payload.itemId
-    const item = payload.item
-
-    return new Promise((resolve, reject) => {
-      productBacklog.updateItem(teamId, itemId, item)
-        .then(() => resolve())
-        .catch(error => reject(error))
-    })
+  async updateItem ({ commit }, payload) {
+    await productBacklog.updateItem(payload.teamId, payload.itemId, payload.newItem)
+      .catch(error => { throw new Error(error) })
   },
 
-  changeSprintItem ({ commit }, payload) {
-    const teamId = payload.teamId
-    const checkedItems = payload.checkedItems
-    const uncheckedItems = payload.uncheckedItems
-
-    return new Promise((resolve, reject) => {
-      productBacklog.changeSprintItem(teamId, checkedItems, uncheckedItems)
-        .then(() => resolve())
-        .catch(error => reject(error))
-    })
+  async changeSprintItem ({ commit }, payload) {
+    await productBacklog.changeSprintItem(payload.teamId, payload.checkedItems, payload.uncheckedItems)
+      .catch(error => { throw new Error(error) })
   },
 
-  deleteItem ({ commit }, payload) {
-    const teamId = payload.teamId
-    const itemId = payload.itemId
-
-    return new Promise((resolve, reject) => {
-      productBacklog.deleteItem(teamId, itemId)
-        .then(() => resolve())
-        .catch(error => reject(error))
-    })
+  async deleteItem ({ commit }, payload) {
+    await productBacklog.deleteItem(payload.teamId, payload.itemId)
+      .catch(error => { throw new Error(error) })
   },
 
-  addTask ({ commit }, payload) {
-    return new Promise((resolve, reject) => {
-      productBacklog.addTask(payload.teamId, payload.itemId, payload.newTask).then(() => {
-        resolve()
-      }, error => {
-        reject(error)
-      })
-    })
+  async addTask ({ commit }, payload) {
+    await productBacklog.addTask(payload.teamId, payload.itemId, payload.newTask)
+      .catch(error => { throw new Error(error) })
   },
 
-  moveTask ({ commit }, payload) {
-    return new Promise((resolve, reject) => {
-      productBacklog.moveTask(
-        payload.teamId,
-        payload.itemId,
-        payload.taskId,
-        payload.status
-      )
-        .then(() => {
-          resolve()
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
+  async moveTask ({ commit }, payload) {
+    await productBacklog.moveTask(payload.teamId, payload.itemId, payload.taskId, payload.status)
+      .catch(error => { throw new Error(error) })
   }
 }
 
 const mutations = {
-  // FIXME: 一旦ProductBacklogの更新が発生したら全入れ替え
-  setItems (state, items) {
-    state.items = items
+  setItems (state, payload) {
+    state.items = payload
   },
 
   setTasks (state, payload) {

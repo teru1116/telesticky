@@ -2,34 +2,37 @@ import firebase from '@/firebase'
 const db = firebase.firestore()
 
 export default {
-  listenItems (teamId, callback) {
-    db.collection('scrumTeams').doc(teamId).collection('productBacklog').orderBy('order')
-      .onSnapshot(snapshot => {
-        let results = []
-        snapshot.forEach(doc => {
-          results.push(Object.assign(doc.data(), { id: doc.id }))
-        })
-        callback(results)
-      }, error => {
-        console.error(error)
+  listenItems (teamId, onNext, onError) {
+    db.collection('scrumTeams').doc(teamId).collection('productBacklog').orderBy('order').onSnapshot(snapshot => {
+      let results = []
+      snapshot.forEach(doc => {
+        results.push(Object.assign(doc.data(), { id: doc.id }))
       })
+      onNext(results)
+    }, error => {
+      onError(error)
+    })
   },
 
-  listenTasks (teamId, itemIds, callback) {
-    let tasks = {}
-    const pbRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog')
-    itemIds.forEach((itemId, index) => {
-      pbRef.doc(itemId).collection('tasks').onSnapshot(snapshot => {
+  listenTasks (teamId, itemIds, onNext, onError) {
+    const tasks = {}
+    itemIds.forEach(itemId => {
+      db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).collection('tasks').onSnapshot(snapshot => {
         tasks[itemId] = []
         snapshot.forEach(doc => {
           let data = doc.data()
-          if (!tasks[itemId][data.status]) tasks[itemId][data.status] = []
+          if (!tasks[itemId][data.status]) {
+            tasks[itemId][data.status] = []
+          }
           tasks[itemId][data.status].push(Object.assign(data, { id: doc.id }))
         })
-        // NOTE: tasksが全部揃ってからcallback()を呼ぶ. 逐一呼ぶと最初しかObserverが付加されなかったため
+
+        // 全てのタスクがtasksに追加されたらコールバック
         if (Object.keys(tasks).length === itemIds.length) {
-          callback(tasks)
+          onNext(tasks)
         }
+      }, error => {
+        onError(error)
       })
     })
   },
@@ -55,9 +58,9 @@ export default {
     }).catch(error => { throw new Error(error) })
   },
 
-  moveItem (teamId, movedItem, newIndex, oldIndex, isRaised, relatedItems) {
+  async moveItem (teamId, movedItem, newIndex, oldIndex, isRaised, sandwichedItems) {
     const batch = db.batch()
-    const pbRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog')
+    const productBacklogRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog')
 
     // 移動分
     let diff = 0
@@ -65,96 +68,65 @@ export default {
     if (isRaised) {
       // 動かしたアイテムのorderを更新
       diff = oldIndex - newIndex
-      batch.update(pbRef.doc(movedItem.id), { order: movedItem.order - diff })
+      batch.update(productBacklogRef.doc(movedItem.id), { order: movedItem.order - diff })
       // 影響を受けたアイテムのorderを更新
-      relatedItems.forEach((item, index) => {
+      sandwichedItems.forEach(item => {
         if (item.id === movedItem.id) return
-        batch.update(pbRef.doc(item.id), { order: item.order + 1 })
+        batch.update(productBacklogRef.doc(item.id), { order: item.order + 1 })
       })
     }
     // order値を上げた場合
     if (!isRaised) {
       // 動かしたアイテムのorderを更新
       diff = newIndex - oldIndex
-      batch.update(pbRef.doc(movedItem.id), { order: movedItem.order + diff })
+      batch.update(productBacklogRef.doc(movedItem.id), { order: movedItem.order + diff })
       // 影響を受けたアイテムのorderを更新
-      relatedItems.forEach((item, index) => {
+      sandwichedItems.forEach(item => {
         if (item.id === movedItem.id) return
-        batch.update(pbRef.doc(item.id), { order: item.order - 1 })
+        batch.update(productBacklogRef.doc(item.id), { order: item.order - 1 })
       })
     }
-
-    // commit
-    return new Promise((resolve, reject) => {
-      batch.commit().then(() => {
-        resolve()
-      })
-    })
+    
+    await batch.commit()
+      .catch(error => { throw new Error(error) })
   },
 
-  updateItem (teamId, itemId, item) {
-    return new Promise((resolve, reject) => {
-      db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).update(item)
-        .then(() => resolve())
-        .catch(error => reject(error))
-    })
+  async updateItem (teamId, itemId, newItem) {
+    await db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).update(newItem)
+      .catch(error => { throw new Error(error) })
   },
 
-  changeSprintItem (teamId, checkedItems, uncheckedItems) {
+  async changeSprintItem (teamId, checkedItems, uncheckedItems) {
     const batch = db.batch()
+    const productBacklogRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog')
+
     checkedItems.forEach(item => {
-      batch.update(db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(item.id), {
+      batch.update(productBacklogRef.doc(item.id), {
         isSelectedForSprint: true
       })
     })
+
     uncheckedItems.forEach(item => {
-      batch.update(db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(item.id), {
+      batch.update(productBacklogRef.doc(item.id), {
         isSelectedForSprint: false
       })
     })
-    return new Promise((resolve, reject) => {
-      batch.commit()
-        .then(() => resolve())
-        .catch(error => reject(error))
-    })
+
+    await batch.commit().catch(error => { throw new Error(error) })
   },
 
-  deleteItem (teamId, itemId) {
-    return new Promise((resolve, reject) => {
-      db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).delete()
-        .then(() => resolve())
-        .catch(error => reject(error))
-    })
+  async deleteItem (teamId, itemId) {
+    await db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).delete()
+      .catch(error => { throw new Error(error) })
   },
 
-  addTask (teamId, itemId, newTask) {
+  async addTask (teamId, itemId, newTask) {
     const tasksRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).collection('tasks')
-
-    return new Promise((resolve, reject) => {
-      tasksRef.add({
-        title: newTask.title,
-        status: newTask.status
-      })
-        .then(doc => {
-          resolve()
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
+    await tasksRef.add(newTask).catch(error => { throw new Error(error) })
   },
 
-  moveTask (teamId, itemId, taskId, status) {
+  async moveTask (teamId, itemId, taskId, status) {
     const taskRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).collection('tasks').doc(taskId)
-
-    return new Promise((resolve, reject) => {
-      taskRef.update({status: status})
-        .then(() => {
-          resolve()
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
+    await taskRef.update({ status }).catch(error => { throw new Error(error) })
   }
 }

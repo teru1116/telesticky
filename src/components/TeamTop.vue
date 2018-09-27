@@ -39,7 +39,7 @@ export default {
     }
   },
   watch: {
-    // team.activeSprintIdを購読し、更新されたらSprint Dataを読み込んでステートにセット
+    // team.activeSprintIdを監視し、更新されたらSprint Dataを読み込んでステートにセット
     activeSprintId () {
       if (!this.activeSprintId) return
       this.$store.dispatch('getSprintData', {

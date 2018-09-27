@@ -55,7 +55,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
 import TaskCard from './TaskCard'
 
 export default {
@@ -75,7 +74,7 @@ export default {
     laneSidePadding: Number,
     verticalPadding: Number
   },
-  data: function () {
+  data () {
     return {
       inputMode: false,
       isUpdating: false,
@@ -85,11 +84,8 @@ export default {
       }
     }
   },
-  components: {
-    'TaskCard': TaskCard
-  },
   computed: {
-    taskCardHeight: function () {
+    taskCardHeight () {
       return (this.itemCardHeight - this.taskCardMargin) / 2
     },
     todoTaskCount: function () {
@@ -114,19 +110,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      'addTask'
-    ]),
     onFinishInputTask: function (e) {
       this.inputMode = false
       if (this.newTask.title) {
         this.isUpdating = true
 
-        let payload = {}
-        payload['teamId'] = this.teamId
-        payload['itemId'] = this.item.id
-        payload['newTask'] = this.newTask
-
+        this.$store.dispatch('addTask', { teamId: this.teamId, itemId: this.item.id, newTask: this.newTask })
         this.addTask(payload)
           .then(() => {
             this.isUpdating = false
@@ -137,7 +126,10 @@ export default {
           })
       }
     }
-  }
+  },
+  components: {
+    TaskCard
+  },
 }
 </script>
 

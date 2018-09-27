@@ -92,11 +92,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-
-// components
 import SprintProductBacklogItem from './SprintProductBacklogItem'
-import draggable from 'vuedraggable'
+import Draggable from 'vuedraggable'
 import TaskLane from './TaskLane'
 
 export default {
@@ -106,12 +103,7 @@ export default {
     sprintTasks: Object,
     team: Object
   },
-  components: {
-    'SprintProductBacklogItem': SprintProductBacklogItem,
-    'draggable': draggable,
-    'TaskLane': TaskLane
-  },
-  data: function () {
+  data () {
     return {
       itemCardWidth: 160,
       itemCardHeight: 132,
@@ -122,7 +114,7 @@ export default {
     }
   },
   computed: {
-    taskColumnWidths: function () {
+    taskColumnWidths () {
       let results = []
       const keys = Object.keys(this.sprintTasks)
       keys.forEach((key, index) => {
@@ -145,7 +137,7 @@ export default {
     }
   },
   methods: {
-    onItemDragged: function (event) {
+    onItemDragged (event) {
       if (event.type !== 'end') return
       const newIndex = event.newIndex
       const oldIndex = event.oldIndex
@@ -158,24 +150,18 @@ export default {
       // アイテムの移動に伴って位置が変わる全てのアイテム
       const relatedItems = isRaised ? this.items.slice(newIndex, oldIndex + 1) : this.items.slice(oldIndex, newIndex + 1)
       // order更新処理開始
-      this.moveItem({
-        'teamId': this.team.id,
-        'sprintId': this.team.activeSprintId,
-        'movedItem': movedItem,
-        'newIndex': newIndex,
-        'oldIndex': oldIndex,
-        'isRaised': isRaised,
-        'relatedItems': relatedItems
-      })
-    },
-    ...mapActions([
-      'moveItem'
-    ])
+      this.$store.dispatch('moveItem', { teamId: this.team.id, sprintId: this.team.activeSprintId, movedItem, newIndex, oldIndex, isRaised, relatedItems })
+    }
+  },
+  components: {
+    SprintProductBacklogItem,
+    Draggable,
+    TaskLane
   }
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .board-scroll-view {
   overflow-x: scroll;
   overflow-y: scroll;
