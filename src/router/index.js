@@ -18,12 +18,19 @@ import Settings from '@/components/TeamSettings'
 import Members from '@/components/TeamMembers'
 import MemberInvite from '@/components/TeamMemberInvite'
 import Account from '@/components/AccountSettings'
+import Visitor from '@/components/Visitor'
 
 Vue.use(Router)
 
 const router = new Router({
   mode: 'history',
   routes: [
+    // Landing Page 
+    {
+      path: '/visitor',
+      name: 'visitor',
+      component: Visitor
+    },
     // auth
     {
       path: '/sign_up',
