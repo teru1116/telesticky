@@ -47,7 +47,7 @@ export default {
           // imageを描画
           this.ctx.drawImage(image, 0, 0)
           // 親コンポーネントにimageのdata_urlを渡す
-          this.$emit('change', image.src)
+          this.$emit('change', image.src, file.name)
         }
         image.src = reader.result
       }

@@ -1,17 +1,17 @@
-import api from '@/api/account'
+import account from '@/api/account'
 
-const state = {
+const initialState = {
   uid: '',
   email: '',
   displayName: '',
   photoURL: ''
 }
 
+const state = Object.assign({}, initialState)
+
 const actions = {
-  setAuthUser ({ state, commit }, authUser) {
-    if (!state.uid) {
-      commit('updateAccount', authUser)
-    }
+  setAuthUser ({ commit }, authUser) {
+    commit('setAccount', authUser)
   },
 
   signOut ({ commit }) {
@@ -20,42 +20,44 @@ const actions = {
     commit('signOut')
   },
 
-  updateDisplayName ({ state, commit }, payload) {
-    const teamId = payload.teamId
-    const uid = payload.uid
-    const displayName = payload.displayName
-
-    api.updateDisplayName(teamId, uid, displayName)
-      .then(() => {
-        commit('updateAccount', { displayName: displayName })
-      })
+  async updateDisplayName ({ commit }, payload) {
+    await account.updateDisplayName(payload.uid, payload.displayName).catch(error => { throw new Error(error) }) 
+    commit('setAccount', { displayName: payload.displayName })
   },
 
-  updateProfilePhoto ({ state, commit }, payload) {
-    const teamId = payload.teamId
-    const uid = payload.uid
-    const dataURL = payload.dataURL
+  async updateProfilePhoto ({ commit }, payload) {
+    const photoURL = await account.updateProfilePhoto(payload.uid, payload.dataURL).catch(error => { throw new Error(error) })
+    commit('setAccount', { photoURL })
+  },
 
-    api.updateProfilePhoto(teamId, uid, dataURL)
-      .then(photoURL => {
-        commit('updateAccount', { photoURL: photoURL })
-      })
+  async updateEmail ({ commit }, payload) {
+    await account.updateEmail(payload.uid, payload.email).catch(error => { throw new Error(error) })
+    commit('setAccount', { email: payload.email })
+  },
+
+  async updatePassword({ commit }, password) {
+    await account.updatePassword(password).catch(error => { throw new Error(error) })
+  },
+
+  async deleteAccount ({ commit }) {
+    await account.delete().catch(error => { throw new Error(error) })
+    dispatchEvent('signOut')
   }
 }
 
 const mutations = {
-  updateAccount (state, payload) {
-    if (payload.hasOwnProperty('uid')) state.uid = payload.uid
-    if (payload.hasOwnProperty('email')) state.email = payload.email
-    if (payload.hasOwnProperty('displayName')) state.displayName = payload.displayName
-    if (payload.hasOwnProperty('photoURL')) state.photoURL = payload.photoURL
+  setAccount (state, payload) {
+    for (let key in payload) {
+      state[key] = payload[key]
+    }
   },
 
   signOut (state) {
-    state.uid = ''
-    state.email = ''
-    state.displayName = ''
-    state.photoURL = ''
+    for (let key in state) {
+      if (initialState.hasOwnProperty(key)) {
+        state[key] = initialState[key]
+      }
+    }
   }
 }
 

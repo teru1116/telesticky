@@ -1,12 +1,8 @@
 <template>
   <md-toolbar class="md-dense">
   <nav>
-    <div
-      class="inner"
-    >
-      <div
-        class="nav-left-contents"
-      >
+    <div class="inner">
+      <div class="nav-left-contents">
         <router-link
           :to="{ name: 'teamList' }"
         >
@@ -37,9 +33,7 @@
           メンバー
         </router-link>
       </div>
-      <div
-        class="nav-right-contents"
-      >
+      <div class="nav-right-contents">
         <button
           v-if="account"
           :style="{'background-image': 'url(' + photoURL + ')'}"
@@ -69,16 +63,26 @@
     </div>
   </nav>
 
-  <!-- サインアウト確認ダイアログ -->
+  <!-- ログアウト確認ダイアログ -->
   <md-dialog-confirm
-    :md-active.sync="showSignoutConfirm"
+    :md-active.sync="showConfirmSignout"
     md-title="ログアウト確認"
     md-content="ログアウトします。<br />よろしいですか？"
     md-confirm-text="はい"
     md-cancel-text="キャンセル"
-    @md-cancel="showSignoutConfirm = false"
+    @md-cancel="showConfirmSignout = false"
     @md-confirm="signOut"
   />
+
+  <!-- トースト: ログアウトエラー -->
+  <md-snackbar
+    :md-position="'center'"
+    :md-duration="4000"
+    :md-active.sync="showsSnackbar"
+    md-persistent
+  >
+    <span>エラー: ログアウトに失敗しました。</span>
+  </md-snackbar>
 
   </md-toolbar>
 </template>
@@ -100,20 +104,21 @@ export default {
   data () {
     return {
       showAccountMenu: false,
-      showSignoutConfirm: false
+      showConfirmSignout: false,
+      showsSnackbar: false
     }
   },
   methods: {
-    signOut () {
-      firebase.auth().signOut()
-        .then(() => {
-          // TODO: ステート破棄
-          // ログイン画面に遷移させる
-          router.push('/sign_in')
-        })
+    async signOut () {
+      await firebase.auth().signOut()
         .catch(error => {
+          this.showsSnackbar = true
           console.error(error)
+          return
         })
+
+      this.$store.dispatch('signOut')
+      router.push('/sign_in')
     }
   }
 }

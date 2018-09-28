@@ -12,16 +12,40 @@ export default {
   },
 
   async updateProfilePhoto (uid, dataURL) {
+    let photoURL = ''
+
     try {
       // 画像アップロード
-      const ref = firebase.storage().ref().child(`profile/${uid}/small/photo.jpg`)
-      await ref.putString(dataURL, 'data_url')
+      if (dataURL) {
+        const ref = firebase.storage().ref().child(`profile/${uid}/small/photo.jpg`)
+        await ref.putString(dataURL, 'data_url')
+        photoURL = await ref.getDownloadURL()
+      }
       // 画像URLをAuthとDatabaseにセット
-      const photoURL = await ref.getDownloadURL()
-      await firebase.auth().currentUser.updateProfile({ photoURL })
+      const user = firebase.auth().currentUser
+      await user.updateProfile({ photoURL })
       await db.collection('users').doc(uid).update({ photoURL })
     } catch (error) {
       throw new Error(error)
-    }   
+    }
+    
+    return photoURL
+  },
+
+  async updateEmail (uid, email) {
+    try {
+      await firebase.auth().currentUser.updateEmail(email)
+      await db.collection('users').doc(uid).update({ email })
+    } catch (error) {
+      throw new Error(error)
+    }
+  },
+
+  async updatePassword (password) {
+    await firebase.auth().currentUser.updatePassword(password).catch(error => { throw new Error(error) })
+  },
+
+  async delete () {
+    await firebase.auth().currentUser.delete().catch(error => { throw new Error(error) })
   }
 }
