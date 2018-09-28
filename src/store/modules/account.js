@@ -41,7 +41,7 @@ const actions = {
 
   async deleteAccount ({ commit }) {
     await account.delete().catch(error => { throw new Error(error) })
-    dispatchEvent('signOut')
+    commit('signOut')
   }
 }
 

@@ -113,7 +113,7 @@
           <div class="input-column">
             <md-button
               class="md-raised"
-              @click="updatePassword"
+              @click="deleteAccount"
             >
               退会する
             </md-button>

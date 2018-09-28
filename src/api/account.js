@@ -46,6 +46,26 @@ export default {
   },
 
   async delete () {
-    await firebase.auth().currentUser.delete().catch(error => { throw new Error(error) })
+    try {
+      // Auth User削除
+      const user = firebase.auth().currentUser
+      await user.delete()
+
+      const batch = db.batch()
+      const userRef = db.collection('users').doc(user.uid)
+
+      // teamのmembersから削除
+      snapshot = await userRef.collection('teams').get()
+      snapshot.forEach(doc => {
+        batch.delete(db.collection('scrumTeams').doc(doc.id).collection('members').doc(user.uid))
+      })
+      db.collection('scrumTeams')
+
+      // user削除
+      batch.delete(userRef)
+      await batch.commit()
+    } catch (error) {
+      throw new Error(error)
+    }
   }
 }
