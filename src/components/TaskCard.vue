@@ -88,8 +88,8 @@ export default {
       }
       if (status === this.task.status) return
 
-      this.$store.dispatch('moveTask', { teamId: this.teamId, itemId: this.itemId, taskId: this.task.id, status})
-    },
+      this.$store.dispatch('moveTask', { teamId: this.teamId, itemId: this.itemId, taskId: this.task.id, status })
+    }
   }
 }
 </script>

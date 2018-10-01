@@ -21,7 +21,7 @@ const actions = {
   },
 
   async updateDisplayName ({ commit }, payload) {
-    await account.updateDisplayName(payload.uid, payload.displayName).catch(error => { throw new Error(error) }) 
+    await account.updateDisplayName(payload.uid, payload.displayName).catch(error => { throw new Error(error) })
     commit('setAccount', { displayName: payload.displayName })
   },
 
@@ -35,7 +35,7 @@ const actions = {
     commit('setAccount', { email: payload.email })
   },
 
-  async updatePassword({ commit }, password) {
+  async updatePassword ({ commit }, password) {
     await account.updatePassword(password).catch(error => { throw new Error(error) })
   },
 

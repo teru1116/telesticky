@@ -113,8 +113,7 @@ export default {
       await firebase.auth().signOut()
         .catch(error => {
           this.showsSnackbar = true
-          console.error(error)
-          return
+          throw console.error(error)
         })
 
       this.$store.dispatch('signOut')

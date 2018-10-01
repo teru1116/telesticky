@@ -86,7 +86,7 @@ export default {
         batch.update(productBacklogRef.doc(item.id), { order: item.order - 1 })
       })
     }
-    
+
     await batch.commit()
       .catch(error => { throw new Error(error) })
   },

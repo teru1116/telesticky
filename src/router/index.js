@@ -25,7 +25,7 @@ Vue.use(Router)
 const router = new Router({
   mode: 'history',
   routes: [
-    // Landing Page 
+    // Landing Page
     {
       path: '/visitor',
       name: 'visitor',

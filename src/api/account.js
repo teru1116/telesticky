@@ -28,7 +28,7 @@ export default {
     } catch (error) {
       throw new Error(error)
     }
-    
+
     return photoURL
   },
 
@@ -55,7 +55,7 @@ export default {
       const userRef = db.collection('users').doc(user.uid)
 
       // teamのmembersから削除
-      snapshot = await userRef.collection('teams').get()
+      const snapshot = await userRef.collection('teams').get()
       snapshot.forEach(doc => {
         batch.delete(db.collection('scrumTeams').doc(doc.id).collection('members').doc(user.uid))
       })

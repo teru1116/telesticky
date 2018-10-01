@@ -116,7 +116,6 @@ export default {
         this.isUpdating = true
 
         this.$store.dispatch('addTask', { teamId: this.teamId, itemId: this.item.id, newTask: this.newTask })
-        this.addTask(payload)
           .then(() => {
             this.isUpdating = false
             this.newTask = {
@@ -129,7 +128,7 @@ export default {
   },
   components: {
     TaskCard
-  },
+  }
 }
 </script>
 

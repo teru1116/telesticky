@@ -196,7 +196,7 @@ export default {
       showsConfirmDeleteItem: false,
       showsIndicator: false,
       showsSnackbar: false,
-      snackbarMessage: '',
+      snackbarMessage: ''
     }
   },
   methods: {
@@ -219,7 +219,7 @@ export default {
           this.$router.push({ name: 'productBacklog' })
         })
         .catch(error => {
-          this.$emit('updateItemFailed')
+          this.$emit('updateItemFailed', error)
         })
         .finally(() => {
           this.showsIndicator = false

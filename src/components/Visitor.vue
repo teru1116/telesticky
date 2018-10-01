@@ -97,6 +97,7 @@
 
 <script>
 import firebase from '@/firebase'
+const db = firebase.firestore()
 
 export default {
   name: 'Visitor',
@@ -145,7 +146,7 @@ export default {
         })
         .then(() => {
           // チーム一覧画面へ遷移
-          router.push({ name: 'teamList' })
+          this.$router.push({ name: 'teamList' })
         })
         .catch(error => {
           switch (error.code) {
