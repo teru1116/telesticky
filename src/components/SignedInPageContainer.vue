@@ -17,14 +17,22 @@
 
 <script>
 import { mapState } from 'vuex'
-// components
 import GlobalNavHeader from './GlobalNavHeader'
 
 export default {
-  computed: mapState([
-    'account',
-    'team'
-  ]),
+  computed: {
+    ...mapState([
+      'account',
+      'team'
+    ])
+  },
+  watch: {
+    '$route' (to, from) {
+      if (to.name === 'teamList') {
+        this.$store.dispatch('unsetTeam')
+      }
+    }
+  },
   components: {
     GlobalNavHeader
   }
