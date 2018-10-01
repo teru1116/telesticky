@@ -54,7 +54,7 @@
             </router-link>
           </li>
           <li>
-            <a @click="showSignoutConfirm = true">
+            <a @click="showConfirmSignout = true">
               ログアウト
             </a>
           </li>

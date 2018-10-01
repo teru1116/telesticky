@@ -56,7 +56,7 @@
       </router-link>
     </div>
 
-    <!-- indicator -->
+    <!-- インジケータ -->
     <md-progress-spinner
       v-if="isProcessing"
       md-mode="indeterminate"
