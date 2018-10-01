@@ -214,5 +214,6 @@ ul.form-items {
   position: absolute;
   top: calc(50% - 40px);
   left: calc(50% - 30px);
+  z-index: 10;
 }
 </style>

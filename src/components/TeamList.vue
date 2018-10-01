@@ -1,14 +1,9 @@
 <template>
   <div>
-    <!-- content -->
-    <div
-      class="inner"
-    >
+    <div class="inner">
       <ul>
         <li>
-          <md-card
-            class="add-team"
-          >
+          <md-card class="add-team">
             <router-link
               to="/teams/create"
             >
@@ -23,17 +18,9 @@
           :style="(index + 2) % 3 === 0 ? { marginRight: 0 } : null"
         >
           <md-card>
-            <a
-              @click="onTeamSelected(team.id)"
-            >
-              <div
-                class="team-title"
-              >
-                {{ team.name }}
-              </div>
-              <div
-                class="team-info"
-              >
+            <a @click="onTeamSelected(team.id)">
+              <div class="team-title">{{ team.name }}</div>
+              <div class="team-info">
                 <dl>
                   <dt>スプリント</dt>
                   <dd>{{ team.sprintNumber }}</dd>
@@ -49,13 +36,13 @@
       </ul>
     </div>
 
-    <!-- create team dialog -->
+    <!-- チーム作成モーダル -->
     <md-dialog
       :md-active="$route.name === 'teamCreate'"
     >
       <router-view
-        :uid="account ? account.uid : ''"
-        v-on:createTeamFinish="isCorrectlyCreated = true"
+        :uid="account.uid"
+        v-on:createTeamSucceeded="onCreateTeamSucceeded"
       />
     </md-dialog>
     <md-snackbar
@@ -67,17 +54,26 @@
       <span>新しくチームが作成されました</span>
     </md-snackbar>
 
-    <!-- indicator -->
+    <!-- インジケータ -->
     <md-progress-spinner
-      v-if="loading"
+      v-if="showsIndicator"
       md-mode="indeterminate"
     />
+
+    <!-- トースト -->
+    <md-snackbar
+      :md-position="'center'"
+      :md-duration="4000"
+      :md-active.sync="showsSnackbar"
+      md-persistent
+    >
+      <span>{{ snackbarMessage }}</span>
+    </md-snackbar>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
-import router from '@/router'
+import { mapState } from 'vuex'
 
 export default {
   props: {
@@ -90,30 +86,48 @@ export default {
   },
   data () {
     return {
-      loading: true,
+      showsIndicator: true,
+      showsSnackbar: false,
+      snackbarMessage: '',
       isCorrectlyCreated: false
     }
   },
   created () {
     // チーム一覧を読み込み
-    this.getTeamList(this.account.uid).then(() => {
-      this.loading = false
-    })
+    this.$store.dispatch('getTeamList', this.account.uid)
+      .catch(error => {
+        this.showSnackbar('エラー: チームページを開けません。時間を置いて再度お試しください。')
+        console.error(error)
+      })
+      .finally(() => {
+        this.showsIndicator = false
+      })
 
     // Local StorageのteamIdを削除
     localStorage.removeItem('tid')
   },
   methods: {
-    ...mapActions([
-      'getTeamList',
-      'getTeam'
-    ]),
     onTeamSelected (teamId) {
-      this.loading = true
-      this.getTeam({ teamId: teamId }).then(() => {
-        this.loading = false
-        router.push({name: 'productBacklog', params: {'teamId': teamId}})
-      })
+      this.showsIndicator = true
+
+      this.$store.dispatch('getTeam', teamId)
+        .then(() => {
+          this.$router.push({ name: 'productBacklog', params: { 'teamId': teamId } })
+        })
+        .catch(error => {
+          this.showSnackbar('エラー: チームページを開けません。時間を置いて再度お試しください。')
+          console.error(error)
+        })
+        .finally(() => {
+          this.showsIndicator = false
+        })
+    },
+    onCreateTeamSucceeded () {
+      this.showSnackbar('新しくチームが追加されました。')
+    },
+    showSnackbar (message) {
+      this.snackbarMessage = message
+      this.showsSnackbar = true
     }
   }
 }

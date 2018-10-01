@@ -52,7 +52,7 @@ export default {
     const teamId = this.$route.params.teamId
 
     // storeにチーム情報をセットする
-    this.$store.dispatch('getTeam', { teamId: this.$route.params.teamId })
+    this.$store.dispatch('getTeam', this.$route.params.teamId)
 
     // Local StorageにteamIdがない場合は書き込む
     const tid = localStorage.getItem('tid')

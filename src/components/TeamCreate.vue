@@ -141,7 +141,7 @@ export default {
       })
         .then(() => {
           this.updating = false
-          this.$emit('createTeamFinish')
+          this.$emit('createTeamSucceeded')
         })
         .catch(error => {
           this.updating = false

@@ -1,32 +1,18 @@
 <template>
-  <div
-    class="inner"
-  >
+  <div class="inner">
 
     <!-- header -->
-    <div
-      class="content-header"
-    >
-      <h2>
-        チーム設定
-      </h2>
-      <div
-        class="header-items"
-      >
-      </div>
+    <div class="content-header">
+      <h2>チーム設定</h2>
     </div>
 
     <!-- body -->
     <div class="main-content-container">
-      <ul
-        class="form-items"
-      >
+      <ul class="form-items">
 
         <!-- チーム名 -->
         <li>
-          <h3>
-            チーム名
-          </h3>
+          <h3>チーム名</h3>
           <input
             v-model="teamName"
             type="text"
@@ -36,9 +22,7 @@
 
         <!-- スプリント期間 -->
         <li>
-          <h3>
-            スプリント期間
-          </h3>
+          <h3>スプリント期間</h3>
           <input
             v-model.number="sprintDuration"
             type="text"
@@ -49,9 +33,7 @@
 
         <!-- 完成の定義 -->
         <li>
-          <h3>
-            完成の定義
-          </h3>
+          <h3>完成の定義</h3>
           <ListedTextarea
             :source.sync="definitionsOfDone"
           />
@@ -59,9 +41,7 @@
 
         <!-- 見積りの単位 -->
         <li>
-          <h3>
-            見積りの単位
-          </h3>
+          <h3>見積りの単位</h3>
           <input
             v-model.number="estimationUnit"
             type="text"
@@ -72,7 +52,7 @@
 
       <md-button
         class="md-raised md-primary primary-button"
-        @click="submit"
+        @click="updateTeamSettings"
       >
         設定を更新する
       </md-button>
@@ -83,33 +63,16 @@
       >
         プロジェクトを削除する
       </md-button>
-
     </div>
 
-    <!-- spinner -->
-    <md-progress-spinner
-      v-if="isProcessing"
-      md-mode="indeterminate"
-    />
-
-    <!-- snack bar -->
-    <md-snackbar
-      :md-position="'center'"
-      :md-duration="4000"
-      :md-active.sync="isCorrectlyUpdated"
-      md-persistent
-    >
-      <span>設定を更新しました</span>
-    </md-snackbar>
-
-    <!-- confirm delete project -->
+    <!-- チーム削除確認ダイアログ -->
     <md-dialog
       :md-active.sync="confirmDeleteProject"
     >
-      <md-dialog-title>プロジェクトを削除する</md-dialog-title>
+      <md-dialog-title>チームを削除する</md-dialog-title>
       <md-dialog-content>
         <p>
-          プロジェクトを削除するには、このプロジェクトのID
+          チームを削除するには、このチームのID
           <code>{{ team.id }}</code>
           を入力してください。
         </p>
@@ -127,55 +90,56 @@
         </md-button>
         <md-button
           class="md-primary"
-          @click="deleteProject"
+          @click="deleteTeam"
           :disabled="projectIdForDelete !== team.id"
         >
-          プロジェクトを削除する
+          チームを削除する
         </md-button>
       </md-dialog-actions>
     </md-dialog>
 
-    <!-- indicator -->
+    <!-- インジケータ -->
     <md-progress-spinner
-      v-if="loading"
+      v-if="showsIndicator"
       md-mode="indeterminate"
     />
 
+    <!-- トースト -->
+    <md-snackbar
+      :md-position="'center'"
+      :md-duration="4000"
+      :md-active.sync="showsSnackbar"
+      md-persistent
+    >
+      <span>{{ snackbarMessage }}</span>
+    </md-snackbar>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-import router from '@/router'
-// components
 import ListedTextarea from '@/components/ListedTextarea'
 
 export default {
   props: {
     team: Object
   },
-  data: function () {
+  data () {
     return {
       teamName: this.team.name,
       sprintDuration: this.team.sprintDuration,
       definitionsOfDone: this.team.definitionsOfDone,
       estimationUnit: this.team.estimationUnit,
-      isProcessing: false,
-      isCorrectlyUpdated: false,
       confirmDeleteProject: false,
       projectIdForDelete: '',
       enableDeleteProject: false,
-      loading: false
+      showsIndicator: false,
+      showsSnackbar: false,
+      snackbarMessage: ''
     }
   },
   methods: {
-    ...mapActions([
-      'updateTeamSettings',
-      'deleteTeam'
-    ]),
-    submit: function () {
-      this.isProcessing = true
-      this.update({
+    updateTeamSettings () {
+      const payload = {
         teamId: this.team.id,
         teamSettings: {
           teamName: this.teamName,
@@ -183,28 +147,38 @@ export default {
           definitionsOfDone: this.definitionsOfDone,
           estimationUnit: this.estimationUnit
         }
-      })
+      }
+
+      this.showsIndicator = true
+      this.$store.dispatch('updateTeamSettings', payload)
         .then(() => {
-          this.isProcessing = false
-          this.isCorrectlyUpdated = true
+          this.showSnackbar('チーム情報を更新しました。')
         })
         .catch(error => {
-          this.isProcessing = false
+          this.showSnackbar('エラー: チームの削除に失敗しました。')
           console.error(error)
+        })
+        .finally(() => {
+          this.showsIndicator = false
         })
     },
-    deleteProject () {
-      this.loading = true
-      this.deleteTeam({
-        teamId: this.team.id
-      })
+    deleteTeam () {
+      this.showsIndicator = true
+      this.$store.dispatch('deleteTeam', this.team.id)
         .then(() => {
-          this.loading = false
-          router.push('/teams')
+          this.$router.push('/teams')
         })
         .catch(error => {
+          this.showSnackbar('エラー: チームの削除に失敗しました。')
           console.error(error)
         })
+        .finally(() => {
+          this.showsIndicator = false
+        })
+    },
+    showSnackbar (message) {
+      this.snackbarMessage = message
+      this.showsSnackbar = true
     }
   },
   components: {

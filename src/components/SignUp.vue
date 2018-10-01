@@ -65,8 +65,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-import router from '@/router'
 import firebase from '@/firebase'
 import '@/assets/sass/signup.scss'
 
@@ -85,9 +83,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      'setAuthUser'
-    ]),
     signUp () {
       // ユーザー名バリデーション
       const regex = /^[a-zA-Z0-9_\-.]{3,15}/
@@ -104,7 +99,7 @@ export default {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then(userCredential => {
           // Auth Userをストアのステートにセット
-          this.setAuthUser(userCredential.user)
+          this.$store.dispatch('setAuthUser')
           // FirestoreのUsersコレクションへ追加
           const uid = userCredential.user.uid
           return db.collection('users').doc(uid).set({
@@ -121,7 +116,7 @@ export default {
         })
         .then(() => {
           // チーム一覧画面へ遷移
-          router.push({ name: 'teamList' })
+          this.$router.push('/teams')
         })
         .catch(error => {
           switch (error.code) {

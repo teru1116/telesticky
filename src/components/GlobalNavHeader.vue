@@ -4,34 +4,34 @@
     <div class="inner">
       <div class="nav-left-contents">
         <router-link
-          :to="{ name: 'teamList' }"
+          to="/teams"
         >
           Scrum
         </router-link>
-        <router-link
-          v-if="$route.params.teamId"
-          :to="{ name: 'sprintBacklog', params: { teamId: team.id } }"
+        <template
+          v-if="team.id"
         >
-          スプリントバックログ
-        </router-link>
-        <router-link
-          v-if="$route.params.teamId"
-          :to="{ name: 'productBacklog', params: { teamId: team.id } }"
-        >
-          プロダクトバックログ
-        </router-link>
-        <router-link
-          v-if="$route.params.teamId"
-          :to="{ name: 'teamSettings', params: { teamId: team.id } }"
-        >
-          チーム設定
-        </router-link>
-        <router-link
-          v-if="$route.params.teamId"
-          :to="{ name: 'members', params: { teamId: team.id } }"
-        >
-          メンバー
-        </router-link>
+          <router-link
+            :to="{ name: 'sprintBacklog', params: { teamId: team.id }}"
+          >
+            スプリントバックログ
+          </router-link>
+          <router-link
+            :to="{ name: 'productBacklog', params: { teamId: team.id }}"
+          >
+            プロダクトバックログ
+          </router-link>
+          <router-link
+            :to="{ name: 'teamSettings', params: { teamId: team.id }}"
+          >
+            チーム設定
+          </router-link>
+          <router-link
+            :to="{ name: 'members', params: { teamId: team.id }}"
+          >
+            メンバー
+          </router-link>
+        </template>
       </div>
       <div class="nav-right-contents">
         <button
@@ -48,7 +48,7 @@
         <ul>
           <li>
             <router-link
-              :to="{ name: 'account' }"
+              to="/account"
             >
               アカウント設定
             </router-link>
@@ -89,7 +89,6 @@
 
 <script>
 import firebase from '@/firebase'
-import router from '@/router'
 
 export default {
   props: {
@@ -117,7 +116,7 @@ export default {
         })
 
       this.$store.dispatch('signOut')
-      router.push('/sign_in')
+      this.$router.push('/sign_in')
     }
   }
 }
