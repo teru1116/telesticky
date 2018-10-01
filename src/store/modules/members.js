@@ -1,42 +1,19 @@
-import api from '@/api/members'
+import members from '@/api/members'
 
-// initial state
-let state = []
+const state = []
 
-// getters
-
-// actions
 const actions = {
-  getMembers ({ commit }, payload) {
-    const teamId = payload.teamId
-    return new Promise((resolve, reject) => {
-      api.getMembers(teamId)
-        .then(members => {
-          commit('setMembers', members)
-          resolve()
-        })
-        .catch(error => reject(error))
-    })
+  async getMembers ({ commit }, teamId) {
+    const teamMembers = await members.get(teamId).catch(error => { throw new Error(error) })
+    commit('setMembers', teamMembers)
   },
 
-  addMember ({ commit }, payload) {
-    const teamId = payload.teamId
-    const email = payload.email
-
-    return new Promise((resolve, reject) => {
-      api.addMember(teamId, email)
-        .then(member => {
-          if (member) {
-            commit('addMember', member)
-          }
-          resolve(member)
-        })
-        .catch(error => reject(error))
-    })
+  async addMember ({ commit }, payload) {
+    const member = await members.add(payload.teamId, payload.email).catch(error => { throw new Error(error) })
+    commit('addMember', member)
   }
 }
 
-// mutations
 const mutations = {
   setMembers (state, members) {
     state.splice(0, state.length)
