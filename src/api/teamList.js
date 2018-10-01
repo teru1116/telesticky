@@ -4,17 +4,11 @@ import admin from './admin'
 const db = firebase.firestore()
 
 export default {
-  getTeamList (uid) {
-    return new Promise((resolve, reject) => {
-      let results = []
-      db.collection('users').doc(uid).collection('teams').get()
-        .then(snapshot => {
-          snapshot.forEach(doc => {
-            results.push(Object.assign(doc.data(), { id: doc.id }))
-          })
-          resolve(results)
-        })
-        .catch(error => reject(error))
+  async get (uid) {
+    const results = []
+    const snapshot = await db.collection('users').doc(uid).collection('teams').get().catch(error => { throw new Error(error) })
+    snapshot.forEach(doc => {
+      results.push(Object.assign(doc.data(), { id: doc.id }))
     })
   },
 
@@ -75,23 +69,21 @@ export default {
       })
     }
 
-    return new Promise((resolve, reject) => {
-      batch.commit()
-        .then(() => {
-          // 自分の所属チームリストを取得して返す
-          return db.collection('users').doc(uid).collection('teams').get()
-        })
-        .then(snapshot => {
-          let results = []
-          snapshot.forEach(doc => {
-            results.push(Object.assign(doc.data(), { id: doc.id }))
-          })
-          resolve(results)
-        })
-        .catch(error => {
-          console.error(error)
-          reject(error)
-        })
-    })
+    try {
+      // 新しいteamに関連する書き込みを実行
+      await batch.commit()
+
+      // 自分の所属チームリストを返す
+      const results = []
+
+      const snapshot = await db.collection('users').doc(uid).collection('teams').get()
+      snapshot.forEach(doc => {
+        results.push(Object.assign(doc.data(), { id: doc.id }))
+      })
+
+      return results
+    } catch (error) {
+      throw new Error(error)
+    }
   }
 }

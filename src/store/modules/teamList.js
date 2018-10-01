@@ -1,28 +1,16 @@
-import api from './../../api/teamList'
+import teamList from '@/api/teamList'
 
 const state = []
 
 const actions = {
-  getTeamList ({ commit }, uid) {
-    return new Promise((resolve, reject) => {
-      api.getTeamList(uid)
-        .then(teams => {
-          commit('setTeamList', teams)
-          resolve()
-        })
-        .catch(error => reject(error))
-    })
+  async getTeamList ({ commit }, uid) {
+    const teams = await teamList.get(uid).catch(error => { throw new Error(error) })
+    commit('setTeamList', teams)
   },
 
-  createTeam ({ commit }, payload) {
-    return new Promise((resolve, reject) => {
-      api.createTeam(payload.uid, payload.newTeam)
-        .then(teams => {
-          commit('setTeamList', teams)
-          resolve()
-        })
-        .catch(error => reject(error))
-    })
+  async createTeam ({ commit }, payload) {
+    const teams = await teamList.createTeam(payload.uid, payload.newTeam).catch(error => { throw new Error(error) })
+    commit('setTeamList', teams)
   }
 }
 
