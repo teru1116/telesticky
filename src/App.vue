@@ -78,7 +78,7 @@ textarea {
     > * {
       float: right;
       z-index: 3;
-      margin-left: 16px;
+      margin-left: 16px!important;;
     }
   }
 }

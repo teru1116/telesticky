@@ -107,6 +107,11 @@ export default {
       showsSnackbar: false
     }
   },
+  watch: {
+    '$route' (to, from) {
+      this.showAccountMenu = false
+    }
+  },
   methods: {
     async signOut () {
       await firebase.auth().signOut()
