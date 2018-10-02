@@ -5,19 +5,18 @@ const db = firebase.firestore()
 
 export default {
   async get (teamId) {
-    const members = []
-
     try {
+      // メンバー情報取得クエリ
+      // DocumentReferenceの配列を作る
+      const userRefs = []
       const snapshot = await db.collection('scrumTeams').doc(teamId).collection('members').get()
-      snapshot.forEach(async teamMemberDoc => {
-        let userDoc = await db.collection('users').doc(teamMemberDoc.id).get()
-        members.push(Object.assign(userDoc.data(), { id: userDoc.id }))
-      })
+      snapshot.forEach(doc => userRefs.push(db.collection('users').doc(doc.id)))
+      // 複数の非同期処理の結果を得るために Promise.all() を使用
+      const docs = await Promise.all(userRefs.map(async userRef => { return await userRef.get() }))
+      return docs.map(doc => Object.assign(doc.data(), { id: doc.id }))
     } catch (error) {
       throw new Error(error)
     }
-
-    return members
   },
 
   async addMember (teamId, email) {
