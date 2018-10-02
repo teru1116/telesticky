@@ -18,9 +18,14 @@ export default {
       // 削除対象のteamのmembersのuidを取得
       const snapshot = await db.collection('scrumTeams').doc(teamId).collection('members').get()
       // それぞれのユーザーのteamsコレクションから、このteamを削除
-      snapshot.forEach(async doc => {
-        await db.collection('users').doc(doc.id).collection('teams').doc(teamId).delete()
+      const userTeamRefs = []
+      snapshot.forEach(doc => {
+        userTeamRefs.push(db.collection('users').doc(doc.id).collection('teams').doc(teamId))
       })
+      await Promise.all(userTeamRefs.map(async docRef => {
+        const promise = await docRef.delete()
+        return promise
+      }))
       // teamを削除
       db.collection('scrumTeams').doc(teamId).delete()
     } catch (error) {

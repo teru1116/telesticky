@@ -1,17 +1,9 @@
 <template>
-  <div
-    class="inner"
-  >
+  <div class="inner">
     <!-- header -->
-    <div
-      class="content-header"
-    >
-      <h2>
-        メンバー
-      </h2>
-      <div
-        class="header-items"
-      >
+    <div class="content-header">
+      <h2>メンバー</h2>
+      <div class="header-items">
         <md-button
           @click="$router.push({ name: 'memberInvite' })"
           class="md-raised md-primary primary-button"
@@ -23,9 +15,7 @@
     </div>
 
     <!-- table -->
-    <div
-      class="members-table"
-    >
+    <div class="members-table">
       <md-table v-model="members" md-card>
         <md-table-row slot="md-table-row" slot-scope="{ item }">
           <md-table-cell
@@ -43,7 +33,7 @@
       </md-table>
     </div>
 
-    <!-- invite dialog -->
+    <!-- 招待モーダル -->
     <md-dialog
       :md-active="$route.name === 'memberInvite'"
       :md-click-outside-to-close="false"
@@ -53,16 +43,26 @@
       />
     </md-dialog>
 
-    <!-- indicator -->
+    <!-- インジケータ -->
     <md-progress-spinner
-      v-if="loading"
+      v-if="showsIndicator"
       md-mode="indeterminate"
     />
+
+    <!-- トースト -->
+    <md-snackbar
+      :md-position="'center'"
+      :md-duration="4000"
+      :md-active.sync="showsSnackbar"
+      md-persistent
+    >
+      <span>{{ snackbarMessage }}</span>
+    </md-snackbar>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   props: {
@@ -70,7 +70,9 @@ export default {
   },
   data () {
     return {
-      loading: true
+      showsIndicator: true,
+      showsSnackbar: false,
+      snackbarMessage: ''
     }
   },
   computed: {
@@ -79,23 +81,21 @@ export default {
     ])
   },
   methods: {
-    ...mapActions([
-      'getMembers'
-    ])
+    showSnackbar (message) {
+      this.snackbarMessage = message
+      this.showsSnackbar = true
+    }
   },
   created () {
-    this.loading = true
+    this.showsIndicator = true
 
-    this.getMembers({ teamId: this.$route.params.teamId })
-      .then(() => {
-        //
-      })
+    this.$store.dispatch('getMembers', this.$route.params.teamId)
       .catch(error => {
-        // TODO: メンバー情報の読み込みに失敗しました。
+        this.showSnackbar('エラー: メンバー情報の読み込みに失敗しました。')
         console.error(error)
       })
       .finally(() => {
-        this.loading = false
+        this.showsIndicator = false
       })
   }
 }

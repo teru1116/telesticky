@@ -15,9 +15,11 @@ const actions = {
 }
 
 const mutations = {
-  setMembers (state, members) {
+  setMembers (state, payload) {
     state.splice(0, state.length)
-    members.forEach(member => state.push(member))
+    payload.forEach(member => {
+      state.push(member)
+    })
   },
 
   addMember (state, member) {

@@ -4,15 +4,26 @@ import admin from './admin'
 const db = firebase.firestore()
 
 export default {
+  // メンバー情報取得クエリ
   async get (teamId) {
     try {
-      // メンバー情報取得クエリ
       // DocumentReferenceの配列を作る
       const userRefs = []
       const snapshot = await db.collection('scrumTeams').doc(teamId).collection('members').get()
-      snapshot.forEach(doc => userRefs.push(db.collection('users').doc(doc.id)))
+      snapshot.forEach(doc => {
+        userRefs.push(db.collection('users').doc(doc.id))
+      })
+
       // 複数の非同期処理の結果を得るために Promise.all() を使用
-      const docs = await Promise.all(userRefs.map(async userRef => { return await userRef.get() }))
+      const docs = await Promise.all(
+        userRefs.map(
+          async userRef => {
+            const doc = await userRef.get()
+            return doc
+          }
+        )
+      )
+
       return docs.map(doc => Object.assign(doc.data(), { id: doc.id }))
     } catch (error) {
       throw new Error(error)

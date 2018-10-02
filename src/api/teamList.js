@@ -6,10 +6,13 @@ const db = firebase.firestore()
 export default {
   async get (uid) {
     const results = []
+
     const snapshot = await db.collection('users').doc(uid).collection('teams').get().catch(error => { throw new Error(error) })
     snapshot.forEach(doc => {
       results.push(Object.assign(doc.data(), { id: doc.id }))
     })
+
+    return results
   },
 
   async createTeam (uid, team) {
