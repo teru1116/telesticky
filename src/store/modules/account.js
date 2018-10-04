@@ -31,16 +31,16 @@ const actions = {
   },
 
   async updateEmail ({ commit }, payload) {
-    await account.updateEmail(payload.uid, payload.email).catch(error => { throw new Error(error) })
+    await account.updateEmail(payload.uid, payload.email).catch(error => { throw error })
     commit('setAccount', { email: payload.email })
   },
 
   async updatePassword ({ commit }, password) {
-    await account.updatePassword(password).catch(error => { throw new Error(error) })
+    await account.updatePassword(password).catch(error => { throw error })
   },
 
   async deleteAccount ({ commit }) {
-    await account.delete().catch(error => { throw new Error(error) })
+    await account.delete().catch(error => { throw error })
     commit('signOut')
   }
 }

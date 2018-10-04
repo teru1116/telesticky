@@ -37,7 +37,7 @@ export default {
       await firebase.auth().currentUser.updateEmail(email)
       await db.collection('users').doc(uid).update({ email })
     } catch (error) {
-      throw new Error(error)
+      throw error
     }
   },
 

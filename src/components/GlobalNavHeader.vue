@@ -1,88 +1,88 @@
 <template>
   <md-toolbar class="md-dense">
-  <nav>
-    <div class="inner">
-      <div class="nav-left-contents">
-        <router-link
-          to="/teams"
-        >
-          Scrum
-        </router-link>
-        <template
-          v-if="team.id"
-        >
+    <nav>
+      <div class="inner">
+        <div class="nav-left-contents">
           <router-link
-            :to="{ name: 'sprintBacklog', params: { teamId: team.id }}"
+            to="/teams"
           >
-            スプリントバックログ
+            Scrum
           </router-link>
-          <router-link
-            :to="{ name: 'productBacklog', params: { teamId: team.id }}"
+          <template
+            v-if="team.id"
           >
-            プロダクトバックログ
-          </router-link>
-          <router-link
-            :to="{ name: 'teamSettings', params: { teamId: team.id }}"
-          >
-            チーム設定
-          </router-link>
-          <router-link
-            :to="{ name: 'members', params: { teamId: team.id }}"
-          >
-            メンバー
-          </router-link>
-        </template>
-      </div>
-      <div class="nav-right-contents">
-        <button
-          v-if="account"
-          :style="{'background-image': 'url(' + photoURL + ')'}"
-          class="account-thumbnail"
-          @click="showAccountMenu = !showAccountMenu"
-        />
-      </div>
-      <md-card
-        v-if="showAccountMenu"
-        class="account-menu"
-      >
-        <ul>
-          <li>
             <router-link
-              to="/account"
+              :to="{ name: 'sprintBacklog', params: { teamId: team.id }}"
             >
-              アカウント設定
+              スプリントバックログ
             </router-link>
-          </li>
-          <li>
-            <a @click="showConfirmSignout = true">
-              ログアウト
-            </a>
-          </li>
-        </ul>
-      </md-card>
-    </div>
-  </nav>
+            <router-link
+              :to="{ name: 'productBacklog', params: { teamId: team.id }}"
+            >
+              プロダクトバックログ
+            </router-link>
+            <router-link
+              :to="{ name: 'teamSettings', params: { teamId: team.id }}"
+            >
+              チーム設定
+            </router-link>
+            <router-link
+              :to="{ name: 'members', params: { teamId: team.id }}"
+            >
+              メンバー
+            </router-link>
+          </template>
+        </div>
+        <div class="nav-right-contents">
+          <button
+            v-if="account"
+            :style="{'background-image': 'url(' + photoURL + ')'}"
+            class="account-thumbnail"
+            @click="showAccountMenu = !showAccountMenu"
+          />
+        </div>
+        <md-card
+          v-if="showAccountMenu"
+          class="account-menu"
+        >
+          <ul>
+            <li>
+              <router-link
+                to="/account"
+              >
+                アカウント設定
+              </router-link>
+            </li>
+            <li>
+              <a @click="showConfirmSignout = true">
+                ログアウト
+              </a>
+            </li>
+          </ul>
+        </md-card>
+      </div>
+    </nav>
 
-  <!-- ログアウト確認ダイアログ -->
-  <md-dialog-confirm
-    :md-active.sync="showConfirmSignout"
-    md-title="ログアウト確認"
-    md-content="ログアウトします。<br />よろしいですか？"
-    md-confirm-text="はい"
-    md-cancel-text="キャンセル"
-    @md-cancel="showConfirmSignout = false"
-    @md-confirm="signOut"
-  />
+    <!-- ログアウト確認ダイアログ -->
+    <md-dialog-confirm
+      :md-active.sync="showConfirmSignout"
+      md-title="ログアウト確認"
+      md-content="ログアウトします。<br />よろしいですか？"
+      md-confirm-text="はい"
+      md-cancel-text="キャンセル"
+      @md-cancel="showConfirmSignout = false"
+      @md-confirm="signOut"
+    />
 
-  <!-- トースト: ログアウトエラー -->
-  <md-snackbar
-    :md-position="'center'"
-    :md-duration="4000"
-    :md-active.sync="showsSnackbar"
-    md-persistent
-  >
-    <span>エラー: ログアウトに失敗しました。</span>
-  </md-snackbar>
+    <!-- トースト: ログアウトエラー -->
+    <md-snackbar
+      :md-position="'center'"
+      :md-duration="4000"
+      :md-active.sync="showsSnackbar"
+      md-persistent
+    >
+      <span>エラー: ログアウトに失敗しました。</span>
+    </md-snackbar>
 
   </md-toolbar>
 </template>

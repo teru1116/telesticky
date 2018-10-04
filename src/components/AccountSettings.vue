@@ -8,6 +8,8 @@
     <!-- body -->
     <div class="main-content-container">
       <ul class="account-form-items">
+
+        <!-- プロフィール画像 -->
         <li>
           <h3>プロフィール画像</h3>
           <div class="input-column">
@@ -57,6 +59,8 @@
             </ul>
           </div>
         </li>
+
+        <!-- ユーザー名 -->
         <li>
           <h3>ユーザー名</h3>
           <div class="input-column">
@@ -74,6 +78,8 @@
             </md-button>
           </div>
         </li>
+
+        <!-- メールアドレス -->
         <li>
           <h3>メールアドレス</h3>
           <div class="input-column">
@@ -91,6 +97,8 @@
             </md-button>
           </div>
         </li>
+
+        <!-- パスワード -->
         <li>
           <h3>パスワード</h3>
           <div class="input-column">
@@ -108,6 +116,8 @@
             </md-button>
           </div>
         </li>
+
+        <!-- 退会 -->
         <li>
           <h3>その他</h3>
           <div class="input-column">
@@ -121,6 +131,19 @@
         </li>
       </ul>
     </div>
+
+    <!-- 再認証ダイアログ -->
+    <md-dialog
+      :md-active.sync="showDialogReauth"
+    >
+      <SignInDialogContent
+        title="認証が必要です"
+        :uid="this.account.uid"
+        :reauthNext="reauthNext"
+        v-on:close="showDialogReauth = false"
+        v-on:reauthNextSucceeded="onReauthNextSucceeded"
+      />
+    </md-dialog>
 
     <!-- インジケータ -->
     <md-progress-spinner
@@ -141,7 +164,9 @@
 </template>
 
 <script>
+import firebase from '@/firebase'
 import ProfileImageUploader from './ProfileImageUploader'
+import SignInDialogContent from './SignInDialogContent'
 
 export default {
   props: {
@@ -158,7 +183,9 @@ export default {
       password: '',
       showsIndicator: false,
       showsSnackbar: false,
-      snackbarMessage: ''
+      snackbarMessage: '',
+      showDialogReauth: false,
+      reauthNext: ''
     }
   },
   methods: {
@@ -237,7 +264,13 @@ export default {
           this.showSnackbar('メールアドレスを変更しました。')
         })
         .catch(error => {
-          this.showSnackbar('エラー: メールアドレスの変更に失敗しました。')
+          // 再認証が要求された場合
+          if (error.code === 'auth/requires-recent-login') {
+            this.reauthNext = 'updateEmail'
+            this.showDialogReauth = true
+          } else {
+            this.showSnackbar('エラー: メールアドレスの変更に失敗しました。')
+          }
           console.error(error)
         })
         .finally(() => {
@@ -252,7 +285,13 @@ export default {
           this.showSnackbar('パスワードを変更しました。')
         })
         .catch(error => {
-          this.showSnackbar('エラー: パスワードの変更に失敗しました。')
+          // 再認証が要求された場合
+          if (error.code === 'auth/requires-recent-login') {
+            this.reauthNext = 'updatePassword'
+            this.showDialogReauth = true
+          } else {
+            this.showSnackbar('エラー: パスワードの変更に失敗しました。')
+          }
           console.error(error)
         })
         .finally(() => {
@@ -264,15 +303,36 @@ export default {
 
       this.$store.dispatch('deleteAccount')
         .then(() => {
-          this.$router.push({ name: 'visitor' })
+          this.$router.push('/visitor')
         })
         .catch(error => {
-          this.showSnackbar('エラー: 退会できませんでした。')
+          // 再認証が要求された場合
+          if (error.code === 'auth/requires-recent-login') {
+            this.reauthNext = 'deleteAccount'
+            this.showDialogReauth = true
+          } else {
+            this.showSnackbar('エラー: 退会できませんでした。')
+          }
           console.error(error)
         })
         .finally(() => {
           this.showsIndicator = false
         })
+    },
+    onReauthNextSucceeded () {
+      this.showDialogReauth = false
+
+      switch (this.reauthNext) {
+        case 'updateEmail':
+          this.showSnackbar('メールアドレスを変更しました。')
+          break
+        case 'updatePassword':
+          this.showSnackbar('パスワードを変更しました。')
+          break
+        case 'deleteAccount':
+          this.$router.push('/visitor')
+          break
+      }
     },
     showSnackbar (message) {
       this.showsSnackbar = true
@@ -280,7 +340,8 @@ export default {
     }
   },
   components: {
-    ProfileImageUploader
+    ProfileImageUploader,
+    SignInDialogContent
   }
 }
 </script>
