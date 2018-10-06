@@ -164,7 +164,6 @@
 </template>
 
 <script>
-import firebase from '@/firebase'
 import ProfileImageUploader from './ProfileImageUploader'
 import SignInDialogContent from './SignInDialogContent'
 

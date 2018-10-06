@@ -16,6 +16,7 @@
           v-for="(team, index) in teamList"
           :key="team.id"
           :style="(index + 2) % 3 === 0 ? { marginRight: 0 } : null"
+          class="team-cell"
         >
           <md-card>
             <a @click="onTeamSelected(team.id)">
