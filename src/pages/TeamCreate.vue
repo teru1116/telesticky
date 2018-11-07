@@ -14,9 +14,7 @@
       <div class="dialog-content-inner">
         <p>メンバーを招待して、新しくチームを作成しましょう。</p>
 
-        <ul
-          class="form-items"
-        >
+        <ul class="form-items">
           <!-- チーム名-->
           <li>
             <h3>チーム名</h3>
@@ -28,9 +26,7 @@
           </li>
 
           <!-- 招待するメンバー -->
-          <li
-            class="form-item-multi-input"
-          >
+          <li class="form-item-multi-input">
             <h3>招待するメンバー</h3>
             <ul>
               <li
@@ -63,16 +59,14 @@
             </ul>
             <md-button
               v-if="showsAddMemberButton"
-              @click="members.push({'email': '', 'displayName': ''})"
+              @click="onAddMemberButtonClick"
             >
               <md-icon>add</md-icon>
             </md-button>
           </li>
 
           <!-- スプリントの期間-->
-          <li
-            class="form-item-sprint-duration"
-          >
+          <li class="form-item-sprint-duration">
             <h3>スプリントの期間</h3>
             <input
               v-model.number="sprintDuration"
@@ -85,7 +79,7 @@
       </div>
       <md-dialog-actions>
         <md-button
-          class="md-raised md-primary primary-button"
+          class="md-raised md-primary primary-button create-team-button"
           @click="onCreateTeamButtonClick"
         >
           スクラムチームを作成する
@@ -93,7 +87,7 @@
       </md-dialog-actions>
     </md-dialog-content>
 
-    <!-- indicator -->
+    <!-- インジケータ -->
     <md-progress-spinner
       v-if="updating"
       md-mode="indeterminate"
@@ -102,9 +96,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-
 export default {
+  name: 'TeamCreate',
   props: {
     uid: String
   },
@@ -125,13 +118,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      'createTeam'
-    ]),
+    onAddMemberButtonClick () {
+      this.members.push({
+        email: '',
+        displayName: ''
+      })
+    },
     onCreateTeamButtonClick () {
-      this.updating = true
       const members = this.members.filter(member => member.email.length > 0)
-      this.createTeam({
+      this.updating = true
+
+      this.$store.dispatch('createTeam', {
         uid: this.uid,
         newTeam: {
           teamName: this.teamName,
@@ -140,12 +137,13 @@ export default {
         }
       })
         .then(() => {
-          this.updating = false
           this.$emit('createTeamSucceeded')
         })
         .catch(error => {
-          this.updating = false
           console.error(error)
+        })
+        .finally(() => {
+          this.updating = false
         })
     }
   },
@@ -153,8 +151,8 @@ export default {
     // 初期状態で3人分の入力欄を用意
     for (let i = 0; i < 3; i++) {
       this.members.push({
-        'email': '',
-        'displayName': ''
+        email: '',
+        displayName: ''
       })
     }
   }

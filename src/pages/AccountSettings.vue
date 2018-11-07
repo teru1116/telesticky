@@ -164,8 +164,8 @@
 </template>
 
 <script>
-import ProfileImageUploader from './ProfileImageUploader'
-import SignInDialogContent from './SignInDialogContent'
+import ProfileImageUploader from '@/components/ProfileImageUploader'
+import SignInDialogContent from '@/components/SignInDialogContent'
 
 export default {
   props: {

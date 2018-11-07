@@ -66,7 +66,7 @@
 
 <script>
 import firebase from '@/firebase'
-import '@/assets/sass/signup.scss'
+import '@/assets/styles/signup.scss'
 
 const db = firebase.firestore()
 

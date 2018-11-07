@@ -5,18 +5,18 @@ db.settings({ timestampsInSnapshots: true })
 
 export default {
   async get (teamId) {
-    const doc = await db.collection('scrumTeams').doc(teamId).get().catch(error => { throw new Error(error) })
+    const doc = await db.collection('teams').doc(teamId).get().catch(error => { throw new Error(error) })
     return Object.assign(doc.data(), { id: doc.id })
   },
 
   async update (teamId, param) {
-    await db.collection('scrumTeams').doc(teamId).update(param).catch(error => { throw new Error(error) })
+    await db.collection('teams').doc(teamId).update(param).catch(error => { throw new Error(error) })
   },
 
   async delete (teamId) {
     try {
       // 削除対象のteamのmembersのuidを取得
-      const snapshot = await db.collection('scrumTeams').doc(teamId).collection('members').get()
+      const snapshot = await db.collection('teams').doc(teamId).collection('members').get()
       // それぞれのユーザーのteamsコレクションから、このteamを削除
       const userTeamRefs = []
       snapshot.forEach(doc => {
@@ -27,7 +27,7 @@ export default {
         return promise
       }))
       // teamを削除
-      db.collection('scrumTeams').doc(teamId).delete()
+      db.collection('teams').doc(teamId).delete()
     } catch (error) {
       throw new Error(error)
     }

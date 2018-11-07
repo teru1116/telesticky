@@ -23,12 +23,12 @@
               <div class="team-title">{{ team.name }}</div>
               <div class="team-info">
                 <dl>
-                  <dt>スプリント</dt>
-                  <dd>{{ team.sprintNumber }}</dd>
+                  <dt>イテレーション</dt>
+                  <dd class="team-sprint-num">{{ team.sprintNumber }}</dd>
                   <dt>残アイテム数</dt>
-                  <dd>{{ team.restItemCount }}</dd>
+                  <dd class="team-remaining-item">{{ team.remainingItem }}</dd>
                   <dt>残ポイント数</dt>
-                  <dd>{{ team.restPointCount }}</dd>
+                  <dd class="team-remaining-point">{{ team.remainingPoint }}</dd>
                 </dl>
               </div>
             </a>

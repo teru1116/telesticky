@@ -1,7 +1,7 @@
 <template>
   <md-card>
     <div class="modal-header">
-      <h2>スプリントプランニング</h2>
+      <h2>新しいイテレーションを開始する</h2>
       <md-button
         class="close-modal"
         @click="$emit('close')"
@@ -15,12 +15,12 @@
       <!-- step 1 -->
       <md-step
         id="first"
-        md-label="スプリントで開発する機能の予想"
+        md-label="イテレーションで開発する機能の予想"
       >
         <p>
-          今スプリントで開発するアイテムを選択しましょう。<br />
+          このイテレーションで開発するアイテムを選択しましょう。<br />
           開発チームの予想キャパシティや実績をもとに、<br />
-          スプリントで何ができるかを予想します。
+          イテレーションで何ができるかを予想します。
         </p>
         <dl>
           <dt>選択中のアイテム数</dt>
@@ -33,11 +33,11 @@
       <!-- step 2 -->
       <md-step
         id="second"
-        md-label="スプリントゴールの設定"
+        md-label="イテレーションのゴールの設定"
       >
         <p>
-          スプリントゴールとは、プロダクトバックログを実装することで実現するスプリントの目的であり、
-          開発チームがインクリメントを開発する指針となるものです。
+          イテレーションは、1〜2週間の短いプロジェクトと考えることができます。
+          それぞれのイテレーションは、プロジェクトと同様、何かを成し遂げるために使うものです。
         </p>
         <div class="textarea-wrapper">
           <AutogrowTextarea
@@ -49,12 +49,12 @@
       <!-- step 3 -->
       <md-step
         id="third"
-        md-label="スプリントの開始"
+        md-label="イテレーションの開始"
       >
         <ul class="date-pickers">
           <li>
             <label>
-              スプリント開始日
+              イテレーション開始日
             </label>
             <Datepicker
               :value="startDate"
@@ -63,7 +63,7 @@
           </li>
           <li>
             <label>
-              スプリント終了日
+              イテレーション終了日
             </label>
             <Datepicker
               :value="endDate"
@@ -75,7 +75,7 @@
           class="md-raised md-primary start-sprint"
           @click="onStartSprintButtonClick"
         >
-          新しいスプリントを開始する
+          イテレーションを開始する
         </md-button>
       </md-step>
     </md-steppers>

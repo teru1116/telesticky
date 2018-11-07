@@ -1,7 +1,7 @@
 <template>
   <div class="signin-container">
     <div class="inner">
-      <h1>にログイン</h1>
+      <h1>Telestickyにログインする</h1>
       <ul class="signup-form-items">
         <!-- メールアドレス -->
         <li>
@@ -56,7 +56,7 @@
 import { mapActions } from 'vuex'
 import firebase from '@/firebase'
 import router from './../router'
-import '@/assets/sass/signup.scss'
+import '@/assets/styles/signup.scss'
 
 export default {
   data () {

@@ -31,14 +31,6 @@
           <span>日</span>
         </li>
 
-        <!-- 完成の定義 -->
-        <li>
-          <h3>完成の定義</h3>
-          <ListedTextarea
-            :source.sync="definitionsOfDone"
-          />
-        </li>
-
         <!-- 見積りの単位 -->
         <li>
           <h3>見積りの単位</h3>
@@ -127,7 +119,6 @@ export default {
     return {
       teamName: this.team.name,
       sprintDuration: this.team.sprintDuration,
-      definitionsOfDone: this.team.definitionsOfDone,
       estimationUnit: this.team.estimationUnit,
       confirmDeleteProject: false,
       projectIdForDelete: '',
@@ -144,7 +135,6 @@ export default {
         teamSettings: {
           teamName: this.teamName,
           sprintDuration: this.sprintDuration,
-          definitionsOfDone: this.definitionsOfDone,
           estimationUnit: this.estimationUnit
         }
       }

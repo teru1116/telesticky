@@ -9,7 +9,7 @@ export default {
     try {
       // DocumentReferenceの配列を作る
       const userRefs = []
-      const snapshot = await db.collection('scrumTeams').doc(teamId).collection('members').get()
+      const snapshot = await db.collection('teams').doc(teamId).collection('members').get()
       snapshot.forEach(doc => {
         userRefs.push(db.collection('users').doc(doc.id))
       })
@@ -38,7 +38,7 @@ export default {
 
       if (uid) {
         // すでにサービスに登録済みのユーザーであれば、uidをmembersコレクションに追加する
-        await db.collection('scrumTeams').doc(teamId).collection('members').doc(uid).set({
+        await db.collection('teams').doc(teamId).collection('members').doc(uid).set({
           createdDate: firebase.firestore.FieldValue.serverTimestamp()
         })
         const doc = await db.collection('users').doc(uid).get()

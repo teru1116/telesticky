@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "web-scrum-board"
+    "development": "scrumboard-development",
+    "production": "scrumboard-production"
   }
 }

@@ -1,17 +1,25 @@
 <template>
-  <router-view
-    :sprint="sprint"
-    :productBacklog="productBacklog"
-    :sprintItems="productBacklog.items.filter(item => {return item.isSelectedForSprint})"
-    :sprintTasks="sprintTasks"
-    :team="team"
-  />
+  <div>
+    <main>
+      <div class="main-inner">
+        <router-view
+          :team="team"
+          :sprint="sprint"
+          :productBacklog="productBacklog"
+          :sprintItems="sprintItems"
+          :sprintTasks="sprintTasks"
+        />
+      </div>
+    </main>
+  </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import GlobalNavHeader from '@/components/GlobalNavHeader'
 
 export default {
+  name: 'TeamPageContainer',
   props: {
     account: Object,
     team: Object
@@ -21,8 +29,8 @@ export default {
       'sprint',
       'productBacklog'
     ]),
-    activeSprintId () {
-      return this.team.activeSprintId
+    sprintItems () {
+      return this.productBacklog.items.filter(item => item.isSelectedForSprint)
     },
     sprintTasks () {
       let sprintTasks = {}
@@ -36,6 +44,9 @@ export default {
         sprintTasks[itemId] = this.productBacklog.tasks[itemId]
       })
       return sprintTasks
+    },
+    activeSprintId () {
+      return this.team.activeSprintId
     }
   },
   watch: {
@@ -62,6 +73,9 @@ export default {
 
     // プロダクトバックログ リッスン開始
     this.$store.dispatch('listenItemsAndTasks', { teamId: teamId })
+  },
+  components: {
+    GlobalNavHeader
   }
 }
 </script>

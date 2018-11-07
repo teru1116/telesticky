@@ -3,7 +3,7 @@ const db = firebase.firestore()
 
 export default {
   async start (teamId, newSprintData) {
-    const teamRef = db.collection('scrumTeams').doc(teamId)
+    const teamRef = db.collection('teams').doc(teamId)
     const newSprintRef = teamRef.collection('sprints').doc()
     const newSprintId = newSprintRef.id
 
@@ -47,13 +47,13 @@ export default {
   },
 
   async getSprintData (teamId, sprintId) {
-    const doc = await db.collection('scrumTeams').doc(teamId).collection('sprints').doc(sprintId).get().catch(error => { throw new Error(error) })
+    const doc = await db.collection('teams').doc(teamId).collection('sprints').doc(sprintId).get().catch(error => { throw new Error(error) })
     return Object.assign(doc.data(), { id: doc.id })
   },
 
   async finish (teamId, sprintId) {
     const batch = db.batch()
-    const teamRef = db.collection('scrumTeams').doc(teamId)
+    const teamRef = db.collection('teams').doc(teamId)
 
     // プロダクトバックログアイテムのスプリントフラグをOFF
     const productBacklogRef = teamRef.collection('productBacklog')

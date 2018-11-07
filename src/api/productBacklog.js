@@ -3,7 +3,7 @@ const db = firebase.firestore()
 
 export default {
   listenItems (teamId, onNext, onError) {
-    db.collection('scrumTeams').doc(teamId).collection('productBacklog').orderBy('order').onSnapshot(snapshot => {
+    db.collection('teams').doc(teamId).collection('productBacklog').orderBy('order').onSnapshot(snapshot => {
       let results = []
       snapshot.forEach(doc => {
         results.push(Object.assign(doc.data(), { id: doc.id }))
@@ -17,7 +17,7 @@ export default {
   listenTasks (teamId, itemIds, onNext, onError) {
     const tasks = {}
     itemIds.forEach(itemId => {
-      db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).collection('tasks').onSnapshot(snapshot => {
+      db.collection('teams').doc(teamId).collection('productBacklog').doc(itemId).collection('tasks').onSnapshot(snapshot => {
         tasks[itemId] = []
         snapshot.forEach(doc => {
           let data = doc.data()
@@ -38,7 +38,7 @@ export default {
   },
 
   async addItem (teamId, newItem) {
-    const teamRef = db.collection('scrumTeams').doc(teamId)
+    const teamRef = db.collection('teams').doc(teamId)
     const newItemRef = teamRef.collection('productBacklog').doc()
 
     // チームの合計アイテム数に基づいて、アイテムにインクリメントされた番号を登録するため、トランザクションを使用
@@ -60,7 +60,7 @@ export default {
 
   async moveItem (teamId, movedItem, newIndex, oldIndex, isRaised, sandwichedItems) {
     const batch = db.batch()
-    const productBacklogRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog')
+    const productBacklogRef = db.collection('teams').doc(teamId).collection('productBacklog')
 
     // 移動分
     let diff = 0
@@ -92,13 +92,13 @@ export default {
   },
 
   async updateItem (teamId, itemId, newItem) {
-    await db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).update(newItem)
+    await db.collection('teams').doc(teamId).collection('productBacklog').doc(itemId).update(newItem)
       .catch(error => { throw new Error(error) })
   },
 
   async changeSprintItem (teamId, checkedItems, uncheckedItems) {
     const batch = db.batch()
-    const productBacklogRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog')
+    const productBacklogRef = db.collection('teams').doc(teamId).collection('productBacklog')
 
     checkedItems.forEach(item => {
       batch.update(productBacklogRef.doc(item.id), {
@@ -116,17 +116,23 @@ export default {
   },
 
   async deleteItem (teamId, itemId) {
-    await db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).delete()
+    await db.collection('teams').doc(teamId).collection('productBacklog').doc(itemId).delete()
       .catch(error => { throw new Error(error) })
   },
 
   async addTask (teamId, itemId, newTask) {
-    const tasksRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).collection('tasks')
+    const tasksRef = db.collection('teams').doc(teamId).collection('productBacklog').doc(itemId).collection('tasks')
     await tasksRef.add(newTask).catch(error => { throw new Error(error) })
   },
 
   async moveTask (teamId, itemId, taskId, status) {
-    const taskRef = db.collection('scrumTeams').doc(teamId).collection('productBacklog').doc(itemId).collection('tasks').doc(taskId)
+    const taskRef = db.collection('teams').doc(teamId).collection('productBacklog').doc(itemId).collection('tasks').doc(taskId)
     await taskRef.update({ status }).catch(error => { throw new Error(error) })
+  },
+
+  async getItems (teamId) {
+    const itemsRef = db.collection('teams').doc(teamId).collection('productBacklog').orderBy('number', 'desc')
+    const results = await itemsRef.get().catch(error => { throw new Error(error) })
+    return results
   }
 }

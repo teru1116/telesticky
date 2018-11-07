@@ -2,7 +2,7 @@
   <md-card>
     <div class="modal-header">
       <h2>
-        スプリントのアイテムを変更する
+        現在のイテレーションのアイテムを変更する
       </h2>
       <md-button
         class="close-modal"
@@ -15,9 +15,9 @@
       class="modal-body"
     >
       <p>
-        今スプリントで開発するアイテムを選択しましょう。<br />
+        このイテレーションで開発するアイテムを選択しましょう。<br />
         開発チームの予想キャパシティや実績をもとに、<br />
-        スプリントで何ができるかを予想します。
+        イテレーションで何ができるかを予想します。
       </p>
       <dl>
         <dt>選択中のアイテム数</dt>
@@ -29,7 +29,7 @@
         class="md-raised md-primary submit"
         @click="submit"
       >
-        現在のスプリントのアイテムを変更する
+        変更を反映する
       </md-button>
     </div>
   </md-card>

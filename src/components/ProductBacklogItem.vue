@@ -24,7 +24,7 @@
             v-if="item.isSelectedForSprint"
             class="item-status-label"
           >
-            現在のスプリント
+            現在のイテレーション
           </span>
         </span>
       </div>

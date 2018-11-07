@@ -2,7 +2,7 @@ import teamList from '@/api/teamList'
 
 const state = []
 
-const actions = {
+export const actions = {
   async getTeamList ({ commit }, uid) {
     const teams = await teamList.get(uid).catch(error => { throw new Error(error) })
     commit('setTeamList', teams)
@@ -14,7 +14,7 @@ const actions = {
   }
 }
 
-const mutations = {
+export const mutations = {
   setTeamList (state, payload) {
     state.splice(0, state.length)
     payload.forEach(team => {

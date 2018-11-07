@@ -2,23 +2,23 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import firebase from '@/firebase'
 import store from '@/store'
-// components
-import Container from '@/components/SignedInPageContainer'
-import SignUp from '@/components/SignUp'
-import SignIn from '@/components/SignIn'
-import Invited from '@/components/Invited'
-import TeamList from '@/components/TeamList'
-import TeamCreate from '@/components/TeamCreate'
-import teamPageContainer from '@/components/TeamTop'
-import ProductBacklog from '@/components/ProductBacklog'
-import ProductBacklogItemCreate from '@/components/ProductBacklogItemCreate'
-import ProductBacklogItemDetail from '@/components/ProductBacklogItemDetail'
-import SprintBacklog from '@/components/SprintBacklog'
-import Settings from '@/components/TeamSettings'
-import Members from '@/components/TeamMembers'
-import MemberInvite from '@/components/TeamMemberInvite'
-import Account from '@/components/AccountSettings'
-import Visitor from '@/components/Visitor'
+
+import Container from '@/pages/SignedInPageContainer'
+import SignUp from '@/pages/SignUp'
+import SignIn from '@/pages/SignIn'
+import Invited from '@/pages/Invited'
+import TeamList from '@/pages/TeamList'
+import TeamCreate from '@/pages/TeamCreate'
+import TeamPageContainer from '@/pages/TeamPageContainer'
+import ProductBacklog from '@/pages/ProductBacklog'
+import ProductBacklogItemCreate from '@/pages/ProductBacklogItemCreate'
+import ProductBacklogItemDetail from '@/pages/ProductBacklogItemDetail'
+import SprintBacklog from '@/pages/SprintBacklog'
+import Settings from '@/pages/TeamSettings'
+import Members from '@/pages/TeamMembers'
+import MemberInvite from '@/pages/TeamMemberInvite'
+import Account from '@/pages/AccountSettings'
+import Visitor from '@/pages/Visitor'
 
 Vue.use(Router)
 
@@ -56,6 +56,7 @@ const router = new Router({
         requiresAuth: true
       },
       children: [
+        // チーム一覧
         {
           path: 'teams',
           name: 'teamList',
@@ -68,10 +69,11 @@ const router = new Router({
             }
           ]
         },
+        // チーム個別
         {
           path: 'teams/:teamId',
           name: 'teamPageContainer',
-          component: teamPageContainer,
+          component: TeamPageContainer,
           children: [
             {
               path: 'product_backlog',

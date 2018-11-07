@@ -1,7 +1,7 @@
 <template>
   <div class="dialog-content">
     <div class="dialog-header">
-      <h2>新規プロダクトバックログアイテム作成</h2>
+      <h2>新規バックログアイテム作成</h2>
       <md-button
         @click="$router.push({ name: 'productBacklog' })"
         class="close-modal"
@@ -49,30 +49,11 @@
             </div>
             <md-button
               v-if="description"
-              class="md-dense md-primary markdown-preview-button"
+              class="md-dense md-raised markdown-preview-button"
               @click="showsDescriptionPreview = !showsDescriptionPreview"
             >
               {{ showsDescriptionPreview ? '編集' : 'プレビュー' }}
             </md-button>
-          </li>
-
-          <!-- 価値 -->
-          <li>
-            <h3>価値</h3>
-            <AutogrowTextarea
-              v-model="value"
-            />
-          </li>
-
-          <!-- 完成の定義 -->
-          <li>
-            <div class="multi-inputs">
-              <h3>完成の定義</h3>
-              <ListedTextarea
-                v-bind:source="definitionsOfItemDone"
-                v-on:update="updatedSource => definitionsOfItemDone = updatedSource"
-              />
-            </div>
           </li>
 
         </ul>
@@ -84,7 +65,7 @@
           class="md-raised primary-button"
           :disabled="!title"
         >
-          プロダクトバックログに追加
+          バックログに追加
         </md-button>
       </md-dialog-actions>
     </md-dialog-content>
@@ -115,8 +96,6 @@ export default {
       estimate: null,
       description: '',
       showsDescriptionPreview: false,
-      value: '',
-      definitionsOfItemDone: this.definitionsOfDone,
       showsIndicator: false
     }
   },
@@ -130,8 +109,6 @@ export default {
           title: this.title,
           estimate: this.estimate,
           description: this.description,
-          value: this.value,
-          definitionsOfItemDone: this.definitionsOfDone,
           status: this.initialItemStatus
         }
       })
@@ -185,7 +162,7 @@ export default {
         min-height: 40px;
       }
       .md-button.markdown-preview-button {
-        margin: -16px 0 0;
+        margin: 8px 0 0;
         float: right;
       }
     }

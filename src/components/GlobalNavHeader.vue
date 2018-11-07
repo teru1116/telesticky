@@ -6,20 +6,20 @@
           <router-link
             to="/teams"
           >
-            Scrum
+            <img src="./../assets/images/logo.png" class="logo-img">
           </router-link>
           <template
             v-if="team.id"
           >
             <router-link
-              :to="{ name: 'sprintBacklog', params: { teamId: team.id }}"
-            >
-              スプリントバックログ
-            </router-link>
-            <router-link
               :to="{ name: 'productBacklog', params: { teamId: team.id }}"
             >
-              プロダクトバックログ
+              バックログ
+            </router-link>
+            <router-link
+              :to="{ name: 'sprintBacklog', params: { teamId: team.id }}"
+            >
+              現在のイテレーション
             </router-link>
             <router-link
               :to="{ name: 'teamSettings', params: { teamId: team.id }}"
@@ -148,6 +148,9 @@ export default {
           color: #fff;
           line-height: 48px;
           margin-right: 40px;
+        }
+        .logo-img {
+          height: 36px;
         }
       }
       .nav-right-contents {

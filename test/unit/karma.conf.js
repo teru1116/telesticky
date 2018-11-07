@@ -28,6 +28,11 @@ module.exports = function karmaConfig (config) {
         { type: 'lcov', subdir: '.' },
         { type: 'text-summary' }
       ]
+    },
+    client: {
+      mocha: {
+        timeout: 50000
+      }
     }
   })
 }

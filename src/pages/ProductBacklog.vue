@@ -3,7 +3,7 @@
 
     <!-- header -->
     <div class="content-header">
-      <h2>プロダクトバックログ</h2>
+      <h2>バックログ</h2>
       <div class="header-items">
         <md-button
           @click="$router.push({ name: 'productBacklogItemCreate' })"
@@ -18,14 +18,14 @@
           class="md-raised"
           :disabled="mode !== 'default'"
         >
-          新しいスプリント
+          イテレーションを開始
         </md-button>
         <md-button
           @click="mode = 'change_sprint_item'"
           class="md-raised"
           :disabled="mode !== 'default' || !sprint.id"
         >
-          スプリントのアイテムを変更
+          イテレーションのアイテムを変更
         </md-button>
       </div>
     </div>
@@ -132,9 +132,9 @@
 
 <script>
 import Draggable from 'vuedraggable'
-import ProductBacklogItem from './ProductBacklogItem'
-import ProductBacklogPlanning from './ProductBacklogPlanning'
-import ProductBacklogChangeSprintItem from './ProductBacklogChangeSprintItem'
+import ProductBacklogItem from '@/components/ProductBacklogItem'
+import ProductBacklogPlanning from '@/components/ProductBacklogPlanning'
+import ProductBacklogChangeSprintItem from '@/components/ProductBacklogChangeSprintItem'
 
 export default {
   props: {
@@ -185,14 +185,14 @@ export default {
       this.checkedItems = []
       this.uncheckedItems = []
       this.mode = 'default'
-      this.showSnackbar('新しいスプリントが開始されました。')
+      this.showSnackbar('新しいイテレーションが開始されました。')
     },
     // スプリントを開始する: 失敗時処理
     onStartSprintFailed (error) {
       this.checkedItems = []
       this.uncheckedItems = []
       this.mode = 'default'
-      this.showSnackbar('エラー：新しいスプリントの開始に失敗しました。')
+      this.showSnackbar('エラー：新しいイテレーションの開始に失敗しました。')
       console.error(error)
     },
     // アイテムを追加する: 成功時処理
@@ -222,14 +222,14 @@ export default {
       this.checkedItems = []
       this.uncheckedItems = []
       this.mode = 'default'
-      this.showSnackbar('スプリントのアイテムを変更しました。')
+      this.showSnackbar('イテレーションのアイテムを変更しました。')
     },
     // スプリントのアイテムを変更: 失敗時処理
     onChangeSprintItemFailed (error) {
       this.checkedItems = []
       this.uncheckedItems = []
       this.mode = 'default'
-      this.showSnackbar('エラー：スプリントのアイテムの変更に失敗しました。')
+      this.showSnackbar('エラー：イテレーションのアイテムの変更に失敗しました。')
       console.error(error)
     },
     // アイテム選択時

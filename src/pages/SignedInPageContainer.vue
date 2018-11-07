@@ -17,7 +17,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import GlobalNavHeader from './GlobalNavHeader'
+import GlobalNavHeader from '@/components/GlobalNavHeader'
 
 export default {
   computed: {

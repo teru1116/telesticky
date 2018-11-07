@@ -7,7 +7,7 @@ export default {
   async get (uid) {
     const results = []
 
-    const snapshot = await db.collection('users').doc(uid).collection('teams').get().catch(error => { throw new Error(error) })
+    const snapshot = await db.collection('users').doc(uid).collection('teams').orderBy('updatedDate', 'desc').get().catch(error => { throw new Error(error) })
     snapshot.forEach(doc => {
       results.push(Object.assign(doc.data(), { id: doc.id }))
     })
@@ -18,7 +18,7 @@ export default {
   async createTeam (uid, team) {
     const batch = db.batch()
 
-    const newTeamRef = db.collection('scrumTeams').doc()
+    const newTeamRef = db.collection('teams').doc()
     const newUserTeamRef = db.collection('users').doc(uid).collection('teams').doc(newTeamRef.id)
 
     // team作成
@@ -34,7 +34,9 @@ export default {
       activeSprintId: '',
       totalSprintCount: 0,
       totalItemCount: 0,
-      doneItemCount: 0
+      doneItemCount: 0,
+      createdDate: firebase.firestore.FieldValue.serverTimestamp(),
+      updatedDate: firebase.firestore.FieldValue.serverTimestamp()
     })
 
     // teamのmembersコレクションに自身のuidを追加
@@ -46,8 +48,10 @@ export default {
     batch.set(newUserTeamRef, {
       name: team.teamName,
       sprintNumber: 0,
-      restOfItem: 0,
-      restOfPoint: 0
+      remainingItem: 0,
+      remainingPoint: 0,
+      createdDate: firebase.firestore.FieldValue.serverTimestamp(),
+      updatedDate: firebase.firestore.FieldValue.serverTimestamp()
     })
 
     // メンバー招待処理
@@ -79,7 +83,7 @@ export default {
       // 自分の所属チームリストを返す
       const results = []
 
-      const snapshot = await db.collection('users').doc(uid).collection('teams').get()
+      const snapshot = await db.collection('users').doc(uid).collection('teams').orderBy('updatedDate', 'desc').get()
       snapshot.forEach(doc => {
         results.push(Object.assign(doc.data(), { id: doc.id }))
       })

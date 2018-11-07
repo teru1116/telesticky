@@ -57,9 +57,9 @@ export default {
       // teamのmembersから削除
       const snapshot = await userRef.collection('teams').get()
       snapshot.forEach(doc => {
-        batch.delete(db.collection('scrumTeams').doc(doc.id).collection('members').doc(user.uid))
+        batch.delete(db.collection('teams').doc(doc.id).collection('members').doc(user.uid))
       })
-      db.collection('scrumTeams')
+      db.collection('teams')
 
       // user削除
       batch.delete(userRef)
