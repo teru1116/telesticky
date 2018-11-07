@@ -1,7 +1,3 @@
-# web-scrum-board
-
-> リモートで開発するスクラムチームのための、最低限の機能だけを有したWebスクラムボード
-
 ## Build Setup
 
 ``` bash
